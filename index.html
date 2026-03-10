@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ravencaller213's ButBetter Collection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #080c0f;
+      --bg2:       #0d1318;
+      --bg3:       #111920;
+      --border:    #1e3040;
+      --accent:    #00d4ff;
+      --accent2:   #00ff9d;
+      --accent3:   #ff6b35;
+      --text:      #c8dde8;
+      --muted:     #4a6070;
+      --dim:       #1a2730;
+      --glow:      rgba(0,212,255,0.15);
+      --glow2:     rgba(0,255,157,0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Exo 2', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Scanline overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.03) 2px,
+        rgba(0,0,0,0.03) 4px
+      );
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* Ambient background glow */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: -10%;
+      width: 60%;
+      height: 60%;
+      background: radial-gradient(ellipse, rgba(0,212,255,0.04) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      padding: 60px 40px 40px;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(0,212,255,0.05) 0%, transparent 50%),
+        repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(0,212,255,0.02) 60px, rgba(0,212,255,0.02) 61px);
+      pointer-events: none;
+    }
+
+    .header-tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: var(--accent2);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.1s;
+    }
+
+    h1 {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: clamp(22px, 4vw, 44px);
+      line-height: 1.1;
+      letter-spacing: 0.05em;
+      color: #fff;
+      text-shadow: 0 0 40px rgba(0,212,255,0.4);
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.2s;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .header-sub {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--muted);
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 1px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.35s;
+    }
+
+    .header-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), transparent);
+      animation: lineExpand 1s ease forwards 0.5s;
+    }
+
+    /* ── INSTRUCTIONS ── */
+    .instructions {
+      max-width: 860px;
+      margin: 40px auto 0;
+      padding: 0 40px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.5s;
+    }
+
+    .instructions-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2);
+      padding: 18px 22px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--text);
+      position: relative;
+    }
+
+    .instructions-box::before {
+      content: '// INSTRUCTIONS';
+      display: block;
+      color: var(--muted);
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+
+    .instructions-box strong {
+      color: var(--accent);
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      max-width: 860px;
+      margin: 50px auto 0;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.65s;
+    }
+
+    .section-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--muted);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .section-rule {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    /* ── FILE GRID ── */
+    .file-grid {
+      max-width: 860px;
+      margin: 24px auto 80px;
+      padding: 0 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* ── FILE CARD ── */
+    .file-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transition: border-color 0.2s, background 0.2s;
+      cursor: default;
+    }
+
+    .file-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--accent);
+      transform: scaleY(0);
+      transition: transform 0.2s ease;
+      transform-origin: bottom;
+    }
+
+    .file-card:hover {
+      background: var(--bg3);
+      border-color: rgba(0,212,255,0.35);
+    }
+
+    .file-card:hover::before {
+      transform: scaleY(1);
+    }
+
+    .file-card-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .file-icon {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--dim);
+      border: 1px solid var(--border);
+    }
+
+    .file-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .file-info {
+      min-width: 0;
+    }
+
+    .file-name {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 14px;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-desc {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.5px;
+    }
+
+    .file-mod-tag {
+      display: inline-block;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      padding: 2px 7px;
+      margin-top: 4px;
+      border: 1px solid;
+    }
+
+    .tag-ini   { color: var(--accent3); border-color: rgba(255,107,53,0.3); background: rgba(255,107,53,0.06); }
+    .tag-json  { color: var(--accent);  border-color: rgba(0,212,255,0.3);  background: rgba(0,212,255,0.05); }
+    .tag-xml   { color: var(--accent2); border-color: rgba(0,255,157,0.3);  background: rgba(0,255,157,0.05); }
+
+    /* ── DOWNLOAD BUTTON ── */
+    .btn-download {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Orbitron', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: transparent;
+      border: 1px solid rgba(0,212,255,0.4);
+      padding: 9px 18px;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+
+    .btn-download::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--glow);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn-download:hover {
+      color: #fff;
+      border-color: var(--accent);
+      background: rgba(0,212,255,0.08);
+    }
+
+    .btn-download:hover::before {
+      opacity: 1;
+    }
+
+    .btn-download svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    /* staggered card animations */
+    .file-card:nth-child(1) { animation: fadeUp 0.5s ease forwards 0.75s; }
+    .file-card:nth-child(2) { animation: fadeUp 0.5s ease forwards 0.85s; }
+    .file-card:nth-child(3) { animation: fadeUp 0.5s ease forwards 0.95s; }
+    .file-card:nth-child(4) { animation: fadeUp 0.5s ease forwards 1.05s; }
+    .file-card:nth-child(5) { animation: fadeUp 0.5s ease forwards 1.15s; }
+    .file-card:nth-child(6) { animation: fadeUp 0.5s ease forwards 1.25s; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .footer-text a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer-text a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-blink {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--accent);
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes lineExpand {
+      from { width: 0; }
+      to   { width: 100%; }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      header, .instructions, .section-header, .file-grid, footer { padding-left: 20px; padding-right: 20px; }
+      .file-card { flex-direction: column; align-items: flex-start; }
+      .btn-download { align-self: flex-end; }
+      h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-tag">// FO76 · HUD MOD CONFIG PACK</div>
+    <h1>ravencaller213's <span>ButBetter</span> Collection</h1>
+    <p class="header-sub">CONFIG FILES &nbsp;·&nbsp; DOWNLOAD &amp; REPLACE &nbsp;·&nbsp; NO MANUAL EDITS REQUIRED</p>
+    <div class="header-line"></div>
+  </header>
+
+  <div class="instructions">
+    <div class="instructions-box">
+      Place each downloaded file in its mod's config directory, replacing the existing file.<br>
+      Default path for most HUD mod configs: <strong>%LOCALAPPDATA%\Fallout76\</strong> or the mod's own folder inside your load order.<br>
+      Refer to the collection description on Nexus for exact file locations per mod.
+    </div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-label">Config Files</span>
+    <div class="section-rule"></div>
+    <span class="section-label">6 files</span>
+  </div>
+
+  <div class="file-grid">
+
+    <div class="file-card">
+      <div class="file-card-left">
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" color="#ff6b35">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+        </div>
+        <div class="file-info">
+          <div class="file-name">Fallout76Custom.ini</div>
+          <div class="file-desc">Game configuration — archive load order, display &amp; VATS tweaks</div>
+          <span class="file-mod-tag tag-ini">.INI</span>
+        </div>
+      </div>
+      <a class="btn-download" href="Fallout76Custom.ini" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download
+      </a>
+    </div>
+
+    <div class="file-card">
+      <div class="file-card-left">
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" color="#00d4ff">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+        </div>
+        <div class="file-info">
+          <div class="file-name">BuffsMeter.json</div>
+          <div class="file-desc">BuffsMeter — active effects display, checklist, XP/score bars</div>
+          <span class="file-mod-tag tag-json">.JSON · BuffsMeter</span>
+        </div>
+      </div>
+      <a class="btn-download" href="BuffsMeter.json" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download
+      </a>
+    </div>
+
+    <div class="file-card">
+      <div class="file-card-left">
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" color="#00d4ff">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+        </div>
+        <div class="file-info">
+          <div class="file-name">HUDCondition.json</div>
+          <div class="file-desc">HUD Condition — armor piece condition tracker with color gradients</div>
+          <span class="file-mod-tag tag-json">.JSON · HUDCondition</span>
+        </div>
+      </div>
+      <a class="btn-download" href="HUDCondition.json" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download
+      </a>
+    </div>
+
+    <div class="file-card">
+      <div class="file-card-left">
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" color="#00ff9d">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+        </div>
+        <div class="file-info">
+          <div class="file-name">HUDEditor.xml</div>
+          <div class="file-desc">HUD Editor (iHUD) — element repositioning, scaling &amp; immersive tweaks</div>
+          <span class="file-mod-tag tag-xml">.XML · HUDEditor</span>
+        </div>
+      </div>
+      <a class="btn-download" href="HUDEditor.xml" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download
+      </a>
+    </div>
+
+    <div class="file-card">
+      <div class="file-card-left">
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" color="#00d4ff">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+        </div>
+        <div class="file-info">
+          <div class="file-name">HUDPlayerList.json</div>
+          <div class="file-desc">Server Player List — player display, vendor data, sort &amp; colors</div>
+          <span class="file-mod-tag tag-json">.JSON · HUDPlayerList</span>
+        </div>
+      </div>
+      <a class="btn-download" href="HUDPlayerList.json" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download
+      </a>
+    </div>
+
+    <div class="file-card">
+      <div class="file-card-left">
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" color="#00d4ff">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+        </div>
+        <div class="file-info">
+          <div class="file-name">hudimprovedbars.json</div>
+          <div class="file-desc">Improved Bars &amp; HUD — widgets, colors, segments &amp; percentages</div>
+          <span class="file-mod-tag tag-json">.JSON · ImprovedBars</span>
+        </div>
+      </div>
+      <a class="btn-download" href="hudimprovedbars.json" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download
+      </a>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-text">
+      ravencaller213 &nbsp;·&nbsp; <a href="https://next.nexusmods.com/profile/ravencaller213" target="_blank">Nexus Profile</a>
+    </div>
+    <div class="footer-text">
+      <span class="footer-blink"></span>
+    </div>
+  </footer>
+
+</body>
+</html>
