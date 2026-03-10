@@ -400,11 +400,56 @@
       50%       { opacity: 0; }
     }
 
+    /* ── BUTTON GROUP ── */
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+      align-items: center;
+    }
+
+    .btn-copy {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Orbitron', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      background: transparent;
+      border: 1px solid rgba(0,255,157,0.35);
+      padding: 9px 18px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+
+    .btn-copy:hover {
+      color: #fff;
+      border-color: var(--accent2);
+      background: rgba(0,255,157,0.08);
+    }
+
+    .btn-copy.copied {
+      color: #fff;
+      border-color: var(--accent2);
+      background: rgba(0,255,157,0.15);
+    }
+
+    .btn-copy svg {
+      width: 12px;
+      height: 12px;
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
       header, .instructions, .section-header, .file-grid, footer { padding-left: 20px; padding-right: 20px; }
       .file-card { flex-direction: column; align-items: flex-start; }
-      .btn-download { align-self: flex-end; }
+      .btn-group { align-self: flex-end; }
       h1 { font-size: 22px; }
     }
   </style>
@@ -414,7 +459,7 @@
   <header>
     <div class="header-tag">// FO76 · HUD MOD CONFIG PACK</div>
     <h1>ravencaller213's <span>ButBetter</span> Collection</h1>
-    <p class="header-sub">CONFIG FILES &nbsp;·&nbsp; DOWNLOAD &amp; RENAME &nbsp;·&nbsp; REPLACE </p>
+    <p class="header-sub">CONFIG FILES &nbsp;·&nbsp; DOWNLOAD &amp; REPLACE &nbsp;·&nbsp; NO MANUAL EDITS REQUIRED</p>
     <div class="header-line"></div>
   </header>
 
@@ -443,19 +488,21 @@
           </svg>
         </div>
         <div class="file-info">
-          <div class="file-name">260310-Fallout76Custom.ini</div>
+          <div class="file-name">Fallout76Custom.ini</div>
           <div class="file-desc">Game configuration — archive load order, display &amp; VATS tweaks</div>
           <span class="file-mod-tag tag-ini">.INI</span>
         </div>
       </div>
-      <a class="btn-download" href="Fallout76Custom.ini" download>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download
-      </a>
+      <div class="btn-group">
+        <button class="btn-copy" data-file="Fallout76Custom.ini">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+        <a class="btn-download" href="Fallout76Custom.ini" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </a>
+      </div>
     </div>
 
     <div class="file-card">
@@ -467,19 +514,21 @@
           </svg>
         </div>
         <div class="file-info">
-          <div class="file-name">0310-1.4.0_BuffsMeter.json</div>
+          <div class="file-name">BuffsMeter.json</div>
           <div class="file-desc">BuffsMeter — active effects display, checklist, XP/score bars</div>
           <span class="file-mod-tag tag-json">.JSON · BuffsMeter</span>
         </div>
       </div>
-      <a class="btn-download" href="BuffsMeter.json" download>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download
-      </a>
+      <div class="btn-group">
+        <button class="btn-copy" data-file="BuffsMeter.json">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+        <a class="btn-download" href="BuffsMeter.json" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </a>
+      </div>
     </div>
 
     <div class="file-card">
@@ -491,19 +540,21 @@
           </svg>
         </div>
         <div class="file-info">
-          <div class="file-name">0310-HUDCondition.json</div>
+          <div class="file-name">HUDCondition.json</div>
           <div class="file-desc">HUD Condition — armor piece condition tracker with color gradients</div>
           <span class="file-mod-tag tag-json">.JSON · HUDCondition</span>
         </div>
       </div>
-      <a class="btn-download" href="HUDCondition.json" download>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download
-      </a>
+      <div class="btn-group">
+        <button class="btn-copy" data-file="HUDCondition.json">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+        <a class="btn-download" href="HUDCondition.json" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </a>
+      </div>
     </div>
 
     <div class="file-card">
@@ -515,19 +566,21 @@
           </svg>
         </div>
         <div class="file-info">
-          <div class="file-name">0310-HUDEditor.xml</div>
+          <div class="file-name">HUDEditor.xml</div>
           <div class="file-desc">HUD Editor (iHUD) — element repositioning, scaling &amp; immersive tweaks</div>
           <span class="file-mod-tag tag-xml">.XML · HUDEditor</span>
         </div>
       </div>
-      <a class="btn-download" href="HUDEditor.xml" download>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download
-      </a>
+      <div class="btn-group">
+        <button class="btn-copy" data-file="HUDEditor.xml">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+        <a class="btn-download" href="HUDEditor.xml" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </a>
+      </div>
     </div>
 
     <div class="file-card">
@@ -539,19 +592,21 @@
           </svg>
         </div>
         <div class="file-info">
-          <div class="file-name">0310-HUDPlayerList.json</div>
+          <div class="file-name">HUDPlayerList.json</div>
           <div class="file-desc">Server Player List — player display, vendor data, sort &amp; colors</div>
           <span class="file-mod-tag tag-json">.JSON · HUDPlayerList</span>
         </div>
       </div>
-      <a class="btn-download" href="HUDPlayerList.json" download>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download
-      </a>
+      <div class="btn-group">
+        <button class="btn-copy" data-file="HUDPlayerList.json">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+        <a class="btn-download" href="HUDPlayerList.json" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </a>
+      </div>
     </div>
 
     <div class="file-card">
@@ -563,19 +618,21 @@
           </svg>
         </div>
         <div class="file-info">
-          <div class="file-name">0310-hudimprovedbars.json</div>
+          <div class="file-name">hudimprovedbars.json</div>
           <div class="file-desc">Improved Bars &amp; HUD — widgets, colors, segments &amp; percentages</div>
           <span class="file-mod-tag tag-json">.JSON · ImprovedBars</span>
         </div>
       </div>
-      <a class="btn-download" href="hudimprovedbars.json" download>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download
-      </a>
+      <div class="btn-group">
+        <button class="btn-copy" data-file="hudimprovedbars.json">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+        <a class="btn-download" href="hudimprovedbars.json" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </a>
+      </div>
     </div>
 
   </div>
@@ -589,5 +646,30 @@
     </div>
   </footer>
 
+  <script>
+    const BASE = 'https://raw.githubusercontent.com/ravencaller213/ravencaller213.github.io/main/';
+
+    document.querySelectorAll('.btn-copy').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const file = btn.dataset.file;
+        const originalHTML = btn.innerHTML;
+        try {
+          const res = await fetch(BASE + file);
+          if (!res.ok) throw new Error('Fetch failed');
+          const text = await res.text();
+          await navigator.clipboard.writeText(text);
+          btn.classList.add('copied');
+          btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+          setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.innerHTML = originalHTML;
+          }, 2000);
+        } catch (e) {
+          btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Error`;
+          setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+        }
+      });
+    });
+  </script>
 </body>
 </html>
