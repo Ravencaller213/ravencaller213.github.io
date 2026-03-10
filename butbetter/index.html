@@ -545,7 +545,6 @@
   <div class="instructions">
     <div class="instructions-box">
       Place each downloaded file in its mod's config directory, replacing the existing file.<br>
-      Default path for most HUD mod configs: <strong>%LOCALAPPDATA%\Fallout76\</strong> or the mod's own folder inside your load order.<br>
       Refer to the collection description on Nexus for exact file locations per mod.
     </div>
   </div>
@@ -569,7 +568,7 @@
           </div>
           <div class="file-info">
             <div class="file-name">Fallout76Custom.ini</div>
-            <div class="file-desc">Game configuration — archive load order, display &amp; VATS tweaks</div>
+            <div class="file-desc">Game configuration — load order, display &amp; VATS tweaks</div>
             <span class="file-mod-tag tag-ini">.INI</span>
           </div>
         </div>
@@ -591,7 +590,8 @@
         <div class="file-card-body-inner">
           <div class="file-card-notes">
             <div class="file-card-notes-text">
-              <p>Placeholder — add your notes for Fallout76Custom.ini here.</p>
+              <p>In the [Archive] section, sResourceIndexFileList is primarily visual and audio mods. sResourceArchive2List is primarily animation and functionality mods.<br>
+              If you notice a mod not showing up in your game, move the ba2 file lower in the list it's in to make it load later, move it higher in the list to load sooner.</p>
             </div>
           </div>
         </div>
@@ -631,7 +631,7 @@
         <div class="file-card-body-inner">
           <div class="file-card-notes">
             <div class="file-card-notes-text">
-              <p>Placeholder — add your notes for BuffsMeter.json here.</p>
+              <p>As of 10 MAR 2026, SFE has not been updated for the Backwoods patch. Follow the instructions on the mod page to use without SFE.</p>
             </div>
           </div>
         </div>
@@ -671,7 +671,7 @@
         <div class="file-card-body-inner">
           <div class="file-card-notes">
             <div class="file-card-notes-text">
-              <p>Placeholder — add your notes for HUDCondition.json here.</p>
+              <p>My current HUDCondition JSON is for a female character using HUDCondition Vault Girl Pack. If you are playing male and don't want female images, feel free to copy everything except the BackgroundImage and Parts sections. </p>
             </div>
           </div>
         </div>
@@ -711,7 +711,12 @@
         <div class="file-card-body-inner">
           <div class="file-card-notes">
             <div class="file-card-notes-text">
-              <p>Placeholder — add your notes for HUDEditor.xml here.</p>
+              <p>I've edited the comments to make them more easily searchable, as the sections are grouped by position and colors.<br>
+			  Some things you might want to move on your own for tweaking that aren't self-explanatory:<br>
+			  TeamPanel - this is the panel for team HP cards when in a team.
+			  QuickLoot, Frobber, RollOver - all control interact prompts for different things. I can't distinguish Frobber from RollOver, so good luck.<br>
+			  HpMeter - found in the LeftMeters section, it's your HP bar.<br>
+			  ActiveEffects - these are the icons for active effects - found in RightMeters</p>
             </div>
           </div>
         </div>
@@ -751,7 +756,7 @@
         <div class="file-card-body-inner">
           <div class="file-card-notes">
             <div class="file-card-notes-text">
-              <p>Placeholder — add your notes for HUDPlayerList.json here.</p>
+              <p>Mine is configured to show items I want first, then the player's name. Rearrange the "format" on line 69 to your liking.</p>
             </div>
           </div>
         </div>
@@ -791,7 +796,7 @@
         <div class="file-card-body-inner">
           <div class="file-card-notes">
             <div class="file-card-notes-text">
-              <p>Placeholder — add your notes for hudimprovedbars.json here.</p>
+              <p>Fairly self-explanatory. Very well commented and the author is constantly on the Posts of the mod page. No real notes.</p>
             </div>
           </div>
         </div>
