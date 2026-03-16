@@ -35,7 +35,7 @@
 	
 	"disableRealTimeEdit": false, // Update 1.0.8
 	
-	"hideSFEMessage": true,
+	"prioritizeHUDToolsSyncOverSFE": true, // 1.4.1, HUDMODLOADER ONLY, DO NOT ENABLE THIS IF YOUR WIDGET IS LOADED IN OVERLAY LAYER - IT WILL STOP WORKING
 	
 	
 	// PIPBOY SETTINGS (Update 1.1.6)
@@ -159,13 +159,8 @@
 	"checklistCompareMode": "contains", // Options: starts, exact, contains (Update 1.2.4)
 	"checklist": [ // Update 1.0.7
 		["Int food", "Brain Bombs", "brain fungus soup", "Broiled Scorchbeast Brain"],
-		["XP food", "Cranberry Relish", "Cranberry Cobbler", "Tasty Squirrel Stew", "Canned Meat Stew"],
-		["Rested", "well rested", "kindred spirit", "lover's embrace"],
-		"Wisdom of the Mothman",
-		"Intelligence Boost",
-		"Bobblehead: Leader",
-		"Live & Love 8",
-		"Berry Mentats"
+		["XP food", "Cranberry Relish", "Cranberry Cobbler", "Tasty Squirrel Stew", "Canned Meat Stew","Cranberry Juice"],
+		["Rested", "well rested", "kindred spirit", "lover's embrace"]
 	],
 	
 	"durationBar": {
