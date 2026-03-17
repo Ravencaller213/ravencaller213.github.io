@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kkachi — Flashcards</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;700&family=Noto+Sans+KR:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #0d0d0f;
+      --surface:   #13131a;
+      --surface2:  #1a1a24;
+      --border:    #2a2a38;
+      --accent:    #c9a84c;
+      --accent-dim:#7a6230;
+      --text:      #e8e4d9;
+      --muted:     #7a7870;
+      --green:     #4caf7d;
+      --red:       #c0392b;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Cormorant Garamond', serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 4rem;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* ── nav ── */
+    nav {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .nav-logo {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.4rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .nav-meta {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .nav-back {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--accent); }
+
+    /* ── toolbar ── */
+    .toolbar {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 2;
+      flex-wrap: wrap;
+    }
+
+    .list-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--muted);
+      flex: 1;
+    }
+
+    .btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn:hover { border-color: var(--accent-dim); color: var(--accent); }
+    .btn.active { border-color: var(--accent); color: var(--accent); }
+
+    /* ── progress bar ── */
+    .progress-wrap {
+      width: 100%;
+      max-width: 760px;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .progress-stats {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar {
+      height: 2px;
+      background: var(--border);
+      width: 100%;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.4s ease;
+    }
+
+    .progress-pips {
+      display: flex;
+      gap: 3px;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .pip {
+      width: 8px;
+      height: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      transition: background 0.3s;
+    }
+    .pip.seen    { background: var(--accent-dim); border-color: var(--accent-dim); }
+    .pip.current { background: var(--accent);     border-color: var(--accent); }
+
+    /* ── card scene ── */
+    .scene {
+      width: 100%;
+      max-width: 760px;
+      height: 320px;
+      perspective: 1200px;
+      cursor: pointer;
+      position: relative;
+      z-index: 2;
+      margin-bottom: 1rem;
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-inner.flipped       { transform: rotateY(180deg); }
+    .card-inner.flipped2      { transform: rotateY(360deg); }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem;
+      gap: 0.75rem;
+      transition: border-color 0.3s;
+    }
+
+    .scene:hover .card-face { border-color: var(--accent-dim); }
+
+    .card-face.back  { transform: rotateY(180deg); }
+    .card-face.back2 { transform: rotateY(180deg); } /* third side stacked on back */
+
+    /* For 3-sided: we use a different approach - swap content on same faces */
+
+    .card-label {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent-dim);
+      position: absolute;
+      top: 1.25rem;
+      left: 1.75rem;
+    }
+
+    .card-side-indicator {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--border);
+      position: absolute;
+      top: 1.25rem;
+      right: 1.75rem;
+    }
+
+    .card-main {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 400;
+      text-align: center;
+      line-height: 1.3;
+      color: var(--text);
+    }
+
+    .card-main.english {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .card-hint {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .tap-hint {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--border);
+      position: absolute;
+      bottom: 1.25rem;
+      right: 1.75rem;
+    }
+
+    /* ── controls ── */
+    .controls {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      position: relative;
+      z-index: 2;
+      margin-top: 0.5rem;
+    }
+
+    .ctrl-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+      min-width: 100px;
+    }
+    .ctrl-btn:hover  { border-color: var(--accent-dim); color: var(--accent); }
+    .ctrl-btn:active { transform: scale(0.98); }
+
+    .card-counter {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--muted);
+      text-align: center;
+      min-width: 80px;
+    }
+
+    /* ── keyboard hints ── */
+    .key-hints {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    .key-hint {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    kbd {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 0.15rem 0.4rem;
+      font-size: 0.6rem;
+      font-family: monospace;
+      color: var(--text);
+    }
+
+    /* ── done screen ── */
+    #done-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 760px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .done-kanji {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 4rem;
+      color: var(--accent);
+    }
+
+    .done-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+    }
+
+    .done-sub {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── loading / error ── */
+    #status {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.8rem;
+      color: var(--muted);
+      position: relative;
+      z-index: 2;
+      margin-top: 4rem;
+      letter-spacing: 0.1em;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="../index.html">까치</a>
+    <span class="nav-meta" id="nav-list-name">—</span>
+    <a class="nav-back" href="../index.html">← Home</a>
+  </nav>
+
+  <div id="status">Loading cards…</div>
+
+  <div id="app" class="hidden" style="width:100%;max-width:760px;display:flex;flex-direction:column;align-items:center;gap:0;">
+
+    <div class="toolbar">
+      <span class="list-title" id="list-title"></span>
+      <button class="btn" id="btn-shuffle">Shuffle</button>
+      <button class="btn" id="btn-reset">Reset</button>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-stats">
+        <span id="prog-seen">0 seen</span>
+        <span id="prog-count"></span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="progress-pips" id="prog-pips"></div>
+    </div>
+
+    <div class="scene" id="scene" role="button" aria-label="Flip card" tabindex="0">
+      <div class="card-inner" id="card-inner">
+        <div class="card-face front" id="face-front">
+          <span class="card-label" id="front-label">한국어</span>
+          <span class="card-side-indicator" id="front-side">1 / 2</span>
+          <div class="card-main" id="front-text"></div>
+          <div class="card-hint" id="front-hint"></div>
+          <span class="tap-hint">tap or space to flip</span>
+        </div>
+        <div class="card-face back" id="face-back">
+          <span class="card-label" id="back-label">English</span>
+          <span class="card-side-indicator" id="back-side">2 / 2</span>
+          <div class="card-main english" id="back-text"></div>
+          <div class="card-hint" id="back-hint"></div>
+          <span class="tap-hint" id="back-tap">tap or space to flip</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="ctrl-btn" id="btn-prev">← Prev</button>
+      <span class="card-counter" id="counter">1 / 1</span>
+      <button class="ctrl-btn" id="btn-next">Next →</button>
+    </div>
+
+    <div class="key-hints">
+      <span class="key-hint"><kbd>Space</kbd> flip</span>
+      <span class="key-hint"><kbd>→</kbd> next</span>
+      <span class="key-hint"><kbd>←</kbd> prev</span>
+      <span class="key-hint"><kbd>S</kbd> shuffle</span>
+      <span class="key-hint"><kbd>R</kbd> reset</span>
+    </div>
+
+  </div>
+
+  <div id="done-screen">
+    <div class="done-kanji">完</div>
+    <div class="done-title">Deck complete.</div>
+    <div class="done-sub" id="done-sub"></div>
+    <button class="ctrl-btn" id="btn-restart" style="margin-top:1rem;">Start Over</button>
+  </div>
+
+  <script>
+    // ── state ──────────────────────────────────────────────────────────────
+    let allCards   = [];
+    let deck       = [];
+    let index      = 0;
+    let side       = 0;   // 0=hangul, 1=english, 2=hanja
+    let seen       = new Set();
+    let flipState  = 0;   // tracks cumulative flips for CSS class cycling
+    let listTitle  = '';
+
+    // ── URL param ──────────────────────────────────────────────────────────
+    function getListParam() {
+      const p = new URLSearchParams(window.location.search);
+      return p.get('list') || 'vocabulary';
+    }
+
+    // ── load ───────────────────────────────────────────────────────────────
+    async function loadDeck() {
+      const listName = getListParam();
+      const url = `../lists/${listName}.json`;
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        allCards  = data.cards;
+        listTitle = data.meta?.title || listName;
+        document.title = `Kkachi — ${listTitle}`;
+        document.getElementById('nav-list-name').textContent = listTitle;
+        document.getElementById('list-title').textContent    = listTitle;
+        deck = [...allCards];
+        document.getElementById('status').classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+        buildPips();
+        showCard();
+      } catch (e) {
+        document.getElementById('status').textContent = `Failed to load list "${listName}". Check the URL and try again.`;
+      }
+    }
+
+    // ── pips ───────────────────────────────────────────────────────────────
+    function buildPips() {
+      const wrap = document.getElementById('prog-pips');
+      wrap.innerHTML = '';
+      deck.forEach((_, i) => {
+        const pip = document.createElement('div');
+        pip.className = 'pip';
+        pip.id = `pip-${i}`;
+        wrap.appendChild(pip);
+      });
+    }
+
+    function updateProgress() {
+      const total  = deck.length;
+      const nSeen  = seen.size;
+      const pct    = total ? (nSeen / total * 100) : 0;
+      document.getElementById('prog-fill').style.width = pct + '%';
+      document.getElementById('prog-seen').textContent  = `${nSeen} seen`;
+      document.getElementById('prog-count').textContent = `${index + 1} of ${total}`;
+      document.getElementById('counter').textContent    = `${index + 1} / ${total}`;
+      deck.forEach((_, i) => {
+        const pip = document.getElementById(`pip-${i}`);
+        if (!pip) return;
+        pip.className = 'pip' + (i === index ? ' current' : seen.has(i) ? ' seen' : '');
+      });
+    }
+
+    // ── show card ──────────────────────────────────────────────────────────
+    function showCard() {
+      const card   = deck[index];
+      const ci     = document.getElementById('card-inner');
+      const sides  = sidesFor(card);
+
+      // reset flip to front
+      ci.className   = 'card-inner';
+      flipState      = 0;
+      side           = 0;
+
+      renderFront(card, sides);
+      renderBack(card, sides);
+      updateProgress();
+    }
+
+    function sidesFor(card) {
+      // Always: 0=hangul, 1=english, 2=hanja (only if present)
+      return card.hanja
+        ? ['hangul', 'english', 'hanja']
+        : ['hangul', 'english'];
+    }
+
+    function labelFor(s) {
+      return { hangul: '한국어', english: 'English', hanja: '한자' }[s];
+    }
+
+    function contentFor(card, s) {
+      return { hangul: card.hangul, english: card.english, hanja: card.hanja }[s];
+    }
+
+    function isEnglish(s) { return s === 'english'; }
+
+    function renderFront(card, sides) {
+      const s = sides[0];
+      document.getElementById('front-label').textContent = labelFor(s);
+      document.getElementById('front-side').textContent  = `1 / ${sides.length}`;
+      const ft = document.getElementById('front-text');
+      ft.textContent  = contentFor(card, s);
+      ft.className    = 'card-main' + (isEnglish(s) ? ' english' : '');
+      document.getElementById('front-hint').textContent  = '';
+    }
+
+    function renderBack(card, sides) {
+      // back face always shows side index 1
+      const s = sides[1];
+      document.getElementById('back-label').textContent = labelFor(s);
+      document.getElementById('back-side').textContent  = `2 / ${sides.length}`;
+      const bt = document.getElementById('back-text');
+      bt.textContent  = contentFor(card, s);
+      bt.className    = 'card-main' + (isEnglish(s) ? ' english' : '');
+      document.getElementById('back-hint').textContent  = '';
+      // show tap hint only if there's a 3rd side
+      document.getElementById('back-tap').style.opacity = sides.length > 2 ? '1' : '0.3';
+    }
+
+    // ── flip ───────────────────────────────────────────────────────────────
+    function flip() {
+      const card  = deck[index];
+      const sides = sidesFor(card);
+      const ci    = document.getElementById('card-inner');
+
+      side = (side + 1) % sides.length;
+
+      if (side === 0) {
+        // full rotation back to front — use 360 trick
+        ci.className = 'card-inner flipped2';
+        setTimeout(() => { ci.className = 'card-inner'; }, 560);
+        renderFront(card, sides);
+        renderBack(card, sides);
+        return;
+      }
+
+      if (side === 1) {
+        // front → back
+        ci.className = 'card-inner flipped';
+        renderBack(card, sides);
+        return;
+      }
+
+      if (side === 2) {
+        // back → third side: swap back content, flip back to "front" visually
+        // we do: complete the 360 first half, then show side 2 on front
+        ci.className = 'card-inner flipped2';
+        // update front face with hanja while mid-rotation
+        setTimeout(() => {
+          document.getElementById('front-label').textContent = labelFor(sides[2]);
+          document.getElementById('front-side').textContent  = `3 / 3`;
+          const ft = document.getElementById('front-text');
+          ft.textContent = contentFor(card, sides[2]);
+          ft.className   = 'card-main';
+          document.getElementById('front-hint').textContent = '';
+          ci.className = 'card-inner';
+        }, 275);
+      }
+    }
+
+    // ── navigation ────────────────────────────────────────────────────────
+    function goNext() {
+      seen.add(index);
+      if (index < deck.length - 1) {
+        index++;
+        showCard();
+      } else {
+        showDone();
+      }
+    }
+
+    function goPrev() {
+      if (index > 0) { index--; showCard(); }
+    }
+
+    function shuffle() {
+      // Fisher-Yates
+      for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+      }
+      index = 0;
+      seen.clear();
+      buildPips();
+      showCard();
+    }
+
+    function reset() {
+      deck  = [...allCards];
+      index = 0;
+      seen.clear();
+      buildPips();
+      showCard();
+      document.getElementById('done-screen').style.display = 'none';
+      document.getElementById('app').classList.remove('hidden');
+    }
+
+    // ── done ──────────────────────────────────────────────────────────────
+    function showDone() {
+      document.getElementById('app').classList.add('hidden');
+      const ds = document.getElementById('done-screen');
+      ds.style.display = 'flex';
+      document.getElementById('done-sub').textContent =
+        `${deck.length} cards reviewed — ${listTitle}`;
+    }
+
+    // ── event listeners ───────────────────────────────────────────────────
+    document.getElementById('scene').addEventListener('click', flip);
+    document.getElementById('scene').addEventListener('keydown', e => {
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flip(); }
+    });
+    document.getElementById('btn-next').addEventListener('click', goNext);
+    document.getElementById('btn-prev').addEventListener('click', goPrev);
+    document.getElementById('btn-shuffle').addEventListener('click', shuffle);
+    document.getElementById('btn-reset').addEventListener('click', reset);
+    document.getElementById('btn-restart').addEventListener('click', reset);
+
+    document.addEventListener('keydown', e => {
+      if (e.target.tagName === 'BUTTON') return;
+      if (e.key === ' ')          { e.preventDefault(); flip(); }
+      else if (e.key === 'ArrowRight') goNext();
+      else if (e.key === 'ArrowLeft')  goPrev();
+      else if (e.key === 's' || e.key === 'S') shuffle();
+      else if (e.key === 'r' || e.key === 'R') reset();
+    });
+
+    // ── init ──────────────────────────────────────────────────────────────
+    loadDeck();
+  </script>
+</body>
+</html>

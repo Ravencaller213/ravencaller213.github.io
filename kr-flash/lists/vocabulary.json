@@ -1,0 +1,1379 @@
+{
+  "meta": {
+    "title": "Random Vocabulary",
+    "description": "Mixed subject Korean vocabulary",
+    "count": 274
+  },
+  "cards": [
+    {
+      "hangul": "~ㄹ 줄 알다",
+      "english": "know how to do",
+      "hanja": null
+    },
+    {
+      "hangul": "협력",
+      "english": "collaboration (cooperation)",
+      "hanja": "協力"
+    },
+    {
+      "hangul": "합병증",
+      "english": "complications (medical)",
+      "hanja": "合倂症"
+    },
+    {
+      "hangul": "동반질병",
+      "english": "comorbidity",
+      "hanja": "同伴疾病"
+    },
+    {
+      "hangul": "고민하다",
+      "english": "to worry (strong, agonizing worry)",
+      "hanja": "苦悶"
+    },
+    {
+      "hangul": "우려하다",
+      "english": "to worry (less than 고민)",
+      "hanja": "憂慮"
+    },
+    {
+      "hangul": "~고 싶어하다",
+      "english": "someone else wants to do ~",
+      "hanja": null
+    },
+    {
+      "hangul": "~고 싶지 않다",
+      "english": "someone else doesn't want to ~",
+      "hanja": null
+    },
+    {
+      "hangul": "쌓이다",
+      "english": "to increase (by piling up, cumulate)",
+      "hanja": null
+    },
+    {
+      "hangul": "상징이다",
+      "english": "to be symbolic (상징 - symbol)",
+      "hanja": "象徵"
+    },
+    {
+      "hangul": "화끈화끈하다",
+      "english": "to be way spicy",
+      "hanja": null
+    },
+    {
+      "hangul": "맛이 얼얼하다",
+      "english": "to have a tingling taste",
+      "hanja": null
+    },
+    {
+      "hangul": "매콤하다",
+      "english": "to be spicy",
+      "hanja": null
+    },
+    {
+      "hangul": "후끈후끈하다",
+      "english": "to be pretty spicy",
+      "hanja": null
+    },
+    {
+      "hangul": "뻘뻘",
+      "english": "profusely",
+      "hanja": null
+    },
+    {
+      "hangul": "흘리다",
+      "english": "to spill (like tears overflowing)",
+      "hanja": null
+    },
+    {
+      "hangul": "더욱",
+      "english": "more (further)",
+      "hanja": null
+    },
+    {
+      "hangul": "소비자",
+      "english": "consumer",
+      "hanja": "消費者"
+    },
+    {
+      "hangul": "까다롭다",
+      "english": "complex (intricate)_",
+      "hanja": null
+    },
+    {
+      "hangul": "유기농",
+      "english": "organic",
+      "hanja": "有機農"
+    },
+    {
+      "hangul": "하품",
+      "english": "to yawn (not low quality item)",
+      "hanja": null
+    },
+    {
+      "hangul": "하품 (下品)",
+      "english": "low quality item (not to yawn)",
+      "hanja": "下品"
+    },
+    {
+      "hangul": "매력",
+      "english": "appeal (charm, attraction)",
+      "hanja": "魅力"
+    },
+    {
+      "hangul": "백해무익",
+      "english": "no benefit at all",
+      "hanja": "百害無益"
+    },
+    {
+      "hangul": "아까",
+      "english": "a moment ago (just now, recent past)",
+      "hanja": null
+    },
+    {
+      "hangul": "저렴하다",
+      "english": "to be cheap (sino for 싸다)",
+      "hanja": "低廉"
+    },
+    {
+      "hangul": "꾸준하다",
+      "english": "to be steady",
+      "hanja": null
+    },
+    {
+      "hangul": "모시고 오다",
+      "english": "to bring (존댓말 for 데리고 오다)",
+      "hanja": null
+    },
+    {
+      "hangul": "갖다주다",
+      "english": "another form of 가지고 오다",
+      "hanja": null
+    },
+    {
+      "hangul": "원망",
+      "english": "resentment (bitterness)",
+      "hanja": "怨望"
+    },
+    {
+      "hangul": "달라다",
+      "english": "to ask (beg, request, plead)",
+      "hanja": null
+    },
+    {
+      "hangul": "혼란스럽다",
+      "english": "to be confused",
+      "hanja": null
+    },
+    {
+      "hangul": "진지를 잡수시다",
+      "english": "to eat (존댓말)",
+      "hanja": null
+    },
+    {
+      "hangul": "수면을 주무시다",
+      "english": "to sleep (존댓말)",
+      "hanja": null
+    },
+    {
+      "hangul": "결석",
+      "english": "absence (하다 to be absent)",
+      "hanja": "缺席"
+    },
+    {
+      "hangul": "출석",
+      "english": "presence (하다 to be present)",
+      "hanja": "出席"
+    },
+    {
+      "hangul": "밤새도록",
+      "english": "all night long",
+      "hanja": null
+    },
+    {
+      "hangul": "춘하추동",
+      "english": "four seasons (hanja representation)",
+      "hanja": "春夏秋冬"
+    },
+    {
+      "hangul": "점차",
+      "english": "gradually",
+      "hanja": "漸次"
+    },
+    {
+      "hangul": "확대하다 (되다)",
+      "english": "to enlarge (to be enlarged)",
+      "hanja": "擴大"
+    },
+    {
+      "hangul": "각별하다",
+      "english": "to be special (extraordinary)",
+      "hanja": "各別"
+    },
+    {
+      "hangul": "성추행",
+      "english": "sexual harassment",
+      "hanja": "性醜行"
+    },
+    {
+      "hangul": "성폭행",
+      "english": "sexual assault",
+      "hanja": "性暴行"
+    },
+    {
+      "hangul": "경질론을 일축하다",
+      "english": "to turn down replacement",
+      "hanja": "更迭론을 일蹴하다"
+    },
+    {
+      "hangul": "격노",
+      "english": "rage (fury, violent anger, wrath)",
+      "hanja": "激怒"
+    },
+    {
+      "hangul": "방지대책",
+      "english": "plan for prevention",
+      "hanja": "防止 對策"
+    },
+    {
+      "hangul": "경질하다",
+      "english": "to replace (change)",
+      "hanja": "更迭하다"
+    },
+    {
+      "hangul": "장관을 경질하다",
+      "english": "to change a minister (like Minister of War/Minister of State, etc)",
+      "hanja": "長官을 更迭하다"
+    },
+    {
+      "hangul": "철저하다",
+      "english": "to be thorough (exhaustive)",
+      "hanja": "徹底하다"
+    },
+    {
+      "hangul": "엄정하다",
+      "english": "impartial (rigid, fair, strict)",
+      "hanja": "嚴正하다"
+    },
+    {
+      "hangul": "무관심",
+      "english": "indifferent",
+      "hanja": "無關心"
+    },
+    {
+      "hangul": "지속하다",
+      "english": "to continue (persist)",
+      "hanja": "持續하다"
+    },
+    {
+      "hangul": "신생아",
+      "english": "newborn baby",
+      "hanja": "新生兒"
+    },
+    {
+      "hangul": "아기",
+      "english": "kid (toddler)",
+      "hanja": null
+    },
+    {
+      "hangul": "소년 (소녀)",
+      "english": "kid (up to 10)",
+      "hanja": "少年 (少女)"
+    },
+    {
+      "hangul": "청소년",
+      "english": "adolescent",
+      "hanja": "靑少年"
+    },
+    {
+      "hangul": "총년",
+      "english": "young adult",
+      "hanja": null
+    },
+    {
+      "hangul": "장년",
+      "english": "middle aged adult",
+      "hanja": "壯年"
+    },
+    {
+      "hangul": "노년",
+      "english": "elder",
+      "hanja": "老年"
+    },
+    {
+      "hangul": "사인",
+      "english": "cause of death",
+      "hanja": "死因"
+    },
+    {
+      "hangul": "서거",
+      "english": "death (demise)",
+      "hanja": "逝去"
+    },
+    {
+      "hangul": "끔찍하다",
+      "english": "to be horrible (cruseom, horrible)",
+      "hanja": null
+    },
+    {
+      "hangul": "자기 연민",
+      "english": "self-pity",
+      "hanja": "自己憐憫"
+    },
+    {
+      "hangul": "무기징역",
+      "english": "life sentence",
+      "hanja": "無期懲役"
+    },
+    {
+      "hangul": "분노",
+      "english": "fury (rage, violent anger; similar to 격노)",
+      "hanja": "憤怒"
+    },
+    {
+      "hangul": "기적",
+      "english": "miracle (whistle, wonder)",
+      "hanja": "奇跡"
+    },
+    {
+      "hangul": "사악하다",
+      "english": "evil",
+      "hanja": "邪惡하다"
+    },
+    {
+      "hangul": "악랄하다",
+      "english": "evil (악 is first syllable in this one)",
+      "hanja": "惡辣하다"
+    },
+    {
+      "hangul": "슬며시",
+      "english": "lightly (slowly, gently, secretly)",
+      "hanja": null
+    },
+    {
+      "hangul": "떨어뜨리다",
+      "english": "to drop (leave out, leave behind)",
+      "hanja": null
+    },
+    {
+      "hangul": "정액제",
+      "english": "flat rate system",
+      "hanja": "定額制"
+    },
+    {
+      "hangul": "임대료",
+      "english": "rent fee (for a lease)",
+      "hanja": "賃貸料"
+    },
+    {
+      "hangul": "매출",
+      "english": "sale",
+      "hanja": "賣出"
+    },
+    {
+      "hangul": "폐기",
+      "english": "scrapping (discard, denouncement)",
+      "hanja": "廢棄"
+    },
+    {
+      "hangul": "절벽",
+      "english": "cliff",
+      "hanja": "絕壁"
+    },
+    {
+      "hangul": "굴러 떠러지다",
+      "english": "to roll down (tumble, fall)",
+      "hanja": null
+    },
+    {
+      "hangul": "흔적",
+      "english": "trace (mark)",
+      "hanja": "痕跡"
+    },
+    {
+      "hangul": "추측하다",
+      "english": "to guess",
+      "hanja": "推測하다"
+    },
+    {
+      "hangul": "건네다",
+      "english": "to pass over(hand over, speak to)",
+      "hanja": null
+    },
+    {
+      "hangul": "박히다",
+      "english": "to be hammered into (to have something drilled into)",
+      "hanja": null
+    },
+    {
+      "hangul": "생생하다",
+      "english": "to be fresh (vivid, graphic)",
+      "hanja": "生生"
+    },
+    {
+      "hangul": "쇳조각",
+      "english": "piece of iron",
+      "hanja": null
+    },
+    {
+      "hangul": "충실하다",
+      "english": "substantial (full, solid)",
+      "hanja": "忠實하다"
+    },
+    {
+      "hangul": "위신",
+      "english": "dignity (prestige)",
+      "hanja": "威信"
+    },
+    {
+      "hangul": "힘겹다",
+      "english": "to be difficult (strenuous, arduous)",
+      "hanja": null
+    },
+    {
+      "hangul": "푸념",
+      "english": "complaining",
+      "hanja": null
+    },
+    {
+      "hangul": "몰두하다",
+      "english": "to be absorbed",
+      "hanja": "沒頭하다"
+    },
+    {
+      "hangul": "할부금",
+      "english": "installment",
+      "hanja": "割賦金"
+    },
+    {
+      "hangul": "당연히",
+      "english": "naturally (fairly, rightly, justly)",
+      "hanja": "當然히"
+    },
+    {
+      "hangul": "몹시",
+      "english": "seriously (hard; ~~ 좋지 않다)",
+      "hanja": null
+    },
+    {
+      "hangul": "연극곡연",
+      "english": "play recital",
+      "hanja": "演劇 公演"
+    },
+    {
+      "hangul": "난처하다",
+      "english": "to be awkward (embarrassing)",
+      "hanja": "難處하다"
+    },
+    {
+      "hangul": "전구",
+      "english": "bulb (light bulb)",
+      "hanja": "電球"
+    },
+    {
+      "hangul": "끼우다",
+      "english": "to insert (stick in, fasten, lace)",
+      "hanja": null
+    },
+    {
+      "hangul": "자랑스럽다",
+      "english": "to be proud",
+      "hanja": null
+    },
+    {
+      "hangul": "녀석",
+      "english": "guy (fellow; highly informal)",
+      "hanja": null
+    },
+    {
+      "hangul": "피로회복",
+      "english": "recovery from fatigue",
+      "hanja": "疲勞 回復"
+    },
+    {
+      "hangul": "충분하다",
+      "english": "to be sufficient (similar to 만족하다)",
+      "hanja": "充分하다"
+    },
+    {
+      "hangul": "자세를 갖추다",
+      "english": "have posture",
+      "hanja": "姿勢를 갖추다"
+    },
+    {
+      "hangul": "정신이 번쩍들다",
+      "english": "to suddenly come to senses (come to life)",
+      "hanja": "精神이"
+    },
+    {
+      "hangul": "4 더하기 2는 6",
+      "english": "4+2=6",
+      "hanja": null
+    },
+    {
+      "hangul": "3 곱하기 3은 9",
+      "english": "3x3=9",
+      "hanja": null
+    },
+    {
+      "hangul": "10 빼기 8은 2",
+      "english": "10-8=2",
+      "hanja": null
+    },
+    {
+      "hangul": "10 나누기 2는",
+      "english": "10 divided by 2",
+      "hanja": null
+    },
+    {
+      "hangul": "부익부 빈익빈",
+      "english": "rich get richer, poor get poorer",
+      "hanja": "富益富貧益貧"
+    },
+    {
+      "hangul": "대졸",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "황당하다",
+      "english": "to be absurd",
+      "hanja": "荒唐하다"
+    },
+    {
+      "hangul": "신경 쓰다",
+      "english": "to be nervous",
+      "hanja": "神經 쓰다"
+    },
+    {
+      "hangul": "긴장하다",
+      "english": "to be tense",
+      "hanja": "緊張하다"
+    },
+    {
+      "hangul": "쫄쫄",
+      "english": "sound of an empty stomach",
+      "hanja": null
+    },
+    {
+      "hangul": "팍팍 채우다",
+      "english": "to pack to the brim",
+      "hanja": null
+    },
+    {
+      "hangul": "홀딱",
+      "english": "deeply (madly, completely - positive)",
+      "hanja": null
+    },
+    {
+      "hangul": "말랑말랑",
+      "english": "very soft",
+      "hanja": null
+    },
+    {
+      "hangul": "바짝",
+      "english": "almost burnt (texture)",
+      "hanja": null
+    },
+    {
+      "hangul": "알다시피",
+      "english": "as you see (존댓말)",
+      "hanja": null
+    },
+    {
+      "hangul": "왜소하다",
+      "english": "very small",
+      "hanja": "矮小하다"
+    },
+    {
+      "hangul": "장수",
+      "english": "longevity (오래 사는것)",
+      "hanja": null
+    },
+    {
+      "hangul": "환갑잔치 (회갑잔치)",
+      "english": "60 birthday feast",
+      "hanja": null
+    },
+    {
+      "hangul": "이해유익",
+      "english": "opposite of 백해무익",
+      "hanja": "一害有益"
+    },
+    {
+      "hangul": "의식주",
+      "english": "necessities of life (clothing, food, shelter)",
+      "hanja": "衣食住"
+    },
+    {
+      "hangul": "집적거리다 (찝적거리다)",
+      "english": "flirt (harass, tease)",
+      "hanja": null
+    },
+    {
+      "hangul": "치근덕거리다",
+      "english": "to come on to (hit on, make a pass at)",
+      "hanja": null
+    },
+    {
+      "hangul": "꼬시다",
+      "english": "flirt (coax, sweet-talk)",
+      "hanja": null
+    },
+    {
+      "hangul": "작업 걸다 (들어가다)",
+      "english": "flirt (hit-on, pick up)",
+      "hanja": null
+    },
+    {
+      "hangul": "도주 (죄)",
+      "english": "escape (leaving the scene crime)",
+      "hanja": "逃走 (罪)"
+    },
+    {
+      "hangul": "조치",
+      "english": "action",
+      "hanja": "措置"
+    },
+    {
+      "hangul": "무죄",
+      "english": "not guilty",
+      "hanja": "無罪"
+    },
+    {
+      "hangul": "유죄",
+      "english": "guilty",
+      "hanja": "有罪"
+    },
+    {
+      "hangul": "빈집털이",
+      "english": "sneakthieving (stealing from a house when the occupants aren't there)",
+      "hanja": null
+    },
+    {
+      "hangul": "기승을 부리다",
+      "english": "to rage (as in to run rampant, 확산해있다)",
+      "hanja": null
+    },
+    {
+      "hangul": "해가 지다 (딸이 지다)",
+      "english": "sun sets (moon sets)",
+      "hanja": null
+    },
+    {
+      "hangul": "해가 뜨다 (딸이 뜨다)",
+      "english": "sun rises (moon rises)",
+      "hanja": null
+    },
+    {
+      "hangul": "일출",
+      "english": "sunrise",
+      "hanja": "日出"
+    },
+    {
+      "hangul": "일물",
+      "english": "sunset",
+      "hanja": "日入"
+    },
+    {
+      "hangul": "월출",
+      "english": "moonrise",
+      "hanja": "月出"
+    },
+    {
+      "hangul": "월물",
+      "english": "moonset",
+      "hanja": "月入"
+    },
+    {
+      "hangul": "급사하다 (急死)",
+      "english": "sudden death",
+      "hanja": "急死"
+    },
+    {
+      "hangul": "급사 (給仕)",
+      "english": "clerk (errand boy)",
+      "hanja": "給仕"
+    },
+    {
+      "hangul": "금사빠",
+      "english": "lovestruck (falls in love easily)",
+      "hanja": null
+    },
+    {
+      "hangul": "증명하다",
+      "english": "verify (testify, give proof)",
+      "hanja": "證明하다"
+    },
+    {
+      "hangul": "배신자",
+      "english": "traitor",
+      "hanja": "背信者"
+    },
+    {
+      "hangul": "위독하다",
+      "english": "to be in critical condition  (~ 한 상태 - critical condition; 중태 비슷한 말)",
+      "hanja": "危篤하다"
+    },
+    {
+      "hangul": "별거",
+      "english": "legally separated",
+      "hanja": "別居"
+    },
+    {
+      "hangul": "돌씽",
+      "english": "\"coming up single\" (이혼하는 사람 slang)",
+      "hanja": null
+    },
+    {
+      "hangul": "불이 겨져 있어요",
+      "english": "to lose energy (피고해지다 비슷한 말)",
+      "hanja": null
+    },
+    {
+      "hangul": "예인하다",
+      "english": "to tow (물속)",
+      "hanja": "曳引"
+    },
+    {
+      "hangul": "견인하다",
+      "english": "to tow (길에)",
+      "hanja": "牽引하다"
+    },
+    {
+      "hangul": "무용하다",
+      "english": "to dance (sino)",
+      "hanja": "舞踊"
+    },
+    {
+      "hangul": "~에 따라 다르다",
+      "english": "to depend on ~",
+      "hanja": null
+    },
+    {
+      "hangul": "주문하다",
+      "english": "to cast a spell",
+      "hanja": "呪文하다"
+    },
+    {
+      "hangul": "유람선",
+      "english": "cruise ship",
+      "hanja": "遊覽船"
+    },
+    {
+      "hangul": "편도",
+      "english": "one-way",
+      "hanja": "片道"
+    },
+    {
+      "hangul": "왕복",
+      "english": "round trip",
+      "hanja": "往復"
+    },
+    {
+      "hangul": "편도염",
+      "english": "tonsillitis",
+      "hanja": "扁桃炎"
+    },
+    {
+      "hangul": "골다공증",
+      "english": "osteoporosis",
+      "hanja": "骨多孔症"
+    },
+    {
+      "hangul": "구인광고",
+      "english": "help wanted ad",
+      "hanja": "求人廣告"
+    },
+    {
+      "hangul": "주의력 결핍 및 과잉 행동 장애",
+      "english": "ADHD",
+      "hanja": null
+    },
+    {
+      "hangul": "바람을 피우다",
+      "english": "to have an affair",
+      "hanja": null
+    },
+    {
+      "hangul": "취하다",
+      "english": "to be drunk",
+      "hanja": null
+    },
+    {
+      "hangul": "~을 따다",
+      "english": "to pick (a fruit)",
+      "hanja": null
+    },
+    {
+      "hangul": "인사",
+      "english": "personnel matters (HR affairs)",
+      "hanja": "人事"
+    },
+    {
+      "hangul": "계곡",
+      "english": "valley",
+      "hanja": "溪谷"
+    },
+    {
+      "hangul": "피서",
+      "english": "vacation to avoid heat",
+      "hanja": null
+    },
+    {
+      "hangul": "단풍들다",
+      "english": "leaves changing color in the fall",
+      "hanja": null
+    },
+    {
+      "hangul": "고유하다",
+      "english": "unique",
+      "hanja": "固有하다"
+    },
+    {
+      "hangul": "사찰",
+      "english": "Buddhist temple",
+      "hanja": "寺刹"
+    },
+    {
+      "hangul": "띄워주다",
+      "english": "to flatter",
+      "hanja": null
+    },
+    {
+      "hangul": "찡그리다",
+      "english": "to frown",
+      "hanja": null
+    },
+    {
+      "hangul": "전세 (專貰) 내다",
+      "english": "to charter (as in \"charter a plane\")",
+      "hanja": "專貰"
+    },
+    {
+      "hangul": "전세 (戰勢)",
+      "english": "war situation",
+      "hanja": "戰勢"
+    },
+    {
+      "hangul": "하루",
+      "english": "1 day",
+      "hanja": null
+    },
+    {
+      "hangul": "이틀",
+      "english": "2 days",
+      "hanja": null
+    },
+    {
+      "hangul": "사흘",
+      "english": "3 days",
+      "hanja": null
+    },
+    {
+      "hangul": "나흘",
+      "english": "4 days",
+      "hanja": null
+    },
+    {
+      "hangul": "닷새",
+      "english": "5 days",
+      "hanja": null
+    },
+    {
+      "hangul": "엿새",
+      "english": "6 days",
+      "hanja": null
+    },
+    {
+      "hangul": "이레",
+      "english": "7 days",
+      "hanja": null
+    },
+    {
+      "hangul": "여드레",
+      "english": "8 days",
+      "hanja": null
+    },
+    {
+      "hangul": "아흐레",
+      "english": "9 days",
+      "hanja": null
+    },
+    {
+      "hangul": "열흘",
+      "english": "10 days",
+      "hanja": null
+    },
+    {
+      "hangul": "많게는",
+      "english": "up to",
+      "hanja": null
+    },
+    {
+      "hangul": "적게는 + #",
+      "english": "from #",
+      "hanja": null
+    },
+    {
+      "hangul": "판사",
+      "english": "judge",
+      "hanja": null
+    },
+    {
+      "hangul": "검사",
+      "english": "prosecutor",
+      "hanja": null
+    },
+    {
+      "hangul": "피고인 (피고)",
+      "english": "defendant",
+      "hanja": null
+    },
+    {
+      "hangul": "법원",
+      "english": "court",
+      "hanja": null
+    },
+    {
+      "hangul": "원고인 (원고)",
+      "english": "plaintiff",
+      "hanja": null
+    },
+    {
+      "hangul": "사형",
+      "english": "death penalty",
+      "hanja": null
+    },
+    {
+      "hangul": "판결",
+      "english": "verdict",
+      "hanja": null
+    },
+    {
+      "hangul": "집들이",
+      "english": "housewarming",
+      "hanja": null
+    },
+    {
+      "hangul": "생노병사",
+      "english": "life cycle (born, age, sick, death)",
+      "hanja": null
+    },
+    {
+      "hangul": "게으르다",
+      "english": "to be lazy",
+      "hanja": null
+    },
+    {
+      "hangul": "성숙하다",
+      "english": "to be mature",
+      "hanja": null
+    },
+    {
+      "hangul": "겸손하다",
+      "english": "to be humble (modest, unassuming)",
+      "hanja": null
+    },
+    {
+      "hangul": "고개를 숙이다",
+      "english": "to lower one's head (show humility)",
+      "hanja": null
+    },
+    {
+      "hangul": "넓다",
+      "english": "to be wide",
+      "hanja": null
+    },
+    {
+      "hangul": "좁다",
+      "english": "to be narrow",
+      "hanja": null
+    },
+    {
+      "hangul": "비중",
+      "english": "importance (중요",
+      "hanja": "比重"
+    },
+    {
+      "hangul": "백전백승",
+      "english": "100 battles 100 victories (usu. ref to Adm. Lee)",
+      "hanja": null
+    },
+    {
+      "hangul": "분수대",
+      "english": "water fountain",
+      "hanja": null
+    },
+    {
+      "hangul": "폭포",
+      "english": "waterfall",
+      "hanja": null
+    },
+    {
+      "hangul": "미흡하다",
+      "english": "inadequate (insufficient, unsatisfactory)",
+      "hanja": "未洽하다"
+    },
+    {
+      "hangul": "석탄 발전소",
+      "english": "coal power plant",
+      "hanja": "石炭 發電所"
+    },
+    {
+      "hangul": "수면",
+      "english": "sleep (slumber)",
+      "hanja": "睡眠"
+    },
+    {
+      "hangul": "식수",
+      "english": "drinking water",
+      "hanja": "食水"
+    },
+    {
+      "hangul": "낭만이 없다",
+      "english": "to have no sense of romance",
+      "hanja": "浪漫"
+    },
+    {
+      "hangul": "위생",
+      "english": "hygeine (sanitation)",
+      "hanja": null
+    },
+    {
+      "hangul": "누명을 쓰다",
+      "english": "to be treated unfairly (wrongfully accused)",
+      "hanja": null
+    },
+    {
+      "hangul": "형용사",
+      "english": "adjective",
+      "hanja": null
+    },
+    {
+      "hangul": "신앙",
+      "english": "faith",
+      "hanja": null
+    },
+    {
+      "hangul": "진주",
+      "english": "pearl",
+      "hanja": null
+    },
+    {
+      "hangul": "예의",
+      "english": "manners",
+      "hanja": null
+    },
+    {
+      "hangul": "거울",
+      "english": "mirror",
+      "hanja": null
+    },
+    {
+      "hangul": "언행",
+      "english": "words and actions (언어 행동)",
+      "hanja": null
+    },
+    {
+      "hangul": "표시",
+      "english": "expression (visual)",
+      "hanja": null
+    },
+    {
+      "hangul": "인격",
+      "english": "personality",
+      "hanja": null
+    },
+    {
+      "hangul": "형제",
+      "english": "siblings",
+      "hanja": null
+    },
+    {
+      "hangul": "친척",
+      "english": "blood family",
+      "hanja": null
+    },
+    {
+      "hangul": "은혜",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "협조",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "성경",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "구름",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "천둥",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "숭늉",
+      "english": "hot rice water (made from boiling a pot with 누룽지 in it)",
+      "hanja": null
+    },
+    {
+      "hangul": "의복",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "참외",
+      "english": "korean melon (simliar to honeydew)",
+      "hanja": null
+    },
+    {
+      "hangul": "기분",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "설거지",
+      "english": "dish-washing",
+      "hanja": null
+    },
+    {
+      "hangul": "아점저",
+      "english": "brunch (3자)",
+      "hanja": null
+    },
+    {
+      "hangul": "아점",
+      "english": "brunch (2자)",
+      "hanja": null
+    },
+    {
+      "hangul": "재량",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "대기자 명단",
+      "english": "waiting list",
+      "hanja": null
+    },
+    {
+      "hangul": "썩다",
+      "english": "to be rotten",
+      "hanja": null
+    },
+    {
+      "hangul": "충고하다",
+      "english": "to advise",
+      "hanja": null
+    },
+    {
+      "hangul": "동거",
+      "english": "cohabitation",
+      "hanja": null
+    },
+    {
+      "hangul": "불감증",
+      "english": "insensibility",
+      "hanja": null
+    },
+    {
+      "hangul": "안전 불감증",
+      "english": "ignoring safety (being reckless)",
+      "hanja": null
+    },
+    {
+      "hangul": "대접하다",
+      "english": "to treat someone (to food, drink, etc)",
+      "hanja": null
+    },
+    {
+      "hangul": "화해하다",
+      "english": "to reconcile (make up)",
+      "hanja": null
+    },
+    {
+      "hangul": "엄지",
+      "english": "thumb",
+      "hanja": null
+    },
+    {
+      "hangul": "새끼",
+      "english": "child (pinky finger)",
+      "hanja": null
+    },
+    {
+      "hangul": "무속신앙",
+      "english": "Muism (korean shamanism)",
+      "hanja": null
+    },
+    {
+      "hangul": "유괴",
+      "english": "abduction",
+      "hanja": null
+    },
+    {
+      "hangul": "소식이 끊기다",
+      "english": "to lose contact (with someone)",
+      "hanja": null
+    },
+    {
+      "hangul": "인적이 끊기다",
+      "english": "no human trace",
+      "hanja": null
+    },
+    {
+      "hangul": "떼",
+      "english": "group (like a flock of birds)",
+      "hanja": null
+    },
+    {
+      "hangul": "철저히",
+      "english": "totally (완전히)",
+      "hanja": null
+    },
+    {
+      "hangul": "들놀이",
+      "english": "picnic",
+      "hanja": null
+    },
+    {
+      "hangul": "장미",
+      "english": "rose",
+      "hanja": null
+    },
+    {
+      "hangul": "미역",
+      "english": "seaweed",
+      "hanja": null
+    },
+    {
+      "hangul": "인격",
+      "english": "personality (attitude, character)",
+      "hanja": null
+    },
+    {
+      "hangul": "서반아어",
+      "english": "spanish (language)",
+      "hanja": null
+    },
+    {
+      "hangul": "상당",
+      "english": "equivalent to",
+      "hanja": null
+    },
+    {
+      "hangul": "인근",
+      "english": "IVO",
+      "hanja": null
+    },
+    {
+      "hangul": "인상착의",
+      "english": "physical description",
+      "hanja": null
+    },
+    {
+      "hangul": "인질",
+      "english": "hostage",
+      "hanja": null
+    },
+    {
+      "hangul": "자백하다",
+      "english": "to confess (ie, legal crime)",
+      "hanja": null
+    },
+    {
+      "hangul": "고백하다",
+      "english": "to confess (ie, one's love)",
+      "hanja": null
+    },
+    {
+      "hangul": "재판부 (신판부)",
+      "english": "panel of judges",
+      "hanja": null
+    },
+    {
+      "hangul": "저리르다",
+      "english": "to commit (a crime, an action - ie, 자살을 저지르다, 죄를 저지르다)",
+      "hanja": null
+    },
+    {
+      "hangul": "전하다",
+      "english": "to report (tell)",
+      "hanja": null
+    },
+    {
+      "hangul": "중태 바지다",
+      "english": "to be in critical condition",
+      "hanja": null
+    },
+    {
+      "hangul": "본사",
+      "english": "headquarters",
+      "hanja": null
+    },
+    {
+      "hangul": "지사",
+      "english": "branch (of a company, bank, etc)",
+      "hanja": null
+    },
+    {
+      "hangul": "망하다",
+      "english": "to perish",
+      "hanja": null
+    },
+    {
+      "hangul": "구닥다리",
+      "english": "outdated (obsolete, old)",
+      "hanja": null
+    },
+    {
+      "hangul": "파병하다",
+      "english": "to send troops (dispatch troops)",
+      "hanja": null
+    },
+    {
+      "hangul": "소원",
+      "english": "wish",
+      "hanja": "訴願"
+    },
+    {
+      "hangul": "여쭈어",
+      "english": "to ask (존댓말)",
+      "hanja": null
+    },
+    {
+      "hangul": "한의원",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "방청객",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "이승일패",
+      "english": "two wins, one loss",
+      "hanja": null
+    },
+    {
+      "hangul": "주체사상",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "붐비다",
+      "english": "to be crowded",
+      "hanja": null
+    }
+  ]
+}
