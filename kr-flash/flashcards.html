@@ -390,7 +390,7 @@
   <nav>
     <a class="nav-logo" href="../index.html">까치</a>
     <span class="nav-meta" id="nav-list-name">—</span>
-    <a class="nav-back" href="../index.html">← Home</a>
+    <a class="nav-back" href="index.html">← Home</a>
   </nav>
 
   <div id="status">Loading cards…</div>
@@ -473,7 +473,7 @@
     // ── load ───────────────────────────────────────────────────────────────
     async function loadDeck() {
       const listName = getListParam();
-      const url = `../lists/${listName}.json`;
+      const url = `lists/${listName}.json`;
       try {
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
