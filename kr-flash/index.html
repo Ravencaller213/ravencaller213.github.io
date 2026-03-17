@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kkachi — Korean Vocabulary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;700&family=Noto+Sans+KR:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #0d0d0f;
+      --surface:   #13131a;
+      --border:    #2a2a38;
+      --accent:    #c9a84c;
+      --accent-dim:#7a6230;
+      --text:      #e8e4d9;
+      --muted:     #7a7870;
+      --red:       #c0392b;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Cormorant Garamond', serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* ── decorative vertical rule ── */
+    .vert-rule {
+      position: fixed;
+      top: 0; bottom: 0;
+      left: 3.5rem;
+      width: 1px;
+      background: var(--border);
+      z-index: 1;
+    }
+
+    /* ── header ── */
+    header {
+      position: relative;
+      z-index: 2;
+      padding: 4rem 6rem 2rem;
+      display: flex;
+      align-items: flex-end;
+      gap: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo-hangul {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      text-shadow: 0 0 60px rgba(201,168,76,0.25);
+    }
+
+    .logo-meta {
+      padding-bottom: 0.5rem;
+    }
+
+    .logo-roman {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--text);
+      letter-spacing: 0.08em;
+    }
+
+    .logo-sub {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    /* ── hero ── */
+    .hero {
+      position: relative;
+      z-index: 2;
+      padding: 5rem 6rem 4rem;
+      max-width: 900px;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent-dim);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 300;
+      line-height: 1.2;
+      color: var(--text);
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero p {
+      margin-top: 1.5rem;
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 520px;
+    }
+
+    /* ── magpie SVG ornament ── */
+    .magpie-ornament {
+      position: absolute;
+      right: 5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.07;
+      width: 260px;
+    }
+
+    /* ── card grid ── */
+    .section {
+      position: relative;
+      z-index: 2;
+      padding: 3rem 6rem 5rem;
+    }
+
+    .section-label {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent-dim);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2rem 2rem 1.75rem;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+      display: block;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(201,168,76,0.05) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover {
+      border-color: var(--accent-dim);
+      transform: translateY(-3px);
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card-icon {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 2rem;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+      display: block;
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-desc {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .card-arrow {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.75rem;
+      font-size: 1.1rem;
+      color: var(--accent-dim);
+      transition: color 0.3s, transform 0.3s;
+    }
+
+    .card:hover .card-arrow {
+      color: var(--accent);
+      transform: translate(3px, -3px);
+    }
+
+    /* download card variation */
+    .card.download .card-icon { font-size: 1.5rem; }
+
+    /* ── hanja decorative strip ── */
+    .hanja-strip {
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1.2rem 0;
+      margin: 1rem 0;
+    }
+
+    .hanja-scroll {
+      display: flex;
+      gap: 3rem;
+      animation: scroll-left 30s linear infinite;
+      white-space: nowrap;
+    }
+
+    .hanja-scroll span {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.4rem;
+      color: var(--border);
+      letter-spacing: 0.3em;
+    }
+
+    @keyframes scroll-left {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── footer ── */
+    footer {
+      position: relative;
+      z-index: 2;
+      padding: 2rem 6rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+    }
+
+    .footer-hangul {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1rem;
+      color: var(--border);
+    }
+
+    /* ── entrance animations ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.8s ease forwards;
+    }
+
+    .fade-up:nth-child(1) { animation-delay: 0.1s; }
+    .fade-up:nth-child(2) { animation-delay: 0.25s; }
+    .fade-up:nth-child(3) { animation-delay: 0.4s; }
+    .fade-up:nth-child(4) { animation-delay: 0.55s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── responsive ── */
+    @media (max-width: 700px) {
+      header, .hero, .section, footer {
+        padding-left: 5rem;
+        padding-right: 1.5rem;
+      }
+      .vert-rule { left: 2rem; }
+      .magpie-ornament { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="vert-rule"></div>
+
+  <header>
+    <div class="logo-hangul">까치</div>
+    <div class="logo-meta">
+      <div class="logo-roman">Kkachi</div>
+      <div class="logo-sub">Korean Vocabulary Study</div>
+    </div>
+  </header>
+
+  <!-- decorative scrolling hanja strip -->
+  <div class="hanja-strip">
+    <div class="hanja-scroll">
+      <span>語 言 學 習 文 字 韓 國 漢 字 한 글 언 어 학 습 문 자 한 국 한 자</span>
+      <span>語 言 學 習 文 字 韓 國 漢 字 한 글 언 어 학 습 문 자 한 국 한 자</span>
+    </div>
+  </div>
+
+  <section class="hero">
+    <!-- magpie silhouette ornament (SVG) -->
+    <svg class="magpie-ornament" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" fill="var(--text)">
+      <path d="M100 20 C80 20 60 35 55 55 C50 75 60 90 55 105 C50 120 35 130 30 150 C28 160 35 170 45 165 C55 160 60 145 70 140 C80 135 95 140 100 155 C105 140 120 135 130 140 C140 145 145 160 155 165 C165 170 172 160 170 150 C165 130 150 120 145 105 C140 90 150 75 145 55 C140 35 120 20 100 20Z M85 80 C88 75 95 73 100 76 C105 73 112 75 115 80 C118 85 115 92 110 93 C115 98 115 108 108 110 C101 112 99 108 100 103 C101 108 99 112 92 110 C85 108 85 98 90 93 C85 92 82 85 85 80Z"/>
+    </svg>
+
+    <p class="hero-eyebrow fade-up">까치 — The Magpie</p>
+    <h1 class="fade-up">
+      Study Korean vocabulary<br />
+      in <em>Hangul, English,</em><br />
+      and Hanja.
+    </h1>
+    <p class="fade-up">
+      Flashcard-based study tool with 3-sided cards supporting 한글, English, and 漢字.
+      Shuffle, track progress, and navigate by keyboard.
+    </p>
+  </section>
+
+  <section class="section">
+    <div class="section-label">Study</div>
+    <div class="card-grid">
+
+      <a class="card fade-up" href="flashcards/index.html">
+        <span class="card-icon">한</span>
+        <div class="card-title">Flashcards</div>
+        <p class="card-desc">
+          Flip through your vocabulary set.<br />
+          Hangul → English → Hanja (where applicable).<br />
+          Keyboard navigation · Shuffle · Progress tracker.
+        </p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="section-label">Downloads</div>
+    <div class="card-grid">
+
+      <a class="card download fade-up" href="lists/vocabulary.csv" download>
+        <span class="card-icon">↓</span>
+        <div class="card-title">Vocabulary List</div>
+        <p class="card-desc">
+          Full CSV — Hangul, English, Hanja.<br />
+          Compatible with Anki and other SRS tools.
+        </p>
+        <span class="card-arrow">↓</span>
+      </a>
+
+    </div>
+  </section>
+
+  <footer>
+    <p>까치 · Kkachi Korean Vocabulary</p>
+    <span class="footer-hangul">학습</span>
+  </footer>
+
+</body>
+</html>
