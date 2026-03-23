@@ -1,0 +1,284 @@
+{
+  "meta": {
+    "title": "Weather",
+    "description": "Korean vocabulary: weather",
+    "count": 55
+  },
+  "cards": [
+    {
+      "hangul": "기상",
+      "english": "Weather",
+      "hanja": null
+    },
+    {
+      "hangul": "기후",
+      "english": "climate",
+      "hanja": null
+    },
+    {
+      "hangul": "예보 (예보하다)",
+      "english": "Forecast",
+      "hanja": null
+    },
+    {
+      "hangul": "고기압",
+      "english": "High",
+      "hanja": null
+    },
+    {
+      "hangul": "저기압",
+      "english": "low pressure",
+      "hanja": null
+    },
+    {
+      "hangul": "쾌청하다",
+      "english": "Fine (clear, fair)",
+      "hanja": null
+    },
+    {
+      "hangul": "좋은 날씨",
+      "english": "Good weather",
+      "hanja": null
+    },
+    {
+      "hangul": "나쁜 날씨",
+      "english": "bad weather",
+      "hanja": null
+    },
+    {
+      "hangul": "날씨가 맑다",
+      "english": "Clear",
+      "hanja": null
+    },
+    {
+      "hangul": "날씨가 흐리다",
+      "english": "cloudy",
+      "hanja": null
+    },
+    {
+      "hangul": "끼다 (구름, 안개)",
+      "english": "To form (clouds, fog)",
+      "hanja": null
+    },
+    {
+      "hangul": "강수량 (강우량)",
+      "english": "Amount of rainfall (precipitation)",
+      "hanja": null
+    },
+    {
+      "hangul": "비가 오다 (내리다)",
+      "english": "It is raining",
+      "hanja": null
+    },
+    {
+      "hangul": "소나기",
+      "english": "(rain) shower",
+      "hanja": null
+    },
+    {
+      "hangul": "이슬비 (가랑비)",
+      "english": "Drizzle (sprinkle)",
+      "hanja": null
+    },
+    {
+      "hangul": "장마 전선 (장마철)",
+      "english": "Monsoon front (monsoon season)",
+      "hanja": null
+    },
+    {
+      "hangul": "폭설 (눈보라 )",
+      "english": "blizzard",
+      "hanja": null
+    },
+    {
+      "hangul": "함박눈",
+      "english": "Large snowflakes",
+      "hanja": null
+    },
+    {
+      "hangul": "천둥 (천둥이 치다)",
+      "english": "thunder",
+      "hanja": null
+    },
+    {
+      "hangul": "번개 (번개가 치다)",
+      "english": "lighting",
+      "hanja": null
+    },
+    {
+      "hangul": "우박이 치다 (내리다)",
+      "english": "It is hailing (lit. hail strikes/hail falls)",
+      "hanja": null
+    },
+    {
+      "hangul": "바람이 불다",
+      "english": "Wind blows",
+      "hanja": null
+    },
+    {
+      "hangul": "태풍",
+      "english": "Typhoon",
+      "hanja": null
+    },
+    {
+      "hangul": "회오리 바람",
+      "english": "Whirlwind",
+      "hanja": null
+    },
+    {
+      "hangul": "황사",
+      "english": "Yellow sand",
+      "hanja": null
+    },
+    {
+      "hangul": "따뜻하다",
+      "english": "Warm (tender)",
+      "hanja": null
+    },
+    {
+      "hangul": "포근하다",
+      "english": "cozy",
+      "hanja": null
+    },
+    {
+      "hangul": "덥다",
+      "english": "Hot",
+      "hanja": null
+    },
+    {
+      "hangul": "무덥다",
+      "english": "muggy",
+      "hanja": null
+    },
+    {
+      "hangul": "더위 (폭염)",
+      "english": "heat wave",
+      "hanja": null
+    },
+    {
+      "hangul": "시원하다",
+      "english": "Cool",
+      "hanja": null
+    },
+    {
+      "hangul": "쌀쌀하다",
+      "english": "chilly",
+      "hanja": null
+    },
+    {
+      "hangul": "춥다",
+      "english": "Cold",
+      "hanja": null
+    },
+    {
+      "hangul": "한파",
+      "english": "cold wave",
+      "hanja": null
+    },
+    {
+      "hangul": "계절",
+      "english": "season",
+      "hanja": null
+    },
+    {
+      "hangul": "봄",
+      "english": "spring",
+      "hanja": null
+    },
+    {
+      "hangul": "여름",
+      "english": "summer",
+      "hanja": null
+    },
+    {
+      "hangul": "가을",
+      "english": "autumn",
+      "hanja": null
+    },
+    {
+      "hangul": "겨울",
+      "english": "winter",
+      "hanja": null
+    },
+    {
+      "hangul": "춘하추동",
+      "english": "Four seasons (hanja)",
+      "hanja": null
+    },
+    {
+      "hangul": "파도 (물결)",
+      "english": "wave",
+      "hanja": null
+    },
+    {
+      "hangul": "파도가 (높게) 일다",
+      "english": "Waves rise",
+      "hanja": null
+    },
+    {
+      "hangul": "해상 (해상의 물결)",
+      "english": "Maritime (waves on the sea)",
+      "hanja": null
+    },
+    {
+      "hangul": "시속 (초속)",
+      "english": "Speed per hour (per second)",
+      "hanja": null
+    },
+    {
+      "hangul": "산간지방",
+      "english": "Mountain area",
+      "hanja": null
+    },
+    {
+      "hangul": "해안지방",
+      "english": "Coastland",
+      "hanja": null
+    },
+    {
+      "hangul": "내륙 지방",
+      "english": "inland",
+      "hanja": null
+    },
+    {
+      "hangul": "최고 기온 (최저 기온)",
+      "english": "Highest (lowest) temperature",
+      "hanja": null
+    },
+    {
+      "hangul": "영상 (영하)",
+      "english": "Above (below) zero",
+      "hanja": null
+    },
+    {
+      "hangul": "섭씨 (화씨)",
+      "english": "Celsius (Fahrenheit)",
+      "hanja": null
+    },
+    {
+      "hangul": "일출",
+      "english": "Sunrise",
+      "hanja": null
+    },
+    {
+      "hangul": "일몰",
+      "english": "Sunset",
+      "hanja": null
+    },
+    {
+      "hangul": "기상청",
+      "english": "weather bureau",
+      "hanja": null
+    },
+    {
+      "hangul": "꽃샘추위",
+      "english": "A sudden frost",
+      "hanja": null
+    },
+    {
+      "hangul": "천고마비",
+      "english": "autumn (\"sky is high and horses are fat\")",
+      "hanja": null
+    }
+  ]
+}

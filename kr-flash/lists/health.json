@@ -1,0 +1,439 @@
+{
+  "meta": {
+    "title": "Health",
+    "description": "Korean vocabulary: health",
+    "count": 86
+  },
+  "cards": [
+    {
+      "hangul": "병 (질환)",
+      "english": "Sickness (disease)",
+      "hanja": null
+    },
+    {
+      "hangul": "내장 (장기)",
+      "english": "organ",
+      "hanja": null
+    },
+    {
+      "hangul": "간",
+      "english": "Liver",
+      "hanja": null
+    },
+    {
+      "hangul": "폐",
+      "english": "Lung",
+      "hanja": null
+    },
+    {
+      "hangul": "위",
+      "english": "Stomach",
+      "hanja": null
+    },
+    {
+      "hangul": "심장",
+      "english": "heart",
+      "hanja": null
+    },
+    {
+      "hangul": "유전자",
+      "english": "DNA/gene",
+      "hanja": null
+    },
+    {
+      "hangul": "예방하다 (예방 주사)",
+      "english": "Prevention (immunization)",
+      "hanja": null
+    },
+    {
+      "hangul": "감기",
+      "english": "Cold",
+      "hanja": null
+    },
+    {
+      "hangul": "독감 (플루)",
+      "english": "flu",
+      "hanja": null
+    },
+    {
+      "hangul": "기승을 부리다",
+      "english": "Something is more terrible than usual",
+      "hanja": null
+    },
+    {
+      "hangul": "심장 마비",
+      "english": "Heart attack",
+      "hanja": null
+    },
+    {
+      "hangul": "식중독 (가스 중독)",
+      "english": "Food (gas) poisoning",
+      "hanja": null
+    },
+    {
+      "hangul": "중독 (게임 중독)",
+      "english": "Addiction (game/video addiction)",
+      "hanja": null
+    },
+    {
+      "hangul": "신경정신과",
+      "english": "Dept. of mental health",
+      "hanja": null
+    },
+    {
+      "hangul": "치매",
+      "english": "Dementia (Alzheimer's )",
+      "hanja": null
+    },
+    {
+      "hangul": "발병 (발병률)",
+      "english": "Occurrence of a disease (emergence rate)",
+      "hanja": null
+    },
+    {
+      "hangul": "복부 지방",
+      "english": "Abdominal fat",
+      "hanja": null
+    },
+    {
+      "hangul": "복부 비만 (뚱뚱하다)",
+      "english": "Obesity (to be fat)",
+      "hanja": null
+    },
+    {
+      "hangul": "체중 (몸무게)",
+      "english": "Body weight",
+      "hanja": null
+    },
+    {
+      "hangul": "땀",
+      "english": "sweat",
+      "hanja": null
+    },
+    {
+      "hangul": "과식",
+      "english": "Over eating",
+      "hanja": null
+    },
+    {
+      "hangul": "폭식",
+      "english": "Snack",
+      "hanja": null
+    },
+    {
+      "hangul": "군것질",
+      "english": "eating between meals",
+      "hanja": null
+    },
+    {
+      "hangul": "중풍 (뇌졸중)",
+      "english": "stroke",
+      "hanja": null
+    },
+    {
+      "hangul": "안락사 (존엄사)",
+      "english": "Euthanasia (death w/ dignity)",
+      "hanja": null
+    },
+    {
+      "hangul": "(불치가) 치유가 불가능하다",
+      "english": "Incurable",
+      "hanja": null
+    },
+    {
+      "hangul": "식욕",
+      "english": "Appetite",
+      "hanja": null
+    },
+    {
+      "hangul": "심근 경색",
+      "english": "Myocardial infarction (cardiac infarction)",
+      "hanja": null
+    },
+    {
+      "hangul": "불면증",
+      "english": "insomnia",
+      "hanja": null
+    },
+    {
+      "hangul": "보건소",
+      "english": "Public Health Center",
+      "hanja": null
+    },
+    {
+      "hangul": "어지럼증",
+      "english": "Dizziness/vertigo",
+      "hanja": null
+    },
+    {
+      "hangul": "체온",
+      "english": "Body temperature",
+      "hanja": null
+    },
+    {
+      "hangul": "신장",
+      "english": "Kidney",
+      "hanja": null
+    },
+    {
+      "hangul": "대장",
+      "english": "colon",
+      "hanja": null
+    },
+    {
+      "hangul": "의식 불명",
+      "english": "insensibility",
+      "hanja": null
+    },
+    {
+      "hangul": "백혈병",
+      "english": "Leukemia",
+      "hanja": null
+    },
+    {
+      "hangul": "감염",
+      "english": "infection",
+      "hanja": null
+    },
+    {
+      "hangul": "위장 장애",
+      "english": "Gastro enteric trouble",
+      "hanja": null
+    },
+    {
+      "hangul": "위산 분비",
+      "english": "Stomach acid secretion",
+      "hanja": null
+    },
+    {
+      "hangul": "위궤양",
+      "english": "gastric ulcer",
+      "hanja": null
+    },
+    {
+      "hangul": "당뇨병",
+      "english": "Diabetes",
+      "hanja": null
+    },
+    {
+      "hangul": "경련",
+      "english": "spasm",
+      "hanja": null
+    },
+    {
+      "hangul": "과도하다",
+      "english": "excessive",
+      "hanja": null
+    },
+    {
+      "hangul": "섭취하다",
+      "english": "Intake (ingest)",
+      "hanja": null
+    },
+    {
+      "hangul": "복용하다",
+      "english": "Take (specifically 약알을)",
+      "hanja": null
+    },
+    {
+      "hangul": "우울증 (산후 우울증, 주부 우울증)",
+      "english": "Depression (PPD, housewife depression)",
+      "hanja": null
+    },
+    {
+      "hangul": "신체 (정신) 질환",
+      "english": "Physical (mental) illness",
+      "hanja": null
+    },
+    {
+      "hangul": "헌혈",
+      "english": "Blood donation",
+      "hanja": null
+    },
+    {
+      "hangul": "생수 (약수 )",
+      "english": "Mineral water",
+      "hanja": null
+    },
+    {
+      "hangul": "기증자 (장기 기증, 안구 기증)",
+      "english": "Donor (organ donor, eye donor)",
+      "hanja": null
+    },
+    {
+      "hangul": "졸도하다",
+      "english": "Faint",
+      "hanja": null
+    },
+    {
+      "hangul": "쓰러지다",
+      "english": "Collapse (faint, breakdown)",
+      "hanja": null
+    },
+    {
+      "hangul": "정신을 잃다",
+      "english": "black out (lose consciousness)",
+      "hanja": null
+    },
+    {
+      "hangul": "의식을 잃다",
+      "english": "pass out (lose consciousness, faint, black out)",
+      "hanja": null
+    },
+    {
+      "hangul": "응급 조치",
+      "english": "First aid",
+      "hanja": null
+    },
+    {
+      "hangul": "인공 호흡",
+      "english": "CPR (mouth to mouth)",
+      "hanja": null
+    },
+    {
+      "hangul": "맥박 (~을 재다)",
+      "english": "Pulse (measure)",
+      "hanja": null
+    },
+    {
+      "hangul": "혈압 (~을 재다)",
+      "english": "blood pressure (measure)",
+      "hanja": null
+    },
+    {
+      "hangul": "혈액 검사",
+      "english": "A blood test",
+      "hanja": null
+    },
+    {
+      "hangul": "혼수 상태",
+      "english": "coma",
+      "hanja": null
+    },
+    {
+      "hangul": "뇌사",
+      "english": "Brain death",
+      "hanja": null
+    },
+    {
+      "hangul": "내과",
+      "english": "Internal medicine",
+      "hanja": null
+    },
+    {
+      "hangul": "외과",
+      "english": "surgery",
+      "hanja": null
+    },
+    {
+      "hangul": "이식 (골수 이식, 피부이식, 각막이식)",
+      "english": "Transplant (bone marrow, skin, corneal)",
+      "hanja": null
+    },
+    {
+      "hangul": "영양소",
+      "english": "nutrient",
+      "hanja": null
+    },
+    {
+      "hangul": "임신 (임신부)",
+      "english": "Pregnancy (pregnant woman)",
+      "hanja": null
+    },
+    {
+      "hangul": "출산 (저출산율)",
+      "english": "Childbirth (low birth rate)",
+      "hanja": null
+    },
+    {
+      "hangul": "단백질",
+      "english": "protein",
+      "hanja": null
+    },
+    {
+      "hangul": "자연 분만",
+      "english": "Natural childbirth",
+      "hanja": null
+    },
+    {
+      "hangul": "제왕 절개",
+      "english": "C-section",
+      "hanja": null
+    },
+    {
+      "hangul": "유산",
+      "english": "Miscarry",
+      "hanja": null
+    },
+    {
+      "hangul": "낙태",
+      "english": "abortion",
+      "hanja": null
+    },
+    {
+      "hangul": "성형 수술",
+      "english": "Plastic surgery",
+      "hanja": null
+    },
+    {
+      "hangul": "마취",
+      "english": "Anesthesia",
+      "hanja": null
+    },
+    {
+      "hangul": "최면",
+      "english": "hypnosis",
+      "hanja": null
+    },
+    {
+      "hangul": "기억 상실",
+      "english": "Loss of memory",
+      "hanja": null
+    },
+    {
+      "hangul": "유발하다",
+      "english": "Arouse/cause",
+      "hanja": null
+    },
+    {
+      "hangul": "이롭다",
+      "english": "Beneficial",
+      "hanja": null
+    },
+    {
+      "hangul": "해롭다",
+      "english": "harmful",
+      "hanja": null
+    },
+    {
+      "hangul": "만성적",
+      "english": "Chronic",
+      "hanja": null
+    },
+    {
+      "hangul": "급성",
+      "english": "acute",
+      "hanja": null
+    },
+    {
+      "hangul": "암 환자",
+      "english": "Cancer patient",
+      "hanja": null
+    },
+    {
+      "hangul": "임상 실험",
+      "english": "Clinical demonstration",
+      "hanja": null
+    },
+    {
+      "hangul": "흡연 (간접 흡연)",
+      "english": "Smoking (second hand smoking)",
+      "hanja": null
+    },
+    {
+      "hangul": "이비인후과",
+      "english": "E.N.T",
+      "hanja": null
+    }
+  ]
+}

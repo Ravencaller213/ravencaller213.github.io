@@ -1,0 +1,599 @@
+{
+  "meta": {
+    "title": "Economics",
+    "description": "Korean vocabulary: economics",
+    "count": 118
+  },
+  "cards": [
+    {
+      "hangul": "수출",
+      "english": "export",
+      "hanja": null
+    },
+    {
+      "hangul": "수입",
+      "english": "import",
+      "hanja": null
+    },
+    {
+      "hangul": "낭비하다",
+      "english": "waste",
+      "hanja": null
+    },
+    {
+      "hangul": "물가",
+      "english": "price of commodities",
+      "hanja": null
+    },
+    {
+      "hangul": "가격",
+      "english": "price (sino for 값)",
+      "hanja": null
+    },
+    {
+      "hangul": "물가 지수",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "소비",
+      "english": "consumption",
+      "hanja": null
+    },
+    {
+      "hangul": "공급",
+      "english": "supply",
+      "hanja": null
+    },
+    {
+      "hangul": "수요",
+      "english": "demand",
+      "hanja": null
+    },
+    {
+      "hangul": "수요고급",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "소비자",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "소득",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "지출",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "적자",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "흑자",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "중가하다",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "올라가다",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "늘어나다",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "감소하다",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "내려가다",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "줄어들다",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "사치하다",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "넉넉하다",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "충분하다",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "중동",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "모자라다",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "부족하다",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "신용카드",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "부체",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "빚",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "신용불량자",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "농업",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "농부",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "어업",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "수산업",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "어부",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "축산업",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "광업",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "공업",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "산업",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "제조업",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "서비스 산업",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "생필품",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "경제 성장 (률)",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "보증금",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "선진국 (후~)",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "경기 (좋다/나쁘다)",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "호경기 (불~)",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "호황 (불~)",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "시장",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "도매 (소매)",
+      "english": "",
+      "hanja": null
+    },
+    {
+      "hangul": "판매량 (~율)",
+      "english": "sales volume (rate of sales)",
+      "hanja": "販賣量 (~率)"
+    },
+    {
+      "hangul": "취업하다",
+      "english": "to be hired (get a job, be employed)",
+      "hanja": "就業하다"
+    },
+    {
+      "hangul": "취직하다",
+      "english": "to get a job (be hired, be employed)",
+      "hanja": "就職하다"
+    },
+    {
+      "hangul": "모집하다",
+      "english": "to collect (recruit)",
+      "hanja": "募集하다"
+    },
+    {
+      "hangul": "고용하다",
+      "english": "to employ",
+      "hanja": "雇用하다"
+    },
+    {
+      "hangul": "채용하다",
+      "english": "to recruit",
+      "hanja": "採用하다"
+    },
+    {
+      "hangul": "실업 (~률, ~자)",
+      "english": "unemployment (~rate, ~person)",
+      "hanja": "失業 (~率,~者)"
+    },
+    {
+      "hangul": "청년 실업자",
+      "english": "unemployed young person",
+      "hanja": "靑年 失業者"
+    },
+    {
+      "hangul": "투자하다 (~자)",
+      "english": "to invest",
+      "hanja": "投資하다 (投資社)"
+    },
+    {
+      "hangul": "대기업",
+      "english": "large company",
+      "hanja": "大企業"
+    },
+    {
+      "hangul": "재벌",
+      "english": "conglomerate",
+      "hanja": "財閥"
+    },
+    {
+      "hangul": "중소기업",
+      "english": "small and medium size businesses",
+      "hanja": "中小企業"
+    },
+    {
+      "hangul": "대졸 (고~)",
+      "english": "college graduate (high school graduate)",
+      "hanja": "大卒 (高卒)"
+    },
+    {
+      "hangul": "상품 (商品)",
+      "english": "products (goods, merchandise, commodity)",
+      "hanja": "商品"
+    },
+    {
+      "hangul": "상품 (上品)",
+      "english": "high quality product",
+      "hanja": "上品"
+    },
+    {
+      "hangul": "물건",
+      "english": "goods",
+      "hanja": "物件"
+    },
+    {
+      "hangul": "생활비",
+      "english": "living costs",
+      "hanja": "生活費"
+    },
+    {
+      "hangul": "교육비 (사~)",
+      "english": "education costs (private ~)",
+      "hanja": "敎育費 (私~)"
+    },
+    {
+      "hangul": "과외비",
+      "english": "private lesson fees",
+      "hanja": "課外費"
+    },
+    {
+      "hangul": "수입 (輸入)",
+      "english": "import (輸入)",
+      "hanja": "輸入"
+    },
+    {
+      "hangul": "수입 (收入)",
+      "english": "income (收入)",
+      "hanja": null
+    },
+    {
+      "hangul": "봉급",
+      "english": "pay (salary, wage)",
+      "hanja": "俸給"
+    },
+    {
+      "hangul": "연봉",
+      "english": "annual income",
+      "hanja": "年俸"
+    },
+    {
+      "hangul": "월급",
+      "english": "monthly salary",
+      "hanja": "月給"
+    },
+    {
+      "hangul": "임금",
+      "english": "wage (also pure for king)",
+      "hanja": "賃金"
+    },
+    {
+      "hangul": "일당",
+      "english": "daily wage",
+      "hanja": "日當"
+    },
+    {
+      "hangul": "활율",
+      "english": "exchange rate",
+      "hanja": "換率"
+    },
+    {
+      "hangul": "환전 (소)",
+      "english": "currency exchange (location)",
+      "hanja": "換錢所"
+    },
+    {
+      "hangul": "비용 (외식비, 속박비, 식비)",
+      "english": "cost (eating out expenses,",
+      "hanja": "費用"
+    },
+    {
+      "hangul": "외식비",
+      "english": "dineout expenses",
+      "hanja": "外食費"
+    },
+    {
+      "hangul": "속박비",
+      "english": "lodging expense",
+      "hanja": "宿泊費"
+    },
+    {
+      "hangul": "식비",
+      "english": "food expenses",
+      "hanja": "食費"
+    },
+    {
+      "hangul": "주거비",
+      "english": "house expenses",
+      "hanja": "住居費"
+    },
+    {
+      "hangul": "집세",
+      "english": "house rent",
+      "hanja": "집貰"
+    },
+    {
+      "hangul": "전세",
+      "english": "lump sum lease (get some back after lease)",
+      "hanja": "傳貰"
+    },
+    {
+      "hangul": "월세",
+      "english": "monthly payment",
+      "hanja": "月貰"
+    },
+    {
+      "hangul": "주택",
+      "english": "home loan (mortgage)",
+      "hanja": "住宅"
+    },
+    {
+      "hangul": "아파트",
+      "english": "apartment",
+      "hanja": null
+    },
+    {
+      "hangul": "빌라",
+      "english": "villa",
+      "hanja": null
+    },
+    {
+      "hangul": "주상복합건물",
+      "english": "multipurpose building (store on first floor, house upstairs)",
+      "hanja": "住商複合建物"
+    },
+    {
+      "hangul": "콘도",
+      "english": "condo",
+      "hanja": null
+    },
+    {
+      "hangul": "팬션",
+      "english": "pension (type of home)",
+      "hanja": null
+    },
+    {
+      "hangul": "세금",
+      "english": "tax",
+      "hanja": "稅金"
+    },
+    {
+      "hangul": "소득세",
+      "english": "income tax",
+      "hanja": "所得稅"
+    },
+    {
+      "hangul": "재산세",
+      "english": "property tax",
+      "hanja": "財産稅"
+    },
+    {
+      "hangul": "세무조사",
+      "english": "tax audit",
+      "hanja": "稅務 調査"
+    },
+    {
+      "hangul": "맞벌이 부부",
+      "english": "double-income couple",
+      "hanja": "맞벌이 夫婦"
+    },
+    {
+      "hangul": "제품",
+      "english": "goods",
+      "hanja": "製品"
+    },
+    {
+      "hangul": "품질",
+      "english": "quality",
+      "hanja": "品質"
+    },
+    {
+      "hangul": "생산공장",
+      "english": "manufacturing plant",
+      "hanja": "生産工場"
+    },
+    {
+      "hangul": "국산품",
+      "english": "domestic made product",
+      "hanja": "國産品"
+    },
+    {
+      "hangul": "외제품",
+      "english": "foreign made product",
+      "hanja": "外製品"
+    },
+    {
+      "hangul": "명품",
+      "english": "brand name product",
+      "hanja": "名品"
+    },
+    {
+      "hangul": "공장",
+      "english": "factory",
+      "hanja": "工場"
+    },
+    {
+      "hangul": "개방하다",
+      "english": "to open (bus.-open to the public)",
+      "hanja": "開放하다"
+    },
+    {
+      "hangul": "폐쇄하다",
+      "english": "to close down (bus.-go out of business)",
+      "hanja": "閉鎖하다"
+    },
+    {
+      "hangul": "용돈",
+      "english": "allowance",
+      "hanja": "用돈"
+    },
+    {
+      "hangul": "인플레이션 (인플레)",
+      "english": "inflation",
+      "hanja": null
+    },
+    {
+      "hangul": "대출을 받다",
+      "english": "to take out a loan (borrow, check out)",
+      "hanja": "貸出을 받다"
+    },
+    {
+      "hangul": "이자",
+      "english": "interest",
+      "hanja": "利子"
+    },
+    {
+      "hangul": "금리",
+      "english": "interest rate",
+      "hanja": "金利"
+    },
+    {
+      "hangul": "주택 자금용자",
+      "english": "home loan (mortgage)",
+      "hanja": "住宅資金用者"
+    },
+    {
+      "hangul": "주택자금대출회사",
+      "english": "mortgage company",
+      "hanja": "住宅資金貸出會社"
+    },
+    {
+      "hangul": "알뜰하다",
+      "english": "to be frugal (thrifty)",
+      "hanja": null
+    },
+    {
+      "hangul": "검소하다",
+      "english": "to be frugal (thrifty; has 소)",
+      "hanja": "儉素하다"
+    },
+    {
+      "hangul": "국가 경쟁력",
+      "english": "country's competitive power",
+      "hanja": "國家 競爭力"
+    },
+    {
+      "hangul": "자본 (~주의)",
+      "english": "capital (capitalism)",
+      "hanja": "資本主義"
+    }
+  ]
+}

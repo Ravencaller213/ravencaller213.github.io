@@ -1,0 +1,959 @@
+{
+  "meta": {
+    "title": "Accidents & Crime",
+    "description": "Korean vocabulary: accidents and crime",
+    "count": 190
+  },
+  "cards": [
+    {
+      "hangul": "검거하다",
+      "english": "to arrest",
+      "hanja": null
+    },
+    {
+      "hangul": "결함이 있다",
+      "english": "to have a defect",
+      "hanja": null
+    },
+    {
+      "hangul": "고의",
+      "english": "intention",
+      "hanja": null
+    },
+    {
+      "hangul": "관계자",
+      "english": "related persons",
+      "hanja": null
+    },
+    {
+      "hangul": "괴한",
+      "english": "suspicious person",
+      "hanja": null
+    },
+    {
+      "hangul": "구속영장",
+      "english": "arrest warrant",
+      "hanja": null
+    },
+    {
+      "hangul": "근절하다",
+      "english": "to root out (eradicate)",
+      "hanja": null
+    },
+    {
+      "hangul": "급발진",
+      "english": "sudden unintended acceleration",
+      "hanja": null
+    },
+    {
+      "hangul": "난동을 부리다",
+      "english": "to rage about (act violently)",
+      "hanja": null
+    },
+    {
+      "hangul": "누명을 쓰다",
+      "english": "to be accused falsely (unjustly)",
+      "hanja": null
+    },
+    {
+      "hangul": "대책",
+      "english": "countermeasure",
+      "hanja": null
+    },
+    {
+      "hangul": "마약사범",
+      "english": "druggie",
+      "hanja": null
+    },
+    {
+      "hangul": "목격자",
+      "english": "eyewitness",
+      "hanja": null
+    },
+    {
+      "hangul": "무면허",
+      "english": "unlicensed",
+      "hanja": null
+    },
+    {
+      "hangul": "및",
+      "english": "as well as (and; it's a verbal /)",
+      "hanja": null
+    },
+    {
+      "hangul": "바람에",
+      "english": "as a result of",
+      "hanja": null
+    },
+    {
+      "hangul": "밝히다",
+      "english": "to reveal",
+      "hanja": null
+    },
+    {
+      "hangul": "방화",
+      "english": "arson",
+      "hanja": null
+    },
+    {
+      "hangul": "부상을 입다",
+      "english": "to get injured",
+      "hanja": null
+    },
+    {
+      "hangul": "불구속입건",
+      "english": "indictment without detention",
+      "hanja": null
+    },
+    {
+      "hangul": "붕괴",
+      "english": "collapse",
+      "hanja": null
+    },
+    {
+      "hangul": "교통 사고",
+      "english": "Traffic accident",
+      "hanja": null
+    },
+    {
+      "hangul": "충돌 (정면 충돌)",
+      "english": "Collision (head-on collision)",
+      "hanja": null
+    },
+    {
+      "hangul": "추돌",
+      "english": "Rear end (collision)",
+      "hanja": null
+    },
+    {
+      "hangul": "뺑소니",
+      "english": "Hit and run",
+      "hanja": null
+    },
+    {
+      "hangul": "음주 운전",
+      "english": "DUI",
+      "hanja": null
+    },
+    {
+      "hangul": "혈중 알콜 농도",
+      "english": "Blood Alcohol Content",
+      "hanja": null
+    },
+    {
+      "hangul": "측정기 (측정하다)",
+      "english": "Measuring instrument (to measure)",
+      "hanja": null
+    },
+    {
+      "hangul": "운전 면허증",
+      "english": "Driver’s License",
+      "hanja": null
+    },
+    {
+      "hangul": "무면허",
+      "english": "Unlicensed",
+      "hanja": null
+    },
+    {
+      "hangul": "면허 정지",
+      "english": "Suspension of license",
+      "hanja": null
+    },
+    {
+      "hangul": "면허 취소",
+      "english": "revocation of license",
+      "hanja": null
+    },
+    {
+      "hangul": "익사",
+      "english": "drown",
+      "hanja": null
+    },
+    {
+      "hangul": "시내 버스",
+      "english": "Intracity bus (stays in the same city)",
+      "hanja": null
+    },
+    {
+      "hangul": "시외 버스",
+      "english": "Intercity bus",
+      "hanja": null
+    },
+    {
+      "hangul": "고속 버스",
+      "english": "express bus",
+      "hanja": null
+    },
+    {
+      "hangul": "승합차",
+      "english": "van",
+      "hanja": null
+    },
+    {
+      "hangul": "승용차",
+      "english": "Sedan",
+      "hanja": null
+    },
+    {
+      "hangul": "트럭",
+      "english": "Truck",
+      "hanja": null
+    },
+    {
+      "hangul": "화물열차",
+      "english": "freight train",
+      "hanja": null
+    },
+    {
+      "hangul": "오토바이",
+      "english": "Motorcycle",
+      "hanja": null
+    },
+    {
+      "hangul": "폭주족",
+      "english": "bike gang",
+      "hanja": null
+    },
+    {
+      "hangul": "자전거",
+      "english": "bicycle",
+      "hanja": null
+    },
+    {
+      "hangul": "응급차 (응급 구조 차량)",
+      "english": "Ambulance (Emergency rescue car)",
+      "hanja": null
+    },
+    {
+      "hangul": "운전자 (운전사, 운전 기사)",
+      "english": "Professional Driver (operator [like bus])",
+      "hanja": null
+    },
+    {
+      "hangul": "사고 원인",
+      "english": "Cause of accident",
+      "hanja": null
+    },
+    {
+      "hangul": "졸음 운전",
+      "english": "Dose off while driving",
+      "hanja": null
+    },
+    {
+      "hangul": "동사",
+      "english": "Frozen body",
+      "hanja": null
+    },
+    {
+      "hangul": "과속 (속도 위반)",
+      "english": "speeding",
+      "hanja": null
+    },
+    {
+      "hangul": "빙판길",
+      "english": "Icy road",
+      "hanja": null
+    },
+    {
+      "hangul": "빗길",
+      "english": "Rainy road",
+      "hanja": null
+    },
+    {
+      "hangul": "눈길",
+      "english": "Snowy road",
+      "hanja": null
+    },
+    {
+      "hangul": "중앙선 (중앙 분리대)",
+      "english": "Center line (center median)",
+      "hanja": null
+    },
+    {
+      "hangul": "제한 속도",
+      "english": "Speed limit",
+      "hanja": null
+    },
+    {
+      "hangul": "교통 단속",
+      "english": "Traffic enforcement",
+      "hanja": null
+    },
+    {
+      "hangul": "교통 통제 센타",
+      "english": "Traffic Control Center",
+      "hanja": null
+    },
+    {
+      "hangul": "교통 정체",
+      "english": "A traffic jam",
+      "hanja": null
+    },
+    {
+      "hangul": "안전띠를 매다",
+      "english": "Fasten seatbelt",
+      "hanja": null
+    },
+    {
+      "hangul": "안전 벨트를 착용하다",
+      "english": "Fasten seatbelt (lit. attach and use safety belt)",
+      "hanja": null
+    },
+    {
+      "hangul": "전복 사고 (차량 전복, 어선 전복)",
+      "english": "To flip over (vehicle, fishing boat)",
+      "hanja": null
+    },
+    {
+      "hangul": "열차가 탈선하다",
+      "english": "Train derails",
+      "hanja": null
+    },
+    {
+      "hangul": "비행기 추락",
+      "english": "Plane crash",
+      "hanja": null
+    },
+    {
+      "hangul": "승무원",
+      "english": "Crew member",
+      "hanja": null
+    },
+    {
+      "hangul": "탑승자 승객",
+      "english": "passenger",
+      "hanja": null
+    },
+    {
+      "hangul": "여객기",
+      "english": "Airliner (passenger plane)",
+      "hanja": null
+    },
+    {
+      "hangul": "항공사",
+      "english": "Airline",
+      "hanja": null
+    },
+    {
+      "hangul": "활주로",
+      "english": "runway",
+      "hanja": null
+    },
+    {
+      "hangul": "공항",
+      "english": "airport",
+      "hanja": null
+    },
+    {
+      "hangul": "비상 착륙",
+      "english": "emergency landing",
+      "hanja": null
+    },
+    {
+      "hangul": "착륙하다 –",
+      "english": "To land (a plane)",
+      "hanja": null
+    },
+    {
+      "hangul": "이륙하다",
+      "english": "Take off (departure)",
+      "hanja": null
+    },
+    {
+      "hangul": "연착하다(되다),",
+      "english": "Be late (for flights)",
+      "hanja": null
+    },
+    {
+      "hangul": "결항(되다)",
+      "english": "Cancelled (for flights)",
+      "hanja": null
+    },
+    {
+      "hangul": "자살",
+      "english": "suicide",
+      "hanja": null
+    },
+    {
+      "hangul": "투신 자살",
+      "english": "Suicide by jumping",
+      "hanja": null
+    },
+    {
+      "hangul": "음독 자살",
+      "english": "poison oneself",
+      "hanja": null
+    },
+    {
+      "hangul": "유서",
+      "english": "Last will",
+      "hanja": null
+    },
+    {
+      "hangul": "화재가 나다 (불이 나다)",
+      "english": "A fire breaks out",
+      "hanja": null
+    },
+    {
+      "hangul": "방화",
+      "english": "arson",
+      "hanja": null
+    },
+    {
+      "hangul": "소화기",
+      "english": "Fire extinguisher",
+      "hanja": null
+    },
+    {
+      "hangul": "소방차",
+      "english": "Fire truck (fire engine)",
+      "hanja": null
+    },
+    {
+      "hangul": "소방관",
+      "english": "Firefighter",
+      "hanja": null
+    },
+    {
+      "hangul": "소방서",
+      "english": "Fire station",
+      "hanja": null
+    },
+    {
+      "hangul": "구조 대원",
+      "english": "Rescue worker",
+      "hanja": null
+    },
+    {
+      "hangul": "구조 작업",
+      "english": "Rescue operation",
+      "hanja": null
+    },
+    {
+      "hangul": "출동하다",
+      "english": "To mobilize",
+      "hanja": null
+    },
+    {
+      "hangul": "누전",
+      "english": "Short circuit",
+      "hanja": null
+    },
+    {
+      "hangul": "누전 차단기",
+      "english": "circuit breaker",
+      "hanja": null
+    },
+    {
+      "hangul": "대피하다 –",
+      "english": "To evacuate",
+      "hanja": null
+    },
+    {
+      "hangul": "긴급 대피",
+      "english": "Emergency evacuation",
+      "hanja": null
+    },
+    {
+      "hangul": "전소하다 (되다)",
+      "english": "Total destruction by fire",
+      "hanja": null
+    },
+    {
+      "hangul": "보험 (보험금)",
+      "english": "Insurance (money)",
+      "hanja": null
+    },
+    {
+      "hangul": "보험 사기",
+      "english": "Insurance fraud",
+      "hanja": null
+    },
+    {
+      "hangul": "의료 보험",
+      "english": "Medical insurance",
+      "hanja": null
+    },
+    {
+      "hangul": "상해 보험",
+      "english": "Accidental insurance",
+      "hanja": null
+    },
+    {
+      "hangul": "생명 보험",
+      "english": "life insurance",
+      "hanja": null
+    },
+    {
+      "hangul": "사상자",
+      "english": "Casualties (combined total of injured and dead)",
+      "hanja": null
+    },
+    {
+      "hangul": "부상자",
+      "english": "Injured persons",
+      "hanja": null
+    },
+    {
+      "hangul": "사망자",
+      "english": "dead persons",
+      "hanja": null
+    },
+    {
+      "hangul": "중상 (경상)",
+      "english": "Heavy injury (light injury)",
+      "hanja": null
+    },
+    {
+      "hangul": "화상",
+      "english": "Burn injury",
+      "hanja": null
+    },
+    {
+      "hangul": "중태",
+      "english": "Critical condition",
+      "hanja": null
+    },
+    {
+      "hangul": "응급실",
+      "english": "emergency room",
+      "hanja": null
+    },
+    {
+      "hangul": "중환자실",
+      "english": "ICU",
+      "hanja": null
+    },
+    {
+      "hangul": "생존자",
+      "english": "survivors",
+      "hanja": null
+    },
+    {
+      "hangul": "실종",
+      "english": "Missing person",
+      "hanja": null
+    },
+    {
+      "hangul": "미끄러지다",
+      "english": "Skid, slide",
+      "hanja": null
+    },
+    {
+      "hangul": "폭발사고",
+      "english": "explosion",
+      "hanja": null
+    },
+    {
+      "hangul": "붕괴 사고 (무너지다)",
+      "english": "Collapse (to collapse)",
+      "hanja": null
+    },
+    {
+      "hangul": "기름 유출",
+      "english": "Oil spill",
+      "hanja": null
+    },
+    {
+      "hangul": "인명 피해 –",
+      "english": "Human life damage (aka casualties)",
+      "hanja": null
+    },
+    {
+      "hangul": "재산 피해",
+      "english": "property damage",
+      "hanja": null
+    },
+    {
+      "hangul": "유괴",
+      "english": "Kidnap",
+      "hanja": null
+    },
+    {
+      "hangul": "납치",
+      "english": "abduction",
+      "hanja": null
+    },
+    {
+      "hangul": "협박 전화",
+      "english": "Threatening call",
+      "hanja": null
+    },
+    {
+      "hangul": "몸값",
+      "english": "ransom",
+      "hanja": null
+    },
+    {
+      "hangul": "찌르다",
+      "english": "stab",
+      "hanja": null
+    },
+    {
+      "hangul": "~혐의로",
+      "english": "Suspicions/charge of",
+      "hanja": null
+    },
+    {
+      "hangul": "검거하다 (구속하다, 체포하다)",
+      "english": "arrest",
+      "hanja": null
+    },
+    {
+      "hangul": "입건하다",
+      "english": "To book a person on charge of ~",
+      "hanja": null
+    },
+    {
+      "hangul": "영장 발부되다",
+      "english": "Issue a warrant",
+      "hanja": null
+    },
+    {
+      "hangul": "도박 (상습 도박자)",
+      "english": "Gambling (compulsive gambler)",
+      "hanja": null
+    },
+    {
+      "hangul": "불법 복제",
+      "english": "Illegal cloning,",
+      "hanja": null
+    },
+    {
+      "hangul": "불법 환전",
+      "english": "Illegal money exchange",
+      "hanja": null
+    },
+    {
+      "hangul": "밀수 (밀입국)",
+      "english": "Smuggling (secretly enter country)",
+      "hanja": null
+    },
+    {
+      "hangul": "구속 기소하다",
+      "english": "To prosecute with detention",
+      "hanja": null
+    },
+    {
+      "hangul": "불구속 기소하다",
+      "english": "To prosecute without detention",
+      "hanja": null
+    },
+    {
+      "hangul": "마약",
+      "english": "Illegal Drugs",
+      "hanja": null
+    },
+    {
+      "hangul": "향정신성",
+      "english": "psychotropic",
+      "hanja": null
+    },
+    {
+      "hangul": "히로뽕",
+      "english": "methamphetamine",
+      "hanja": null
+    },
+    {
+      "hangul": "대마초",
+      "english": "Marijuana",
+      "hanja": null
+    },
+    {
+      "hangul": "병역 비리",
+      "english": "Military corruption",
+      "hanja": null
+    },
+    {
+      "hangul": "청탁",
+      "english": "Request",
+      "hanja": null
+    },
+    {
+      "hangul": "로비스트",
+      "english": "Lobbyist",
+      "hanja": null
+    },
+    {
+      "hangul": "강력 범죄",
+      "english": "Violent crimes",
+      "hanja": null
+    },
+    {
+      "hangul": "강도",
+      "english": "robbery",
+      "hanja": null
+    },
+    {
+      "hangul": "강간",
+      "english": "rape",
+      "hanja": null
+    },
+    {
+      "hangul": "살인",
+      "english": "murder",
+      "hanja": null
+    },
+    {
+      "hangul": "연쇄 살인 (방화)",
+      "english": "Serial killer (serial arsonist)",
+      "hanja": null
+    },
+    {
+      "hangul": "도난 (절도)",
+      "english": "Theft",
+      "hanja": null
+    },
+    {
+      "hangul": "금품을 털다",
+      "english": "Rob of money and valuables",
+      "hanja": null
+    },
+    {
+      "hangul": "강도",
+      "english": "Mugging",
+      "hanja": null
+    },
+    {
+      "hangul": "소매치기",
+      "english": "Pickpocketing",
+      "hanja": null
+    },
+    {
+      "hangul": "검문 (불심 검문)",
+      "english": "Inspection (random questioning)",
+      "hanja": null
+    },
+    {
+      "hangul": "용의자, 혐의자",
+      "english": "suspect",
+      "hanja": null
+    },
+    {
+      "hangul": "목격자 (증인)",
+      "english": "Eyewitness (witness)",
+      "hanja": null
+    },
+    {
+      "hangul": "직접 증거",
+      "english": "Direct evidence (concrete)",
+      "hanja": null
+    },
+    {
+      "hangul": "간접 증거",
+      "english": "Indirect evidence (circumstantial)",
+      "hanja": null
+    },
+    {
+      "hangul": "수사",
+      "english": "Investigation",
+      "hanja": null
+    },
+    {
+      "hangul": "단속",
+      "english": "crack down",
+      "hanja": null
+    },
+    {
+      "hangul": "범행을 자백하다",
+      "english": "To confess the crime",
+      "hanja": null
+    },
+    {
+      "hangul": "범행을 부인하다",
+      "english": "To deny the crime",
+      "hanja": null
+    },
+    {
+      "hangul": "지문 조회 (지문 검식)",
+      "english": "Fingerprinting request (analysis)",
+      "hanja": null
+    },
+    {
+      "hangul": "구타하다 (때리다)",
+      "english": "Hit (smack, beat, bop)",
+      "hanja": null
+    },
+    {
+      "hangul": "징역",
+      "english": "Prison labor",
+      "hanja": null
+    },
+    {
+      "hangul": "집행 유예",
+      "english": "probation",
+      "hanja": null
+    },
+    {
+      "hangul": "공문서 위조",
+      "english": "Forged documents",
+      "hanja": null
+    },
+    {
+      "hangul": "위조 지폐",
+      "english": "Counterfeit money",
+      "hanja": null
+    },
+    {
+      "hangul": "성폭행, ,",
+      "english": "Sexual assault",
+      "hanja": null
+    },
+    {
+      "hangul": "성추행",
+      "english": "molestation",
+      "hanja": null
+    },
+    {
+      "hangul": "성희롱",
+      "english": "harassment",
+      "hanja": null
+    },
+    {
+      "hangul": "부검",
+      "english": "autopsy",
+      "hanja": null
+    },
+    {
+      "hangul": "신병 확보",
+      "english": "To secure the person",
+      "hanja": null
+    },
+    {
+      "hangul": "보석",
+      "english": "Bail",
+      "hanja": null
+    },
+    {
+      "hangul": "보석금 신청",
+      "english": "Bail money request",
+      "hanja": null
+    },
+    {
+      "hangul": "전과자",
+      "english": "Ex-convict",
+      "hanja": null
+    },
+    {
+      "hangul": "횡령",
+      "english": "Embezzlement",
+      "hanja": null
+    },
+    {
+      "hangul": "탈세",
+      "english": "Tax evasion",
+      "hanja": null
+    },
+    {
+      "hangul": "부동산 투기 (땅 투기)",
+      "english": "Real estate liquidation",
+      "hanja": null
+    },
+    {
+      "hangul": "병역 기피",
+      "english": "Evasion of military",
+      "hanja": null
+    },
+    {
+      "hangul": "판사",
+      "english": "Judge",
+      "hanja": null
+    },
+    {
+      "hangul": "변호사",
+      "english": "lawyer",
+      "hanja": null
+    },
+    {
+      "hangul": "검사",
+      "english": "prosecutor",
+      "hanja": null
+    },
+    {
+      "hangul": "원고",
+      "english": "Plaintiff",
+      "hanja": null
+    },
+    {
+      "hangul": "피고",
+      "english": "defendant",
+      "hanja": null
+    },
+    {
+      "hangul": "정착하다",
+      "english": "to settle (fix)",
+      "hanja": null
+    },
+    {
+      "hangul": "빈고",
+      "english": "freq",
+      "hanja": "頻度"
+    },
+    {
+      "hangul": "물로",
+      "english": "of course",
+      "hanja": null
+    },
+    {
+      "hangul": "살어름판",
+      "english": "thin ice",
+      "hanja": null
+    },
+    {
+      "hangul": "깨지다",
+      "english": "to be broken",
+      "hanja": null
+    },
+    {
+      "hangul": "력부족이다",
+      "english": "to be beyond someone's ability",
+      "hanja": null
+    },
+    {
+      "hangul": "육안으로",
+      "english": "with naked eye",
+      "hanja": null
+    },
+    {
+      "hangul": "떠있다",
+      "english": "to float",
+      "hanja": null
+    },
+    {
+      "hangul": "가장자리",
+      "english": "edge",
+      "hanja": null
+    },
+    {
+      "hangul": "얇아지다",
+      "english": "to become thin",
+      "hanja": null
+    },
+    {
+      "hangul": "견디다",
+      "english": "to endure",
+      "hanja": null
+    },
+    {
+      "hangul": "꺼지다",
+      "english": "to sink (of land to sink, like a cave in/sinkhole; of fire, put out)",
+      "hanja": null
+    },
+    {
+      "hangul": "수심",
+      "english": "depth of water",
+      "hanja": null
+    },
+    {
+      "hangul": "인양하다",
+      "english": "to recover (a corpse, spec. from water)",
+      "hanja": null
+    },
+    {
+      "hangul": "무심적",
+      "english": "careless",
+      "hanja": null
+    }
+  ]
+}

@@ -1,0 +1,284 @@
+{
+  "meta": {
+    "title": "Education",
+    "description": "Korean vocabulary: education",
+    "count": 55
+  },
+  "cards": [
+    {
+      "hangul": "초등학교",
+      "english": "elementary school",
+      "hanja": null
+    },
+    {
+      "hangul": "중학교",
+      "english": "middle school",
+      "hanja": null
+    },
+    {
+      "hangul": "고등학교",
+      "english": "high school",
+      "hanja": null
+    },
+    {
+      "hangul": "대학교",
+      "english": "college (university)",
+      "hanja": null
+    },
+    {
+      "hangul": "대학원",
+      "english": "graduate school",
+      "hanja": null
+    },
+    {
+      "hangul": "전문 대학",
+      "english": "vocational college",
+      "hanja": null
+    },
+    {
+      "hangul": "유아원",
+      "english": "nursery (daycare)",
+      "hanja": null
+    },
+    {
+      "hangul": "어린이집",
+      "english": "preschool (daycare)",
+      "hanja": null
+    },
+    {
+      "hangul": "유치원 (영어 유치원)",
+      "english": "Kindergarten (English Kindergarten)",
+      "hanja": null
+    },
+    {
+      "hangul": "초등학생 (초딩)",
+      "english": "elementary school student",
+      "hanja": null
+    },
+    {
+      "hangul": "중학생 (중딩)",
+      "english": "middle school student",
+      "hanja": null
+    },
+    {
+      "hangul": "고등학생 (고딩)",
+      "english": "high school student",
+      "hanja": null
+    },
+    {
+      "hangul": "대학생",
+      "english": "college student",
+      "hanja": null
+    },
+    {
+      "hangul": "대학원생",
+      "english": "graduate school student",
+      "hanja": null
+    },
+    {
+      "hangul": "공립학교",
+      "english": "public school",
+      "hanja": null
+    },
+    {
+      "hangul": "사립학교",
+      "english": "private school",
+      "hanja": null
+    },
+    {
+      "hangul": "공교육",
+      "english": "public education",
+      "hanja": null
+    },
+    {
+      "hangul": "사교육",
+      "english": "private education",
+      "hanja": null
+    },
+    {
+      "hangul": "학비 (등록금)",
+      "english": "Tuition",
+      "hanja": null
+    },
+    {
+      "hangul": "출석",
+      "english": "present",
+      "hanja": null
+    },
+    {
+      "hangul": "결석",
+      "english": "absent",
+      "hanja": null
+    },
+    {
+      "hangul": "동창 (동창회)",
+      "english": "Alumnus (reunion)",
+      "hanja": null
+    },
+    {
+      "hangul": "입학하다 (입학생)",
+      "english": "Entrance into a school",
+      "hanja": null
+    },
+    {
+      "hangul": "재학하다 (재학생)",
+      "english": "Enrolled student",
+      "hanja": null
+    },
+    {
+      "hangul": "휴학하다 (휴학생)",
+      "english": "Students on a leave of",
+      "hanja": null
+    },
+    {
+      "hangul": "복학하다 (복학생)",
+      "english": "Student returning to",
+      "hanja": null
+    },
+    {
+      "hangul": "졸업하다 (졸업생)",
+      "english": "graduate",
+      "hanja": null
+    },
+    {
+      "hangul": "유학 (가다/오다; 유학생)",
+      "english": "study abroad (go/come; student studying abroad)",
+      "hanja": null
+    },
+    {
+      "hangul": "조기 유학생",
+      "english": "Parachute kids (early childhood studying abroad)",
+      "hanja": null
+    },
+    {
+      "hangul": "학점을 이수하다 (따다, 취득하다)",
+      "english": "Complete  credits (acquire)",
+      "hanja": null
+    },
+    {
+      "hangul": "편입하다 (편입생)",
+      "english": "Transfer schools (transfer student)",
+      "hanja": null
+    },
+    {
+      "hangul": "학기 (학기초, 학기말, 1학기, 2학기)",
+      "english": "semester (beginning of, end of, first, second)",
+      "hanja": null
+    },
+    {
+      "hangul": "학장",
+      "english": "dean",
+      "hanja": null
+    },
+    {
+      "hangul": "장학금",
+      "english": "Scholarship",
+      "hanja": null
+    },
+    {
+      "hangul": "학사",
+      "english": "BA",
+      "hanja": null
+    },
+    {
+      "hangul": "석사",
+      "english": "MA",
+      "hanja": null
+    },
+    {
+      "hangul": "박사",
+      "english": "Doctorate",
+      "hanja": null
+    },
+    {
+      "hangul": "교장",
+      "english": "principal",
+      "hanja": null
+    },
+    {
+      "hangul": "교감",
+      "english": "vice principal",
+      "hanja": null
+    },
+    {
+      "hangul": "담임 교사",
+      "english": "homeroom teacher",
+      "hanja": null
+    },
+    {
+      "hangul": "면접시험",
+      "english": "interview",
+      "hanja": null
+    },
+    {
+      "hangul": "총장",
+      "english": "Chancellor",
+      "hanja": null
+    },
+    {
+      "hangul": "필기시험",
+      "english": "written test",
+      "hanja": null
+    },
+    {
+      "hangul": "구술 시험 (구두 시험)",
+      "english": "oral test",
+      "hanja": null
+    },
+    {
+      "hangul": "상업고",
+      "english": "commercial high school (business focused)",
+      "hanja": null
+    },
+    {
+      "hangul": "특목고 (특수 목적 고등학교)",
+      "english": "special focus high school",
+      "hanja": null
+    },
+    {
+      "hangul": "선배",
+      "english": "senior",
+      "hanja": null
+    },
+    {
+      "hangul": "후배",
+      "english": "junio",
+      "hanja": null
+    },
+    {
+      "hangul": "남녀 공학",
+      "english": "Coed school",
+      "hanja": null
+    },
+    {
+      "hangul": "왕따 (~를 당하다 / 시키다)",
+      "english": "outcast (suffer ostracization / to ostracize someone)",
+      "hanja": null
+    },
+    {
+      "hangul": "집단 따돌림",
+      "english": "bullies",
+      "hanja": null
+    },
+    {
+      "hangul": "장애",
+      "english": "handicapped",
+      "hanja": null
+    },
+    {
+      "hangul": "정신지체 장애",
+      "english": "mental retardation",
+      "hanja": null
+    },
+    {
+      "hangul": "시각 장애",
+      "english": "blind",
+      "hanja": null
+    },
+    {
+      "hangul": "청각장애",
+      "english": "deaf",
+      "hanja": null
+    }
+  ]
+}

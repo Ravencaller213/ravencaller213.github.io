@@ -1,0 +1,294 @@
+{
+  "meta": {
+    "title": "Culture",
+    "description": "Korean vocabulary: culture",
+    "count": 57
+  },
+  "cards": [
+    {
+      "hangul": "관광 (-객)",
+      "english": "Tourism (tourist)",
+      "hanja": null
+    },
+    {
+      "hangul": "명소",
+      "english": "Famous spot (lit. 유명한 장소)",
+      "hanja": null
+    },
+    {
+      "hangul": "기념품",
+      "english": "Souvenir",
+      "hanja": null
+    },
+    {
+      "hangul": "입장료 (입장권)",
+      "english": "Admission fee (ticket)",
+      "hanja": null
+    },
+    {
+      "hangul": "단체 할인",
+      "english": "Group discount",
+      "hanja": null
+    },
+    {
+      "hangul": "무료 (공짜)",
+      "english": "free",
+      "hanja": null
+    },
+    {
+      "hangul": "유료",
+      "english": "For a fee",
+      "hanja": null
+    },
+    {
+      "hangul": "숙박 시설",
+      "english": "Accommodations",
+      "hanja": null
+    },
+    {
+      "hangul": "특급 호텔",
+      "english": "Five-star hotel",
+      "hanja": null
+    },
+    {
+      "hangul": "관광 호텔",
+      "english": "Tourist hotel",
+      "hanja": null
+    },
+    {
+      "hangul": "모텔",
+      "english": "Motel",
+      "hanja": null
+    },
+    {
+      "hangul": "여관",
+      "english": "Inn (usu. in rural area)",
+      "hanja": null
+    },
+    {
+      "hangul": "여인숙",
+      "english": "Inn",
+      "hanja": null
+    },
+    {
+      "hangul": "민박",
+      "english": "B&B",
+      "hanja": null
+    },
+    {
+      "hangul": "펜션",
+      "english": "Vacation cabin",
+      "hanja": null
+    },
+    {
+      "hangul": "바가지 쓰다",
+      "english": "Rip off",
+      "hanja": null
+    },
+    {
+      "hangul": "봉사료",
+      "english": "Service fee",
+      "hanja": null
+    },
+    {
+      "hangul": "외식하다",
+      "english": "To eat out (at a restaurant)",
+      "hanja": null
+    },
+    {
+      "hangul": "외식 산업",
+      "english": "Food service industry (restaurant industry)",
+      "hanja": null
+    },
+    {
+      "hangul": "면세점 (면세품)",
+      "english": "Duty free store (items)",
+      "hanja": null
+    },
+    {
+      "hangul": "놀이 공원 (놀이 동산)",
+      "english": "Amusement park",
+      "hanja": null
+    },
+    {
+      "hangul": "여행사",
+      "english": "Travel agency",
+      "hanja": null
+    },
+    {
+      "hangul": "여행 일정",
+      "english": "Itinerary",
+      "hanja": null
+    },
+    {
+      "hangul": "여행 상품",
+      "english": "Travel package",
+      "hanja": null
+    },
+    {
+      "hangul": "패키지 여행",
+      "english": "Package tour",
+      "hanja": null
+    },
+    {
+      "hangul": "테마 여행",
+      "english": "Theme travel",
+      "hanja": null
+    },
+    {
+      "hangul": "효도 관광",
+      "english": "Filial piety tourism (kids pay for parents to go on a trip)",
+      "hanja": null
+    },
+    {
+      "hangul": "성수기 (비수기)",
+      "english": "Peak season (off-season)",
+      "hanja": null
+    },
+    {
+      "hangul": "예약 확인하다 (취소하다)",
+      "english": "Confirm (cancel) a reservation",
+      "hanja": null
+    },
+    {
+      "hangul": "전시회",
+      "english": "Exhibition",
+      "hanja": null
+    },
+    {
+      "hangul": "출입국 관리",
+      "english": "Immigration control",
+      "hanja": null
+    },
+    {
+      "hangul": "여권",
+      "english": "Passport",
+      "hanja": null
+    },
+    {
+      "hangul": "비자",
+      "english": "Visa",
+      "hanja": null
+    },
+    {
+      "hangul": "환전",
+      "english": "Exchange money",
+      "hanja": null
+    },
+    {
+      "hangul": "여행자 수표",
+      "english": "Traveler’s check",
+      "hanja": null
+    },
+    {
+      "hangul": "문화재",
+      "english": "Cultural assets",
+      "hanja": null
+    },
+    {
+      "hangul": "낚시",
+      "english": "fishing",
+      "hanja": null
+    },
+    {
+      "hangul": "독서",
+      "english": "reading",
+      "hanja": null
+    },
+    {
+      "hangul": "우표수집",
+      "english": "stamp collection",
+      "hanja": null
+    },
+    {
+      "hangul": "사냥",
+      "english": "hunting",
+      "hanja": null
+    },
+    {
+      "hangul": "명절",
+      "english": "Holiday",
+      "hanja": null
+    },
+    {
+      "hangul": "추석",
+      "english": "Chusok (Korean harvest festival)",
+      "hanja": null
+    },
+    {
+      "hangul": "신정",
+      "english": "New Year’s Day (Gregorian calendar)",
+      "hanja": null
+    },
+    {
+      "hangul": "설 (설구정, 설날)",
+      "english": "lunar new year",
+      "hanja": null
+    },
+    {
+      "hangul": "대보름",
+      "english": "full moon",
+      "hanja": null
+    },
+    {
+      "hangul": "주택",
+      "english": "house",
+      "hanja": null
+    },
+    {
+      "hangul": "한옥",
+      "english": "Korean style house",
+      "hanja": null
+    },
+    {
+      "hangul": "양옥",
+      "english": "Western style house",
+      "hanja": null
+    },
+    {
+      "hangul": "매표소",
+      "english": "Ticket booth",
+      "hanja": null
+    },
+    {
+      "hangul": "예매하다",
+      "english": "To purchase in advance",
+      "hanja": null
+    },
+    {
+      "hangul": "매진되다",
+      "english": "To become sold out",
+      "hanja": null
+    },
+    {
+      "hangul": "영화제",
+      "english": "Movie festival",
+      "hanja": null
+    },
+    {
+      "hangul": "전세",
+      "english": "Deposit based rental",
+      "hanja": null
+    },
+    {
+      "hangul": "월세",
+      "english": "Monthly payment rental",
+      "hanja": null
+    },
+    {
+      "hangul": "박물관",
+      "english": "museum",
+      "hanja": null
+    },
+    {
+      "hangul": "저작권",
+      "english": "Copyright",
+      "hanja": null
+    },
+    {
+      "hangul": "저작권 침해",
+      "english": "copyright infringement",
+      "hanja": null
+    }
+  ]
+}
