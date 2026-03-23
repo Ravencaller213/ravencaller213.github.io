@@ -339,6 +339,40 @@
       color: var(--text);
     }
 
+    /* ── download dropdown ── */
+    .dl-wrap {
+      position: relative;
+    }
+
+    .dl-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 0.4rem);
+      right: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      z-index: 10;
+      min-width: 140px;
+      flex-direction: column;
+    }
+
+    .dl-dropdown.open { display: flex; }
+
+    .dl-dropdown a {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .dl-dropdown a:last-child { border-bottom: none; }
+    .dl-dropdown a:hover { color: var(--accent); background: var(--surface2); }
+
     /* ── done screen ── */
     #done-screen {
       display: none;
@@ -390,7 +424,7 @@
   <nav>
     <a class="nav-logo" href="../index.html">까치</a>
     <span class="nav-meta" id="nav-list-name">—</span>
-    <a class="nav-back" href="index.html">← Home</a>
+    <a class="nav-back" href="korean.html">← Decks</a>
   </nav>
 
   <div id="status">Loading cards…</div>
@@ -401,6 +435,13 @@
       <span class="list-title" id="list-title"></span>
       <button class="btn" id="btn-shuffle">Shuffle</button>
       <button class="btn" id="btn-reset">Reset</button>
+      <div class="dl-wrap">
+        <button class="btn" id="btn-dl">Download ↓</button>
+        <div class="dl-dropdown" id="dl-dropdown">
+          <a id="dl-json" href="#" download>JSON ↓</a>
+          <a id="dl-csv" href="#" download>CSV ↓</a>
+        </div>
+      </div>
     </div>
 
     <div class="progress-wrap">
@@ -483,6 +524,12 @@
         document.title = `Kkachi — ${listTitle}`;
         document.getElementById('nav-list-name').textContent = listTitle;
         document.getElementById('list-title').textContent    = listTitle;
+        // wire download links
+        const base = `lists/${listName}`;
+        document.getElementById('dl-json').href     = `${base}.json`;
+        document.getElementById('dl-json').download = `${listName}.json`;
+        document.getElementById('dl-csv').href      = `${base}.csv`;
+        document.getElementById('dl-csv').download  = `${listName}.csv`;
         deck = [...allCards];
         document.getElementById('status').classList.add('hidden');
         document.getElementById('app').classList.remove('hidden');
@@ -681,6 +728,15 @@
       else if (e.key === 'ArrowLeft')  goPrev();
       else if (e.key === 's' || e.key === 'S') shuffle();
       else if (e.key === 'r' || e.key === 'R') reset();
+    });
+
+    document.getElementById('btn-dl').addEventListener('click', e => {
+      e.stopPropagation();
+      document.getElementById('dl-dropdown').classList.toggle('open');
+    });
+
+    document.addEventListener('click', () => {
+      document.getElementById('dl-dropdown').classList.remove('open');
     });
 
     // ── init ──────────────────────────────────────────────────────────────

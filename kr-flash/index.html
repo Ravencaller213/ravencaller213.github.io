@@ -177,14 +177,14 @@
 
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 1.5rem;
     }
 
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      padding: 2rem 2rem 1.75rem;
+      padding: 2.5rem 2rem 2rem;
       text-decoration: none;
       color: inherit;
       position: relative;
@@ -207,17 +207,17 @@
 
     .card-icon {
       font-family: 'Noto Serif KR', serif;
-      font-size: 2rem;
+      font-size: 2.5rem;
       color: var(--accent);
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
       display: block;
     }
 
     .card-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem;
+      font-size: 1.8rem;
       font-weight: 600;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
     }
 
     .card-desc {
@@ -233,7 +233,7 @@
       font-size: 0.6rem;
       letter-spacing: 0.2em;
       color: var(--accent-dim);
-      margin-top: 0.75rem;
+      margin-top: 1rem;
     }
 
     .card-arrow {
@@ -278,13 +278,14 @@
 
     .fade-up {
       opacity: 0;
-      transform: translateY(20px);
       animation: fadeUp 0.8s ease forwards;
     }
 
     .fade-up:nth-child(1) { animation-delay: 0.1s; }
     .fade-up:nth-child(2) { animation-delay: 0.25s; }
     .fade-up:nth-child(3) { animation-delay: 0.4s; }
+
+    .gate-grid .card { min-height: 220px; }
 
     @media (max-width: 700px) {
       header, .hero, .section, footer {
@@ -327,144 +328,31 @@
     </p>
   </section>
 
-  <!-- ── FLASHCARD DECKS ─────────────────────────────────────────────── -->
   <section class="section">
-    <div class="section-label">Flashcard Decks</div>
-    <div class="card-grid" id="deck-grid">
+    <div class="section-label">Study</div>
+    <div class="card-grid gate-grid">
 
-      <!-- Add a new card block for each JSON list you add to /lists/ -->
-      <!-- Pattern: href="flashcards/index.html?list=FILENAME_WITHOUT_EXTENSION" -->
-
-      <a class="card" href="flashcards.html?list=random">
+      <a class="card" href="pages/korean.html">
         <span class="card-icon">한</span>
-        <div class="card-title">Random Vocabulary</div>
+        <div class="card-title">Korean Study</div>
         <p class="card-desc">
-          Mixed subject vocabulary.<br />
-          Hangul → English → Hanja where applicable.
+          Vocabulary flashcard decks by subject.<br />
+          Hangul · English · Hanja where applicable.
         </p>
-        <div class="card-count">274 cards</div>
+        <div class="card-count">7 decks · 835 cards</div>
         <span class="card-arrow">↗</span>
       </a>
 
-      <a class="card" href="flashcards.html?list=accidents-crime">
-        <span class="card-icon">한</span>
-        <div class="card-title">Accidents & Crime</div>
+      <a class="card" href="pages/hanja.html">
+        <span class="card-icon">漢</span>
+        <div class="card-title">Hanja Study</div>
         <p class="card-desc">
-          Police, fire and ambulances oh my.<br />
-          Hangul → English → Hanja where applicable.
+          Dedicated Hanja character study.<br />
+          Coming soon.
         </p>
-        <div class="card-count">190 cards</div>
+        <div class="card-count">—</div>
         <span class="card-arrow">↗</span>
       </a>
-	  
-      <a class="card" href="flashcards.html?list=culture">
-        <span class="card-icon">한</span>
-        <div class="card-title">Culture</div>
-        <p class="card-desc">
-          From Hanyang to Seoul<br />
-          Hangul → English → Hanja where applicable.
-        </p>
-        <div class="card-count">57 cards</div>
-        <span class="card-arrow">↗</span>
-      </a>
-	  
-	  <a class="card" href="flashcards.html?list=econ">
-        <span class="card-icon">한</span>
-        <div class="card-title">Economics</div>
-        <p class="card-desc">
-          Numbers go up; they go down<br />
-          Hangul → English → Hanja where applicable.
-        </p>
-        <div class="card-count">118 cards</div>
-        <span class="card-arrow">↗</span>
-      </a>
-	  
-	  <a class="card" href="flashcards.html?list=health">
-        <span class="card-icon">한</span>
-        <div class="card-title">Health</div>
-        <p class="card-desc">
-          Get your Wellbing here<br />
-          Hangul → English → Hanja where applicable.
-        </p>
-        <div class="card-count">86 cards</div>
-        <span class="card-arrow">↗</span>
-      </a>
-	  
-	  <a class="card" href="flashcards.html?list=weather">
-        <span class="card-icon">한</span>
-        <div class="card-title">Weather</div>
-        <p class="card-desc">
-          The frost spites the flowers.<br />
-          Hangul → English → Hanja where applicable.
-        </p>
-        <div class="card-count">55 cards</div>
-        <span class="card-arrow">↗</span>
-      </a>
-	  
-	  <a class="card" href="flashcards.html?list=education">
-        <span class="card-icon">한</span>
-        <div class="card-title">Education</div>
-        <p class="card-desc">
-          Get your overabundance of schooling, here.<br />
-          Hangul → English → Hanja where applicable.
-        </p>
-        <div class="card-count">55 cards</div>
-        <span class="card-arrow">↗</span>
-      </a>
-
-
-	  
-      <!-- TEMPLATE — copy and fill in for each new list:
-      <a class="card" href="flashcards/index.html?list=LISTNAME">
-        <span class="card-icon">한</span>
-        <div class="card-title">List Title</div>
-        <p class="card-desc">Brief description.</p>
-        <div class="card-count">N cards</div>
-        <span class="card-arrow">↗</span>
-      </a>
-      -->
-
-    </div>
-  </section>
-
-  <!-- ── DOWNLOADS ──────────────────────────────────────────────────── -->
-  <section class="section">
-    <div class="section-label">Downloads</div>
-    <div class="card-grid">
-
-      <!-- Pattern: href="lists/FILENAME.json" download -->
-
-      <!-- CURRENTLY DISABLED TO ADD CSV DOWNLOADING CAPABILITIES
-	  <a class="card" href="lists/vocabulary.json" download>
-        <span class="card-icon" style="font-size:1.5rem">↓</span>
-        <div class="card-title">Random Vocabulary</div>
-        <p class="card-desc">
-          JSON — Hangul, English, Hanja.<br />
-          274 mixed-subject cards.
-        </p>
-        <span class="card-arrow">↓</span>
-      </a>
-	  -->
-	  
-	  <!-- THIS IS THE UNDER CONSTRUCTION CARD -->
-	  <a class="card">
-		<span class = "card-icon" style="font-size:1.5rem">↓</span>
-		<div class="card-title">Download features under construction.</div>
-        <p class="card-desc">
-          Previous feature: only downloading JSON files.<br />
-          Coming soon: choose your file format - CSV or JSON!
-        </p>
-        <span class="card-arrow">↓</span>
-      </a>
-      
-	  <!-- TEMPLATE — copy and fill in for each new list:
-      <a class="card" href="lists/LISTNAME.json" download>
-        <span class="card-icon" style="font-size:1.5rem">↓</span>
-        <div class="card-title">List Title</div>
-        <p class="card-desc">Description. N cards.</p>
-        <span class="card-arrow">↓</span>
-      </a>
-      -->
 
     </div>
   </section>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kkachi — Korean Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;700&family=Noto+Sans+KR:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #0d0d0f;
+      --surface:   #13131a;
+      --surface2:  #1a1a24;
+      --border:    #2a2a38;
+      --accent:    #c9a84c;
+      --accent-dim:#7a6230;
+      --text:      #e8e4d9;
+      --muted:     #7a7870;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Cormorant Garamond', serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    .vert-rule {
+      position: fixed;
+      top: 0; bottom: 0; left: 3.5rem;
+      width: 1px;
+      background: var(--border);
+      z-index: 1;
+    }
+
+    /* ── header ── */
+    header {
+      position: relative;
+      z-index: 2;
+      padding: 2rem 6rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo-hangul {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+      text-shadow: 0 0 40px rgba(201,168,76,0.2);
+    }
+
+    /* ── breadcrumb ── */
+    .breadcrumb {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .breadcrumb a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb .sep { color: var(--border); }
+    .breadcrumb .current { color: var(--accent-dim); }
+
+    /* ── page title ── */
+    .page-hero {
+      position: relative;
+      z-index: 2;
+      padding: 2.5rem 6rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 300;
+    }
+
+    .page-title em { font-style: italic; color: var(--accent); }
+
+    .page-sub {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 300;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      margin-top: 0.5rem;
+    }
+
+    /* ── section ── */
+    .section {
+      position: relative;
+      z-index: 2;
+      padding: 2.5rem 6rem 1.5rem;
+    }
+
+    .section-label {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent-dim);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── deck table ── */
+    .deck-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .deck-table thead tr {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .deck-table th {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent-dim);
+      font-weight: 300;
+      padding: 0 1rem 0.75rem 0;
+      text-align: left;
+    }
+
+    .deck-table th:last-child { text-align: right; padding-right: 0; }
+
+    .deck-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .deck-table tbody tr:hover { background: var(--surface); }
+
+    .deck-table td {
+      padding: 1rem 1rem 1rem 0;
+      vertical-align: middle;
+    }
+
+    .deck-table td:last-child { text-align: right; padding-right: 0; }
+
+    .deck-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .deck-desc {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 300;
+      color: var(--muted);
+      margin-top: 0.2rem;
+      line-height: 1.5;
+    }
+
+    .deck-count {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .deck-link {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent-dim);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .deck-link:hover { color: var(--accent); }
+
+    /* ── download table ── */
+    .dl-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .dl-table thead tr {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dl-table th {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent-dim);
+      font-weight: 300;
+      padding: 0 1rem 0.75rem 0;
+      text-align: left;
+    }
+
+    .dl-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .dl-table tbody tr:hover { background: var(--surface); }
+
+    .dl-table td {
+      padding: 0.85rem 1rem 0.85rem 0;
+      vertical-align: middle;
+    }
+
+    .dl-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .dl-count {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    .dl-btns {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+    }
+
+    .dl-btn {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.7rem;
+      transition: border-color 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .dl-btn:hover { border-color: var(--accent-dim); color: var(--accent); }
+
+    /* ── footer ── */
+    footer {
+      position: relative;
+      z-index: 2;
+      padding: 2rem 6rem;
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+    }
+
+    .footer-hangul {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1rem;
+      color: var(--border);
+    }
+
+    @media (max-width: 700px) {
+      header, .page-hero, .section, footer {
+        padding-left: 5rem;
+        padding-right: 1.5rem;
+      }
+      .vert-rule { left: 2rem; }
+      .deck-table th:nth-child(2),
+      .deck-table td:nth-child(2) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="vert-rule"></div>
+
+  <header>
+    <a class="logo-hangul" href="../index.html">까치</a>
+    <nav class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="sep">→</span>
+      <span class="current">Korean Study</span>
+    </nav>
+  </header>
+
+  <div class="page-hero">
+    <h1 class="page-title">Korean <em>Study</em></h1>
+    <p class="page-sub">Select a deck to begin · 7 decks · 835 cards</p>
+  </div>
+
+  <!-- ── FLASHCARD DECKS ── -->
+  <section class="section">
+    <div class="section-label">Flashcard Decks</div>
+    <table class="deck-table">
+      <thead>
+        <tr>
+          <th>Deck</th>
+          <th>Description</th>
+          <th style="text-align:right">Cards</th>
+          <th style="text-align:right">Study</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="deck-name">Random Vocabulary</div>
+          </td>
+          <td><div class="deck-desc">Mixed subject vocabulary</div></td>
+          <td><div class="deck-count">274</div></td>
+          <td><a class="deck-link" href="flashcards.html?list=random">Study ↗</a></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="deck-name">Accidents &amp; Crime</div>
+          </td>
+          <td><div class="deck-desc">Police, fire, and ambulances oh my</div></td>
+          <td><div class="deck-count">190</div></td>
+          <td><a class="deck-link" href="flashcards.html?list=accidents-crime">Study ↗</a></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="deck-name">Economics</div>
+          </td>
+          <td><div class="deck-desc">Numbers go up; they go down</div></td>
+          <td><div class="deck-count">118</div></td>
+          <td><a class="deck-link" href="flashcards.html?list=econ">Study ↗</a></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="deck-name">Health</div>
+          </td>
+          <td><div class="deck-desc">Get your wellbeing here</div></td>
+          <td><div class="deck-count">86</div></td>
+          <td><a class="deck-link" href="flashcards.html?list=health">Study ↗</a></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="deck-name">Culture</div>
+          </td>
+          <td><div class="deck-desc">From Hanyang to Seoul</div></td>
+          <td><div class="deck-count">57</div></td>
+          <td><a class="deck-link" href="flashcards.html?list=culture">Study ↗</a></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="deck-name">Weather</div>
+          </td>
+          <td><div class="deck-desc">The frost spites the flowers</div></td>
+          <td><div class="deck-count">55</div></td>
+          <td><a class="deck-link" href="flashcards.html?list=weather">Study ↗</a></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="deck-name">Education</div>
+          </td>
+          <td><div class="deck-desc">Get your overabundance of schooling, here</div></td>
+          <td><div class="deck-count">55</div></td>
+          <td><a class="deck-link" href="flashcards.html?list=education">Study ↗</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── DOWNLOADS ── -->
+  <section class="section">
+    <div class="section-label">Downloads</div>
+    <table class="dl-table">
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Cards</th>
+          <th style="text-align:right">Format</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="dl-name">Random Vocabulary</div></td>
+          <td><div class="dl-count">274</div></td>
+          <td>
+            <div class="dl-btns">
+              <a class="dl-btn" href="lists/random.json" download>JSON ↓</a>
+              <a class="dl-btn" href="lists/random.csv" download>CSV ↓</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><div class="dl-name">Accidents &amp; Crime</div></td>
+          <td><div class="dl-count">190</div></td>
+          <td>
+            <div class="dl-btns">
+              <a class="dl-btn" href="lists/accidents-crime.json" download>JSON ↓</a>
+              <a class="dl-btn" href="lists/accidents-crime.csv" download>CSV ↓</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><div class="dl-name">Economics</div></td>
+          <td><div class="dl-count">118</div></td>
+          <td>
+            <div class="dl-btns">
+              <a class="dl-btn" href="lists/econ.json" download>JSON ↓</a>
+              <a class="dl-btn" href="lists/econ.csv" download>CSV ↓</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><div class="dl-name">Health</div></td>
+          <td><div class="dl-count">86</div></td>
+          <td>
+            <div class="dl-btns">
+              <a class="dl-btn" href="lists/health.json" download>JSON ↓</a>
+              <a class="dl-btn" href="lists/health.csv" download>CSV ↓</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><div class="dl-name">Culture</div></td>
+          <td><div class="dl-count">57</div></td>
+          <td>
+            <div class="dl-btns">
+              <a class="dl-btn" href="lists/culture.json" download>JSON ↓</a>
+              <a class="dl-btn" href="lists/culture.csv" download>CSV ↓</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><div class="dl-name">Weather</div></td>
+          <td><div class="dl-count">55</div></td>
+          <td>
+            <div class="dl-btns">
+              <a class="dl-btn" href="lists/weather.json" download>JSON ↓</a>
+              <a class="dl-btn" href="lists/weather.csv" download>CSV ↓</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><div class="dl-name">Education</div></td>
+          <td><div class="dl-count">55</div></td>
+          <td>
+            <div class="dl-btns">
+              <a class="dl-btn" href="lists/education.json" download>JSON ↓</a>
+              <a class="dl-btn" href="lists/education.csv" download>CSV ↓</a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    <p>까치 · ravencaller213.github.io/kr-flash</p>
+    <span class="footer-hangul">학습</span>
+  </footer>
+
+</body>
+</html>
