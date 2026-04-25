@@ -123,10 +123,10 @@
 
     .section-label {
       font-family: 'Noto Sans KR', sans-serif;
-      font-size: 0.65rem;
+      font-size: 0.85rem;
       letter-spacing: 0.3em;
       text-transform: uppercase;
-      color: var(--accent-dim);
+      color: var(--accent);
       margin-bottom: 1.5rem;
       display: flex;
       align-items: center;
@@ -155,7 +155,7 @@
       font-size: 0.6rem;
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: var(--accent-dim);
+      color: var(--accent);
       font-weight: 300;
       padding: 0 1rem 0.75rem 0;
       text-align: left;
@@ -199,6 +199,11 @@
       letter-spacing: 0.15em;
       color: var(--muted);
       white-space: nowrap;
+      text-align: right;
+    }
+
+    .deck-table tbody tr[data-href] {
+      cursor: pointer;
     }
 
     .deck-link {
@@ -231,7 +236,7 @@
       font-size: 0.6rem;
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: var(--accent-dim);
+      color: var(--accent);
       font-weight: 300;
       padding: 0 1rem 0.75rem 0;
       text-align: left;
@@ -350,7 +355,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr data-href="flashcards.html?list=random">
           <td>
             <div class="deck-name">Random Vocabulary</div>
           </td>
@@ -358,7 +363,7 @@
           <td><div class="deck-count">274</div></td>
           <td><a class="deck-link" href="flashcards.html?list=random">Study ↗</a></td>
         </tr>
-        <tr>
+        <tr data-href="flashcards.html?list=accidents-crime">
           <td>
             <div class="deck-name">Accidents &amp; Crime</div>
           </td>
@@ -366,7 +371,7 @@
           <td><div class="deck-count">190</div></td>
           <td><a class="deck-link" href="flashcards.html?list=accidents-crime">Study ↗</a></td>
         </tr>
-        <tr>
+        <tr data-href="flashcards.html?list=econ">
           <td>
             <div class="deck-name">Economics</div>
           </td>
@@ -374,7 +379,7 @@
           <td><div class="deck-count">118</div></td>
           <td><a class="deck-link" href="flashcards.html?list=econ">Study ↗</a></td>
         </tr>
-        <tr>
+        <tr data-href="flashcards.html?list=health">
           <td>
             <div class="deck-name">Health</div>
           </td>
@@ -382,7 +387,7 @@
           <td><div class="deck-count">86</div></td>
           <td><a class="deck-link" href="flashcards.html?list=health">Study ↗</a></td>
         </tr>
-        <tr>
+        <tr data-href="flashcards.html?list=culture">
           <td>
             <div class="deck-name">Culture</div>
           </td>
@@ -390,7 +395,7 @@
           <td><div class="deck-count">57</div></td>
           <td><a class="deck-link" href="flashcards.html?list=culture">Study ↗</a></td>
         </tr>
-        <tr>
+        <tr data-href="flashcards.html?list=weather">
           <td>
             <div class="deck-name">Weather</div>
           </td>
@@ -398,7 +403,7 @@
           <td><div class="deck-count">55</div></td>
           <td><a class="deck-link" href="flashcards.html?list=weather">Study ↗</a></td>
         </tr>
-        <tr>
+        <tr data-href="flashcards.html?list=education">
           <td>
             <div class="deck-name">Education</div>
           </td>
@@ -501,5 +506,14 @@
     <span class="footer-hangul">학습</span>
   </footer>
 
+  <script>
+    document.querySelectorAll('.deck-table tbody tr[data-href]').forEach(row => {
+      row.addEventListener('click', e => {
+        // Don't double-navigate if the user clicked the anchor directly
+        if (e.target.closest('a')) return;
+        window.location.href = row.dataset.href;
+      });
+    });
+  </script>
 </body>
 </html>
