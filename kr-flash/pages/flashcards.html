@@ -514,7 +514,7 @@
     // ── load ───────────────────────────────────────────────────────────────
     async function loadDeck() {
       const listName = getListParam();
-      const url = `../lists/${listName}.json`;
+      const url = `/kr-flash/lists/${listName}.json`;
       try {
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -525,7 +525,7 @@
         document.getElementById('nav-list-name').textContent = listTitle;
         document.getElementById('list-title').textContent    = listTitle;
         // wire download links
-        const base = `../lists/${listName}`;
+        const base = `/kr-flash/lists/${listName}`;
         document.getElementById('dl-json').href     = `${base}.json`;
         document.getElementById('dl-json').download = `${listName}.json`;
         document.getElementById('dl-csv').href      = `${base}.csv`;
