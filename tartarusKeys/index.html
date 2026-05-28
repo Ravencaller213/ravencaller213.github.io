@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tartarus Pro v2 — NMS Keymap</title>
+  <style>
+    :root {
+      --bg-primary:   #181818;
+      --bg-secondary: #222222;
+      --bg-tertiary:  #2c2c2c;
+      --border-sec:   #363636;
+      --border-ter:   #484848;
+      --text-pri:     #e4e4e4;
+      --text-sec:     #a0a0a0;
+      --text-ter:     #686868;
+      --accent:       #4a9eff;
+      --bg-info:      #152d4a;
+      --border-info:  #1e4878;
+      --font: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-pri);
+      font-family: var(--font);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      padding: 20px 24px 0;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    h1 { font-size: 17px; font-weight: 600; }
+    h1 .sub { color: var(--text-sec); font-weight: 400; font-size: 13px; }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      padding: 14px 24px 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .tabs { display: flex; gap: 8px; }
+    .tab {
+      padding: 5px 15px;
+      border-radius: 6px;
+      border: 1px solid var(--border-sec);
+      background: var(--bg-secondary);
+      font-size: 13px;
+      cursor: pointer;
+      color: var(--text-sec);
+      transition: all 0.12s;
+      font-family: var(--font);
+    }
+    .tab.active {
+      background: var(--bg-info);
+      color: var(--accent);
+      border-color: var(--border-info);
+      font-weight: 500;
+    }
+    .spacer { flex: 1; }
+    .btn {
+      padding: 5px 13px;
+      border-radius: 6px;
+      border: 1px solid var(--border-sec);
+      background: var(--bg-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--text-sec);
+      transition: all 0.12s;
+      font-family: var(--font);
+    }
+    .btn:hover { border-color: var(--border-ter); color: var(--text-pri); }
+    .btn.danger { border-color: #4a2020; color: #c06060; }
+    .btn.danger:hover { background: #2e1515; }
+
+    /* ── SVG wrapper ── */
+    .svg-wrap { padding: 0 24px 8px; }
+    svg { display: block; }
+    .key-cell { cursor: pointer; }
+    .key-cell:hover > rect { filter: brightness(1.15); }
+
+    /* ── Legend ── */
+    .legend {
+      display: flex;
+      gap: 16px;
+      padding: 4px 24px 20px;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-sec);
+    }
+    .swatch {
+      width: 12px; height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .swatch.unbound {
+      background: transparent;
+      border: 1px dashed var(--border-ter);
+    }
+
+    /* ── Popover ── */
+    .backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,0.55);
+      align-items: center;
+      justify-content: center;
+    }
+    .backdrop.open { display: flex; }
+
+    .popover {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-sec);
+      border-radius: 10px;
+      padding: 18px;
+      min-width: 260px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    }
+    .popover h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-sec);
+      margin-bottom: 14px;
+    }
+    .popover label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-ter);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .popover input,
+    .popover select {
+      width: 100%;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-sec);
+      border-radius: 6px;
+      color: var(--text-pri);
+      padding: 7px 10px;
+      font-size: 14px;
+      margin-bottom: 12px;
+      outline: none;
+      font-family: var(--font);
+      appearance: none;
+    }
+    .popover input:focus,
+    .popover select:focus { border-color: var(--accent); }
+    .popover select { background-image: none; }
+
+    .popover-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 4px;
+    }
+    .btn-cancel {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border-sec);
+      background: transparent;
+      color: var(--text-sec);
+      font-size: 13px;
+      cursor: pointer;
+      font-family: var(--font);
+    }
+    .btn-save {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--font);
+    }
+    .btn-save:hover { background: #3a8eef; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Tartarus Pro v2 <span class="sub">— NMS Keymap Editor</span></h1>
+</header>
+
+<div class="toolbar">
+  <div class="tabs">
+    <button class="tab active" onclick="showLayer('ground')">Ground (slot 1)</button>
+    <button class="tab"        onclick="showLayer('flight')">Flight (slot 2)</button>
+  </div>
+  <div class="spacer"></div>
+  <button class="btn" onclick="exportJSON()">Export JSON</button>
+  <button class="btn" onclick="importJSON()">Import JSON</button>
+  <button class="btn danger" onclick="resetState()">Reset</button>
+</div>
+
+<div class="svg-wrap">
+  <svg id="kp-svg" width="100%" viewBox="0 0 680 350" role="img" aria-label="Tartarus Pro v2 keymap"></svg>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="swatch" style="background:#3B6D11"></div>ESC</div>
+  <div class="legend-item"><div class="swatch" style="background:#533AB7"></div>Keymap switch</div>
+  <div class="legend-item"><div class="swatch" style="background:#0F6E56"></div>Action (analog)</div>
+  <div class="legend-item"><div class="swatch" style="background:#185FA5"></div>Modifier (analog)</div>
+  <div class="legend-item"><div class="swatch" style="background:#BA7517"></div>D-pad / joystick</div>
+  <div class="legend-item"><div class="swatch" style="background:#993C1D"></div>Arrow → WASD</div>
+  <div class="legend-item"><div class="swatch unbound"></div>Unbound</div>
+</div>
+
+<!-- Edit popover -->
+<div class="backdrop" id="backdrop" onclick="onBackdropClick(event)">
+  <div class="popover" onclick="event.stopPropagation()">
+    <h3 id="pop-title">Edit binding</h3>
+    <label>Label</label>
+    <input type="text" id="pop-label" placeholder="e.g. ESC, G, SPACE …" autocomplete="off" />
+    <label>Category</label>
+    <select id="pop-cat">
+      <option value="unbound">— Unbound</option>
+      <option value="esc">ESC</option>
+      <option value="action">Action (analog)</option>
+      <option value="modifier">Modifier (analog)</option>
+      <option value="switch">Keymap switch</option>
+    </select>
+    <div class="popover-actions">
+      <button class="btn-cancel" onclick="closePopover()">Cancel</button>
+      <button class="btn-save"   onclick="saveEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ── Color palette ────────────────────────────────────────────────────────────
+const C = {
+  esc:      '#3B6D11',
+  switch:   '#533AB7',
+  action:   '#0F6E56',
+  modifier: '#185FA5',
+  dpad:     '#BA7517',
+  arrow:    '#993C1D',
+  unbound:  null,
+};
+
+// ── Default bindings (matches the reference SVG exactly) ────────────────────
+const DEFAULTS = {
+  ground: {
+    '01': { label:'ESC',      cat:'esc'      },
+    '02': { label:'—',        cat:'unbound'  },
+    '03': { label:'—',        cat:'unbound'  },
+    '04': { label:'—',        cat:'unbound'  },
+    '05': { label:'—',        cat:'unbound'  },
+    '06': { label:'—',        cat:'unbound'  },
+    '07': { label:'—',        cat:'unbound'  },
+    '08': { label:'C',        cat:'modifier' },
+    '09': { label:'—',        cat:'unbound'  },
+    '10': { label:'—',        cat:'unbound'  },
+    '11': { label:'—',        cat:'unbound'  },
+    '12': { label:'F',        cat:'modifier' },
+    '13': { label:'L-SHF',   cat:'modifier' },
+    '14': { label:'Q',        cat:'action'   },
+    '15': { label:'SPACE',    cat:'action'   },
+    '16': { label:'—',        cat:'unbound'  },
+    '17': { label:'—',        cat:'unbound'  },
+    '18': { label:'R',        cat:'action'   },
+    '19': { label:'G',        cat:'action'   },
+    '20': { label:'X',        cat:'action'   },
+    'ALT':{ label:'→ Flight', cat:'switch'   },
+  },
+  flight: {
+    '01': { label:'ESC',      cat:'esc'      },
+    '02': { label:'—',        cat:'unbound'  },
+    '03': { label:'—',        cat:'unbound'  },
+    '04': { label:'—',        cat:'unbound'  },
+    '05': { label:'—',        cat:'unbound'  },
+    '06': { label:'—',        cat:'unbound'  },
+    '07': { label:'—',        cat:'unbound'  },
+    '08': { label:'M',        cat:'action'   },
+    '09': { label:'C',        cat:'action'   },
+    '10': { label:'E',        cat:'action'   },
+    '11': { label:'—',        cat:'unbound'  },
+    '12': { label:'L-ALT',    cat:'modifier' },
+    '13': { label:'L-SHF',   cat:'modifier' },
+    '14': { label:'G',        cat:'action'   },
+    '15': { label:'F',        cat:'action'   },
+    '16': { label:',',        cat:'action'   },
+    '17': { label:'.',        cat:'action'   },
+    '18': { label:'SPACE',    cat:'action'   },
+    '19': { label:'/',        cat:'action'   },
+    '20': { label:'X',        cat:'action'   },
+    'ALT':{ label:'→ Ground', cat:'switch'   },
+  },
+};
+
+// ── State ────────────────────────────────────────────────────────────────────
+const LS_KEY = 'tartarus-nms-v1';
+let state = loadState();
+let currentLayer = 'ground';
+let editTarget = null; // { layer, keyId }
+
+function loadState() {
+  try {
+    const s = localStorage.getItem(LS_KEY);
+    if (s) return JSON.parse(s);
+  } catch (_) {}
+  return clone(DEFAULTS);
+}
+function saveState() {
+  localStorage.setItem(LS_KEY, JSON.stringify(state));
+}
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function resetState() {
+  if (!confirm('Reset all bindings to NMS defaults?')) return;
+  state = clone(DEFAULTS);
+  saveState();
+  render();
+}
+
+// ── SVG helpers ──────────────────────────────────────────────────────────────
+const NS = 'http://www.w3.org/2000/svg';
+
+function svgEl(tag, attrs) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, String(v));
+  return e;
+}
+
+function svgText(txt, x, y, attrs) {
+  const e = svgEl('text', { x, y, ...attrs });
+  e.textContent = txt;
+  return e;
+}
+
+// ── Key cell factory ─────────────────────────────────────────────────────────
+const FONT = "system-ui, -apple-system, 'Segoe UI', sans-serif";
+
+function makeKey(keyId, x, y, w, h, layer) {
+  const b = state[layer][keyId];
+  const color = C[b.cat];
+  const unbound = b.cat === 'unbound';
+  const lbl = b.label;
+
+  const g = svgEl('g', { class: 'key-cell' });
+  g.addEventListener('click', () => openEditor(layer, keyId));
+
+  // Background rect
+  const rectAttrs = {
+    x, y, width: w, height: h, rx: 6,
+    fill: 'var(--bg-primary)',
+    stroke: unbound ? 'var(--border-ter)' : color,
+    'stroke-width': unbound ? 0.8 : 1.2,
+  };
+  if (unbound) rectAttrs['stroke-dasharray'] = '4 3';
+  g.appendChild(svgEl('rect', rectAttrs));
+
+  // Key number (top-left)
+  g.appendChild(svgText(keyId, x + 5, y + 13, {
+    'font-size': 9,
+    fill: 'var(--text-ter)',
+    'font-family': FONT,
+    'font-weight': 500,
+  }));
+
+  // Binding label (center)
+  const len = lbl.length;
+  let fs = 18, ly = y + h * 0.66;
+  if (len >= 6) { fs = 10; ly = y + h * 0.62; }
+  else if (len >= 4) { fs = 12; ly = y + h * 0.64; }
+  else if (len >= 3) { fs = 14; ly = y + h * 0.66; }
+
+  g.appendChild(svgText(lbl, x + w / 2, ly, {
+    'font-size': fs,
+    'font-weight': 500,
+    fill: unbound ? 'var(--text-ter)' : color,
+    'text-anchor': 'middle',
+    'font-family': FONT,
+  }));
+
+  return g;
+}
+
+// ── Layout constants ─────────────────────────────────────────────────────────
+// Viewbox: 680 × 350 (tighter than reference — no wasted vertical space)
+const KW = 62, KH = 52, KGX = 70, KGY = 60;
+const GRID_X0 = 22, GRID_Y0 = 36;
+const DIVIDER_X = 390;
+
+const GRID_ROWS = [
+  ['01','02','03','04','05'],
+  ['06','07','08','09','10'],
+  ['11','12','13','14','15'],
+  ['16','17','18','19','20'],
+];
+
+// ── Main render ──────────────────────────────────────────────────────────────
+function render() {
+  const svg = document.getElementById('kp-svg');
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+  const layer = currentLayer;
+
+  // Outer card
+  svg.appendChild(svgEl('rect', {
+    x:10, y:8, width:660, height:334, rx:20,
+    fill: 'var(--bg-secondary)',
+    stroke: 'var(--border-sec)',
+    'stroke-width': 1.5,
+  }));
+
+  // Layer label
+  svg.appendChild(svgText(
+    `NMS — ${layer === 'ground' ? 'Ground' : 'Flight'} layer  ·  top-left = key#  ·  center = output  ·  click to edit`,
+    340, 26,
+    { 'font-size':10, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT }
+  ));
+
+  // ── Key grid ──
+  GRID_ROWS.forEach((row, ri) => {
+    row.forEach((keyId, ci) => {
+      const x = GRID_X0 + ci * KGX;
+      const y = GRID_Y0 + ri * KGY;
+      svg.appendChild(makeKey(keyId, x, y, KW, KH, layer));
+    });
+  });
+
+  // ── ALT key (wide, below grid) ──
+  const altY = GRID_Y0 + 4 * KGY + 4;
+  const altBinding = state[layer]['ALT'];
+  const altColor = C[altBinding.cat];
+  const altG = svgEl('g', { class: 'key-cell' });
+  altG.addEventListener('click', () => openEditor(layer, 'ALT'));
+  altG.appendChild(svgEl('rect', {
+    x: GRID_X0, y: altY, width: 130, height: 40, rx: 6,
+    fill: 'var(--bg-primary)', stroke: altColor, 'stroke-width': 1.2,
+  }));
+  altG.appendChild(svgText('ALT', GRID_X0 + 5, altY + 13, {
+    'font-size':9, fill:'var(--text-ter)', 'font-family':FONT, 'font-weight':500,
+  }));
+  altG.appendChild(svgText(altBinding.label, GRID_X0 + 65, altY + 25, {
+    'font-size':12, 'font-weight':500, fill:altColor, 'text-anchor':'middle', 'font-family':FONT,
+  }));
+  svg.appendChild(altG);
+
+  // ── Divider ──
+  svg.appendChild(svgEl('line', {
+    x1: DIVIDER_X, y1: 20, x2: DIVIDER_X, y2: 340,
+    stroke: 'var(--border-ter)', 'stroke-width': 0.5, 'stroke-dasharray': '5 4',
+  }));
+
+  // ── Right panel: Arrow keys ──
+  const RP = DIVIDER_X + 16; // right panel left edge
+  svg.appendChild(svgText('Arrow keys → WASD', RP, 44, {
+    'font-size':10, fill:'var(--text-ter)', 'font-family':FONT,
+  }));
+
+  // Arrow cross layout (↑=W, ←=A, ↓=S, →=D)
+  const AW = 48, AH = 38;
+  const arrows = [
+    { x: RP + 48,      y: 52,  sym:'↑', lbl:'W' },
+    { x: RP,           y: 96,  sym:'←', lbl:'A' },
+    { x: RP + 48,      y: 96,  sym:'↓', lbl:'S' },
+    { x: RP + 96,      y: 96,  sym:'→', lbl:'D' },
+  ];
+  for (const { x, y, sym, lbl } of arrows) {
+    const g = svgEl('g', {});
+    g.appendChild(svgEl('rect', { x, y, width:AW, height:AH, rx:6,
+      fill:'var(--bg-primary)', stroke:'#993C1D', 'stroke-width':1 }));
+    g.appendChild(svgText(sym, x + AW/2, y + 14, {
+      'font-size':10, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
+    }));
+    g.appendChild(svgText(lbl, x + AW/2, y + 28, {
+      'font-size':13, 'font-weight':500, fill:'#993C1D', 'text-anchor':'middle', 'font-family':FONT,
+    }));
+    svg.appendChild(g);
+  }
+
+  // ── Right panel: D-pad ──
+  const dpY0 = 152;
+  if (layer === 'ground') {
+    svg.appendChild(svgText('D-pad → joystick axes', RP, dpY0, {
+      'font-size':10, fill:'var(--text-ter)', 'font-family':FONT,
+    }));
+
+    const CS = 40, CG = 2; // cell size, gap
+    const dpad = [
+      { col:0, row:0, sym:'↖' },
+      { col:1, row:0, sym:'↑',  sub:'Y−' },
+      { col:2, row:0, sym:'↗' },
+      { col:0, row:1, sym:'←',  sub:'X−' },
+      { col:1, row:1, sym:'·',  center:true },
+      { col:2, row:1, sym:'→',  sub:'X+' },
+      { col:0, row:2, sym:'↙' },
+      { col:1, row:2, sym:'↓',  sub:'Y+' },
+      { col:2, row:2, sym:'↘' },
+    ];
+    for (const { col, row, sym, sub, center } of dpad) {
+      const dx = RP + col * (CS + CG);
+      const dy = dpY0 + 8 + row * (CS + CG);
+      const g = svgEl('g', {});
+      g.appendChild(svgEl('rect', { x:dx, y:dy, width:CS, height:CS, rx:5,
+        fill: center ? 'var(--bg-tertiary)' : 'var(--bg-primary)',
+        stroke: center ? 'var(--border-ter)' : '#BA7517',
+        'stroke-width': center ? 0.6 : 0.9,
+      }));
+      if (sub) {
+        g.appendChild(svgText(sym, dx + CS/2, dy + 15, {
+          'font-size':10, fill:'#BA7517', 'text-anchor':'middle', 'font-family':FONT,
+        }));
+        g.appendChild(svgText(sub, dx + CS/2, dy + 29, {
+          'font-size':9, fill:'#BA7517', 'text-anchor':'middle', 'font-family':FONT,
+        }));
+      } else {
+        g.appendChild(svgText(sym, dx + CS/2, dy + CS/2 + 4, {
+          'font-size': center ? 9 : 13,
+          'font-weight': center ? 400 : 500,
+          fill: center ? 'var(--text-ter)' : '#BA7517',
+          'text-anchor':'middle',
+          'font-family':FONT,
+          'dominant-baseline':'middle',
+        }));
+      }
+      svg.appendChild(g);
+    }
+
+    // Scroll wheel label
+    const swX = RP + 3 * (CS + CG) + 6;
+    const swY = dpY0 + 8;
+    svg.appendChild(svgEl('rect', { x:swX, y:swY, width:76, height:CS*3+CG*2, rx:7,
+      fill:'var(--bg-tertiary)', stroke:'var(--border-sec)', 'stroke-width':0.8,
+    }));
+    svg.appendChild(svgText('scroll', swX + 38, swY + (CS*3+CG*2)/2 - 6, {
+      'font-size':10, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
+    }));
+    svg.appendChild(svgText('wheel', swX + 38, swY + (CS*3+CG*2)/2 + 7, {
+      'font-size':10, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
+    }));
+    svg.appendChild(svgText('(unbound)', swX + 38, swY + (CS*3+CG*2)/2 + 20, {
+      'font-size':8, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
+    }));
+
+  } else {
+    // Flight: dpad unbound placeholder
+    svg.appendChild(svgText('D-pad: unbound in this layer', RP, dpY0, {
+      'font-size':10, fill:'var(--text-ter)', 'font-family':FONT,
+    }));
+    svg.appendChild(svgEl('rect', { x:RP, y:dpY0+8, width:200, height:130, rx:8,
+      fill:'var(--bg-tertiary)', stroke:'var(--border-ter)',
+      'stroke-width':0.8, 'stroke-dasharray':'4 3',
+    }));
+    svg.appendChild(svgText('no joystick bindings', RP + 100, dpY0 + 76, {
+      'font-size':11, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
+    }));
+  }
+
+  // ── Footer note ──
+  svg.appendChild(svgText(
+    'key# = hardware number  ·  dashed = unbound  ·  key 20 (physical V) remapped to SPACEBAR in Synapse',
+    20, 338,
+    { 'font-size':9, fill:'var(--text-ter)', 'font-family':FONT }
+  ));
+}
+
+// ── Layer tab switching ───────────────────────────────────────────────────────
+function showLayer(layer) {
+  currentLayer = layer;
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0 && layer === 'ground') || (i === 1 && layer === 'flight'));
+  });
+  render();
+}
+
+// ── Popover ──────────────────────────────────────────────────────────────────
+function openEditor(layer, keyId) {
+  editTarget = { layer, keyId };
+  const b = state[layer][keyId];
+  document.getElementById('pop-title').textContent = `Edit key ${keyId} (${layer})`;
+  document.getElementById('pop-label').value = b.label === '—' ? '' : b.label;
+  document.getElementById('pop-cat').value = b.cat;
+  document.getElementById('backdrop').classList.add('open');
+  setTimeout(() => document.getElementById('pop-label').focus(), 30);
+}
+
+function closePopover() {
+  document.getElementById('backdrop').classList.remove('open');
+  editTarget = null;
+}
+
+function onBackdropClick(e) {
+  if (e.target === document.getElementById('backdrop')) closePopover();
+}
+
+function saveEdit() {
+  if (!editTarget) return;
+  const { layer, keyId } = editTarget;
+  const raw = document.getElementById('pop-label').value.trim();
+  const cat = document.getElementById('pop-cat').value;
+  state[layer][keyId] = {
+    label: raw || '—',
+    cat:   raw ? cat : 'unbound',
+  };
+  saveState();
+  closePopover();
+  render();
+}
+
+document.getElementById('pop-label').addEventListener('keydown', e => {
+  if (e.key === 'Enter')  { e.preventDefault(); saveEdit(); }
+  if (e.key === 'Escape') closePopover();
+});
+
+// ── Import / Export ───────────────────────────────────────────────────────────
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type:'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = 'tartarus-nms-bindings.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importJSON() {
+  const input = document.createElement('input');
+  input.type   = 'file';
+  input.accept = '.json,application/json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const parsed = JSON.parse(ev.target.result);
+        if (!parsed.ground || !parsed.flight) throw new Error('Missing layers');
+        state = parsed;
+        saveState();
+        render();
+      } catch (err) {
+        alert('Invalid file — expected { ground: {...}, flight: {...} }');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>

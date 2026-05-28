@@ -1,0 +1,162 @@
+{
+  "device": "Tartarus Pro v2",
+  "note": "Hardware key numbers 01-20 to inputID mapping. Key 20 (physical V) appears remapped to SPACEBAR output in NMS profile. Left Alt is a dedicated key outside the 01-20 grid.",
+  "layout": {
+    "row_0 (top)": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05"
+    ],
+    "row_1": [
+      "06",
+      "07",
+      "08",
+      "09",
+      "10"
+    ],
+    "row_2": [
+      "11",
+      "12",
+      "13",
+      "14",
+      "15"
+    ],
+    "row_3 (bottom)": [
+      "16",
+      "17",
+      "18",
+      "19",
+      "20"
+    ],
+    "modifier": [
+      "ALT"
+    ]
+  },
+  "keys": {
+    "01": {
+      "inputID": "KEY_1",
+      "default": "1"
+    },
+    "02": {
+      "inputID": "KEY_2",
+      "default": "2"
+    },
+    "03": {
+      "inputID": "KEY_3",
+      "default": "3"
+    },
+    "04": {
+      "inputID": "KEY_4",
+      "default": "4"
+    },
+    "05": {
+      "inputID": "KEY_5",
+      "default": "5"
+    },
+    "06": {
+      "inputID": "KEY_TAB",
+      "default": "Tab"
+    },
+    "07": {
+      "inputID": "KEY_Q",
+      "default": "Q"
+    },
+    "08": {
+      "inputID": "KEY_W",
+      "default": "W"
+    },
+    "09": {
+      "inputID": "KEY_E",
+      "default": "E"
+    },
+    "10": {
+      "inputID": "KEY_R",
+      "default": "R"
+    },
+    "11": {
+      "inputID": "KEY_CAPS_LOCK",
+      "default": "Caps"
+    },
+    "12": {
+      "inputID": "KEY_A",
+      "default": "A"
+    },
+    "13": {
+      "inputID": "KEY_S",
+      "default": "S"
+    },
+    "14": {
+      "inputID": "KEY_D",
+      "default": "D"
+    },
+    "15": {
+      "inputID": "KEY_F",
+      "default": "F"
+    },
+    "16": {
+      "inputID": "KEY_LEFT_SHIFT",
+      "default": "LShift"
+    },
+    "17": {
+      "inputID": "KEY_Z",
+      "default": "Z"
+    },
+    "18": {
+      "inputID": "KEY_X",
+      "default": "X"
+    },
+    "19": {
+      "inputID": "KEY_C",
+      "default": "C"
+    },
+    "20": {
+      "inputID": "KEY_SPACEBAR",
+      "default": "V\u2192SPACE"
+    },
+    "ALT": {
+      "inputID": "KEY_LEFT_ALT",
+      "default": "L\u0410lt"
+    }
+  },
+  "nms_ground_bindings": {
+    "01": "ESC (analog)",
+    "08": "C (analog)",
+    "09": "(unbound)",
+    "10": "(unbound)",
+    "12": "F (analog)",
+    "13": "L-Shift (analog)",
+    "14": "Q (analog)",
+    "15": "Space (analog)",
+    "18": "R (analog)",
+    "19": "G (analog)",
+    "20": "X (analog)",
+    "ALT": "\u2192 Flight keymap",
+    "arrow_up": "W",
+    "arrow_down": "S",
+    "arrow_left": "A",
+    "arrow_right": "D",
+    "dpad": "8-direction joystick axis emulation"
+  },
+  "nms_flight_bindings": {
+    "01": "ESC (analog)",
+    "08": "M (analog)",
+    "09": "C (analog)",
+    "10": "E (analog)",
+    "12": "L-Alt (analog)",
+    "13": "L-Shift (analog)",
+    "14": "G (analog)",
+    "15": "F (analog)",
+    "19": "/ (analog)",
+    "20": "X (analog)",
+    "ALT": "\u2192 Ground keymap",
+    "arrow_up": "W",
+    "arrow_down": "S",
+    "arrow_left": "A",
+    "arrow_right": "D",
+    "16": ", (analog)",
+    "17": ". (analog)",
+    "18": "SPACE (analog)"
+  }
+}
