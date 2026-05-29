@@ -19,176 +19,110 @@
       --border-info:  #1e4878;
       --font: system-ui, -apple-system, 'Segoe UI', sans-serif;
     }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: var(--bg-primary);
-      color: var(--text-pri);
-      font-family: var(--font);
-      min-height: 100vh;
-    }
+    body { background: var(--bg-primary); color: var(--text-pri); font-family: var(--font); min-height: 100vh; }
 
     /* ── Header ── */
-    header {
-      padding: 20px 24px 0;
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-    }
+    header { padding: 20px 24px 0; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
     h1 { font-size: 17px; font-weight: 600; }
-    h1 .sub { color: var(--text-sec); font-weight: 400; font-size: 13px; }
+    .profile-name {
+      font-size: 13px; color: var(--text-ter); cursor: text;
+      border-bottom: 1px dashed transparent; padding: 1px 4px;
+      border-radius: 3px; outline: none; transition: all 0.15s;
+      min-width: 60px;
+    }
+    .profile-name:hover { color: var(--text-sec); border-color: var(--border-ter); }
+    .profile-name:focus { color: var(--text-pri); border-color: var(--accent); background: var(--bg-tertiary); }
+    .profile-name::before { content: ''; }
 
     /* ── Toolbar ── */
-    .toolbar {
-      display: flex;
-      gap: 8px;
-      padding: 14px 24px 10px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .tabs { display: flex; gap: 8px; }
+    .toolbar { display: flex; gap: 8px; padding: 12px 24px 8px; align-items: center; flex-wrap: wrap; }
+    .tabs-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
     .tab {
-      padding: 5px 15px;
-      border-radius: 6px;
-      border: 1px solid var(--border-sec);
-      background: var(--bg-secondary);
-      font-size: 13px;
-      cursor: pointer;
-      color: var(--text-sec);
-      transition: all 0.12s;
-      font-family: var(--font);
+      display: flex; align-items: center; gap: 5px;
+      padding: 5px 10px 5px 14px;
+      border-radius: 6px; border: 1px solid var(--border-sec);
+      background: var(--bg-secondary); font-size: 13px; cursor: pointer;
+      color: var(--text-sec); transition: all 0.12s; font-family: var(--font);
+      user-select: none;
     }
-    .tab.active {
-      background: var(--bg-info);
-      color: var(--accent);
-      border-color: var(--border-info);
-      font-weight: 500;
+    .tab:hover { border-color: var(--border-ter); color: var(--text-pri); }
+    .tab.active { background: var(--bg-info); color: var(--accent); border-color: var(--border-info); font-weight: 500; }
+    .tab-name { cursor: pointer; }
+    .tab-del {
+      background: none; border: none; color: var(--text-ter); cursor: pointer;
+      font-size: 14px; padding: 0 1px; line-height: 1; font-family: var(--font);
+      transition: color 0.1s;
     }
+    .tab-del:hover { color: #c06060; }
+    .tab-del:disabled { opacity: 0.15; cursor: default; pointer-events: none; }
+
+    .btn-add-layer {
+      padding: 5px 11px; border-radius: 6px;
+      border: 1px dashed var(--border-sec); background: transparent;
+      font-size: 12px; cursor: pointer; color: var(--text-ter);
+      transition: all 0.12s; font-family: var(--font);
+    }
+    .btn-add-layer:hover { color: var(--text-sec); border-color: var(--border-ter); }
+
     .spacer { flex: 1; }
     .btn {
-      padding: 5px 13px;
-      border-radius: 6px;
-      border: 1px solid var(--border-sec);
-      background: var(--bg-secondary);
-      font-size: 12px;
-      cursor: pointer;
-      color: var(--text-sec);
-      transition: all 0.12s;
-      font-family: var(--font);
+      padding: 5px 13px; border-radius: 6px; border: 1px solid var(--border-sec);
+      background: var(--bg-secondary); font-size: 12px; cursor: pointer;
+      color: var(--text-sec); transition: all 0.12s; font-family: var(--font);
     }
     .btn:hover { border-color: var(--border-ter); color: var(--text-pri); }
     .btn.danger { border-color: #4a2020; color: #c06060; }
     .btn.danger:hover { background: #2e1515; }
+    .btn.accent { border-color: var(--border-info); color: var(--accent); }
+    .btn.accent:hover { background: var(--bg-info); }
 
-    /* ── SVG wrapper ── */
+    /* ── SVG ── */
     .svg-wrap { padding: 0 24px 8px; }
     svg { display: block; }
     .key-cell { cursor: pointer; }
-    .key-cell:hover > rect { filter: brightness(1.15); }
+    .key-cell:hover > rect,
+    .key-cell:hover > circle,
+    .key-cell:hover > ellipse { filter: brightness(1.2); }
 
     /* ── Legend ── */
-    .legend {
-      display: flex;
-      gap: 16px;
-      padding: 4px 24px 20px;
-      flex-wrap: wrap;
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      color: var(--text-sec);
-    }
-    .swatch {
-      width: 12px; height: 12px;
-      border-radius: 3px;
-      flex-shrink: 0;
-    }
-    .swatch.unbound {
-      background: transparent;
-      border: 1px dashed var(--border-ter);
-    }
+    .legend { display: flex; gap: 16px; padding: 4px 24px 20px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-sec); }
+    .swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+    .swatch.unbound { background: transparent; border: 1px dashed var(--border-ter); }
 
     /* ── Popover ── */
     .backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      background: rgba(0,0,0,0.55);
-      align-items: center;
-      justify-content: center;
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.55); align-items: center; justify-content: center;
     }
     .backdrop.open { display: flex; }
-
     .popover {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-sec);
-      border-radius: 10px;
-      padding: 18px;
-      min-width: 260px;
+      background: var(--bg-secondary); border: 1px solid var(--border-sec);
+      border-radius: 10px; padding: 18px; min-width: 260px;
       box-shadow: 0 12px 40px rgba(0,0,0,0.5);
     }
-    .popover h3 {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-sec);
-      margin-bottom: 14px;
-    }
+    .popover h3 { font-size: 13px; font-weight: 600; color: var(--text-sec); margin-bottom: 14px; }
     .popover label {
-      display: block;
-      font-size: 11px;
-      color: var(--text-ter);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      display: block; font-size: 11px; color: var(--text-ter); margin-bottom: 4px;
+      text-transform: uppercase; letter-spacing: 0.04em;
     }
-    .popover input,
-    .popover select {
-      width: 100%;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-sec);
-      border-radius: 6px;
-      color: var(--text-pri);
-      padding: 7px 10px;
-      font-size: 14px;
-      margin-bottom: 12px;
-      outline: none;
-      font-family: var(--font);
-      appearance: none;
+    .popover input, .popover select {
+      width: 100%; background: var(--bg-primary); border: 1px solid var(--border-sec);
+      border-radius: 6px; color: var(--text-pri); padding: 7px 10px; font-size: 14px;
+      margin-bottom: 12px; outline: none; font-family: var(--font); appearance: none;
     }
-    .popover input:focus,
-    .popover select:focus { border-color: var(--accent); }
-    .popover select { background-image: none; }
-
-    .popover-actions {
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
-      margin-top: 4px;
-    }
+    .popover input:focus, .popover select:focus { border-color: var(--accent); }
+    .popover-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
     .btn-cancel {
-      padding: 6px 14px;
-      border-radius: 6px;
-      border: 1px solid var(--border-sec);
-      background: transparent;
-      color: var(--text-sec);
-      font-size: 13px;
-      cursor: pointer;
-      font-family: var(--font);
+      padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border-sec);
+      background: transparent; color: var(--text-sec); font-size: 13px; cursor: pointer; font-family: var(--font);
     }
     .btn-save {
-      padding: 6px 14px;
-      border-radius: 6px;
-      border: none;
-      background: var(--accent);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      font-family: var(--font);
+      padding: 6px 14px; border-radius: 6px; border: none;
+      background: var(--accent); color: #fff; font-size: 13px; font-weight: 500;
+      cursor: pointer; font-family: var(--font);
     }
     .btn-save:hover { background: #3a8eef; }
   </style>
@@ -196,27 +130,41 @@
 <body>
 
 <header>
-  <h1>Tartarus Pro v2 <span class="sub">— Keymap Editor</span></h1>
+  <h1>Tartarus Pro v2</h1>
+  <span
+    id="profile-name"
+    class="profile-name"
+    contenteditable="true"
+    spellcheck="false"
+    title="Click to rename profile"
+    onblur="onProfileNameBlur()"
+    onkeydown="onProfileNameKey(event)"
+  ></span>
 </header>
 
 <div class="toolbar">
-  <div class="tabs">
-    <button class="tab active" onclick="showLayer('ground')">Ground (slot 1)</button>
-    <button class="tab"        onclick="showLayer('flight')">Flight (slot 2)</button>
-  </div>
+  <div class="tabs-row" id="tabs-row"></div>
   <div class="spacer"></div>
+  <button class="btn accent" onclick="importSynapse()" title="Import and decode a Razer Synapse 4 .synapse4 file">Import .synapse4</button>
   <button class="btn" onclick="exportJSON()">Export JSON</button>
   <button class="btn" onclick="importJSON()">Import JSON</button>
   <button class="btn danger" onclick="resetState()">Reset</button>
 </div>
 
 <div class="svg-wrap">
-  <svg id="kp-svg" width="100%" viewBox="0 0 680 350" role="img" aria-label="Tartarus Pro v2 keymap"></svg>
+  <svg id="kp-svg" width="100%" viewBox="0 0 680 350" role="img" aria-label="Tartarus Pro v2 keymap">
+    <defs>
+      <linearGradient id="card-grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="#272727"/>
+        <stop offset="100%" stop-color="#1e1e1e"/>
+      </linearGradient>
+    </defs>
+  </svg>
 </div>
 
 <div class="legend">
   <div class="legend-item"><div class="swatch" style="background:#3B6D11"></div>ESC</div>
-  <div class="legend-item"><div class="swatch" style="background:#533AB7"></div>Keymap switch</div>
+  <div class="legend-item"><div class="swatch" style="background:#533AB7"></div>Layer switch</div>
   <div class="legend-item"><div class="swatch" style="background:#0F6E56"></div>Action (analog)</div>
   <div class="legend-item"><div class="swatch" style="background:#185FA5"></div>Modifier (analog)</div>
   <div class="legend-item"><div class="swatch" style="background:#BA7517"></div>D-pad / joystick</div>
@@ -224,7 +172,7 @@
   <div class="legend-item"><div class="swatch unbound"></div>Unbound</div>
 </div>
 
-<!-- Edit popover -->
+<!-- Key edit popover -->
 <div class="backdrop" id="backdrop" onclick="onBackdropClick(event)">
   <div class="popover" onclick="event.stopPropagation()">
     <h3 id="pop-title">Edit binding</h3>
@@ -236,7 +184,7 @@
       <option value="esc">ESC</option>
       <option value="action">Action (analog)</option>
       <option value="modifier">Modifier (analog)</option>
-      <option value="switch">Keymap switch</option>
+      <option value="switch">Layer switch</option>
     </select>
     <div class="popover-actions">
       <button class="btn-cancel" onclick="closePopover()">Cancel</button>
@@ -248,7 +196,50 @@
 <script>
 'use strict';
 
-// ── Color palette ────────────────────────────────────────────────────────────
+// ── Hardware inputID → key number (from tartarus_pro_v2_key_map.json) ────────
+const INPUT_TO_KEY = {
+  'KEY_1': '01', 'KEY_2': '02', 'KEY_3': '03', 'KEY_4': '04', 'KEY_5': '05',
+  'KEY_TAB': '06', 'KEY_Q': '07', 'KEY_W': '08', 'KEY_E': '09', 'KEY_R': '10',
+  'KEY_CAPS_LOCK': '11', 'KEY_A': '12', 'KEY_S': '13', 'KEY_D': '14', 'KEY_F': '15',
+  'KEY_LEFT_SHIFT': '16', 'KEY_Z': '17', 'KEY_X': '18', 'KEY_C': '19',
+  'KEY_SPACEBAR': '20',      // thumb button
+  'KEY_LEFT_ALT': 'ALT',    // circle button
+};
+
+// Synapse key string → human-readable label
+function synKeyToLabel(k) {
+  const m = {
+    'KEY_ESCAPE':'ESC', 'KEY_SPACEBAR':'SPACE', 'KEY_TAB':'TAB',
+    'KEY_ENTER':'ENT', 'KEY_BACKSPACE':'BKSP', 'KEY_DELETE':'DEL',
+    'KEY_INSERT':'INS', 'KEY_HOME':'HOME', 'KEY_END':'END',
+    'KEY_PAGE_UP':'PG↑', 'KEY_PAGE_DOWN':'PG↓',
+    'KEY_LEFT_SHIFT':'L-SHF', 'KEY_RIGHT_SHIFT':'R-SHF',
+    'KEY_LEFT_ALT':'L-ALT', 'KEY_RIGHT_ALT':'R-ALT',
+    'KEY_LEFT_CONTROL':'L-CTL', 'KEY_RIGHT_CONTROL':'R-CTL',
+    'KEY_CAPS_LOCK':'CAPS',
+    'KEY_UP':'↑', 'KEY_DOWN':'↓', 'KEY_LEFT':'←', 'KEY_RIGHT':'→',
+    'KEY_COMMA':',', 'KEY_PERIOD':'.', 'KEY_SLASH':'/',
+    'KEY_SEMICOLON':';', 'KEY_APOSTROPHE':"'", 'KEY_GRAVE':'`',
+    'KEY_MINUS':'-', 'KEY_EQUAL':'=',
+    'KEY_LEFT_BRACKET':'[', 'KEY_RIGHT_BRACKET':']', 'KEY_BACKSLASH':'\\',
+  };
+  if (!k) return '?';
+  if (m[k]) return m[k];
+  const match = k.match(/^KEY_(.+)$/);
+  return match ? match[1] : k;
+}
+
+// Infer category from a Synapse mapping object
+function inferCat(mapping) {
+  if (mapping.outputType === 'keymapGroup') return 'switch';
+  const key = mapping.keyboardGroup?.key || mapping.keyboardGroup?.Key || '';
+  if (key === 'KEY_ESCAPE') return 'esc';
+  if (['KEY_LEFT_SHIFT','KEY_RIGHT_SHIFT','KEY_LEFT_ALT','KEY_RIGHT_ALT',
+       'KEY_LEFT_CONTROL','KEY_RIGHT_CONTROL'].includes(key)) return 'modifier';
+  return 'action';
+}
+
+// ── Color palette ─────────────────────────────────────────────────────────────
 const C = {
   esc:      '#3B6D11',
   switch:   '#533AB7',
@@ -259,82 +250,232 @@ const C = {
   unbound:  null,
 };
 
-// ── Default bindings (matches the reference SVG exactly) ────────────────────
-const DEFAULTS = {
-  ground: {
-    '01': { label:'ESC',      cat:'esc'      },
-    '02': { label:'—',        cat:'unbound'  },
-    '03': { label:'—',        cat:'unbound'  },
-    '04': { label:'—',        cat:'unbound'  },
-    '05': { label:'—',        cat:'unbound'  },
-    '06': { label:'—',        cat:'unbound'  },
-    '07': { label:'—',        cat:'unbound'  },
-    '08': { label:'C',        cat:'modifier' },
-    '09': { label:'—',        cat:'unbound'  },
-    '10': { label:'—',        cat:'unbound'  },
-    '11': { label:'—',        cat:'unbound'  },
-    '12': { label:'F',        cat:'modifier' },
-    '13': { label:'L-SHF',   cat:'modifier' },
-    '14': { label:'Q',        cat:'action'   },
-    '15': { label:'SPACE',    cat:'action'   },
-    '16': { label:'—',        cat:'unbound'  },
-    '17': { label:'—',        cat:'unbound'  },
-    '18': { label:'R',        cat:'action'   },
-    '19': { label:'G',        cat:'action'   },
-    '20': { label:'X',        cat:'action'   },
-    'ALT':{ label:'→ Flight', cat:'switch'   },
-  },
-  flight: {
-    '01': { label:'ESC',      cat:'esc'      },
-    '02': { label:'—',        cat:'unbound'  },
-    '03': { label:'—',        cat:'unbound'  },
-    '04': { label:'—',        cat:'unbound'  },
-    '05': { label:'—',        cat:'unbound'  },
-    '06': { label:'—',        cat:'unbound'  },
-    '07': { label:'—',        cat:'unbound'  },
-    '08': { label:'M',        cat:'action'   },
-    '09': { label:'C',        cat:'action'   },
-    '10': { label:'E',        cat:'action'   },
-    '11': { label:'—',        cat:'unbound'  },
-    '12': { label:'L-ALT',    cat:'modifier' },
-    '13': { label:'L-SHF',   cat:'modifier' },
-    '14': { label:'G',        cat:'action'   },
-    '15': { label:'F',        cat:'action'   },
-    '16': { label:',',        cat:'action'   },
-    '17': { label:'.',        cat:'action'   },
-    '18': { label:'SPACE',    cat:'action'   },
-    '19': { label:'/',        cat:'action'   },
-    '20': { label:'X',        cat:'action'   },
-    'ALT':{ label:'→ Ground', cat:'switch'   },
-  },
+// ── Blank / default key sets ──────────────────────────────────────────────────
+function blankKeys() {
+  const keys = {};
+  ['01','02','03','04','05','06','07','08','09','10',
+   '11','12','13','14','15','16','17','18','19','20'].forEach(k => {
+    keys[k] = { label:'—', cat:'unbound' };
+  });
+  keys['ALT'] = { label:'—', cat:'unbound' };
+  return keys;
+}
+
+const NMS_GROUND_KEYS = {
+  '01':{ label:'ESC',       cat:'esc'      },
+  '02':{ label:'—',         cat:'unbound'  },
+  '03':{ label:'—',         cat:'unbound'  },
+  '04':{ label:'—',         cat:'unbound'  },
+  '05':{ label:'—',         cat:'unbound'  },
+  '06':{ label:'—',         cat:'unbound'  },
+  '07':{ label:'—',         cat:'unbound'  },
+  '08':{ label:'C',         cat:'modifier' },
+  '09':{ label:'—',         cat:'unbound'  },
+  '10':{ label:'—',         cat:'unbound'  },
+  '11':{ label:'—',         cat:'unbound'  },
+  '12':{ label:'F',         cat:'modifier' },
+  '13':{ label:'L-SHF',     cat:'modifier' },
+  '14':{ label:'Q',         cat:'action'   },
+  '15':{ label:'SPACE',     cat:'action'   },
+  '16':{ label:'—',         cat:'unbound'  },
+  '17':{ label:'—',         cat:'unbound'  },
+  '18':{ label:'R',         cat:'action'   },
+  '19':{ label:'G',         cat:'action'   },
+  '20':{ label:'X',         cat:'action'   },
+  'ALT':{ label:'→ Flight', cat:'switch'   },
 };
 
-// ── State ────────────────────────────────────────────────────────────────────
-const LS_KEY = 'tartarus-nms-v1';
+const NMS_FLIGHT_KEYS = {
+  '01':{ label:'ESC',        cat:'esc'      },
+  '02':{ label:'—',          cat:'unbound'  },
+  '03':{ label:'—',          cat:'unbound'  },
+  '04':{ label:'—',          cat:'unbound'  },
+  '05':{ label:'—',          cat:'unbound'  },
+  '06':{ label:'—',          cat:'unbound'  },
+  '07':{ label:'—',          cat:'unbound'  },
+  '08':{ label:'M',          cat:'action'   },
+  '09':{ label:'C',          cat:'action'   },
+  '10':{ label:'E',          cat:'action'   },
+  '11':{ label:'—',          cat:'unbound'  },
+  '12':{ label:'L-ALT',      cat:'modifier' },
+  '13':{ label:'L-SHF',      cat:'modifier' },
+  '14':{ label:'G',          cat:'action'   },
+  '15':{ label:'F',          cat:'action'   },
+  '16':{ label:',',          cat:'action'   },
+  '17':{ label:'.',          cat:'action'   },
+  '18':{ label:'SPACE',      cat:'action'   },
+  '19':{ label:'/',          cat:'action'   },
+  '20':{ label:'X',          cat:'action'   },
+  'ALT':{ label:'→ Ground',  cat:'switch'   },
+};
+
+function uid() {
+  return (typeof crypto !== 'undefined' && crypto.randomUUID)
+    ? crypto.randomUUID().slice(0,8)
+    : Math.random().toString(36).slice(2,10);
+}
+
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+// ── Default state ─────────────────────────────────────────────────────────────
+const DEFAULT_STATE = {
+  profileName: 'NMS Profile',
+  keymaps: [
+    { id: 'km-ground', name: 'Ground', dpadMode: 'joystick', keys: clone(NMS_GROUND_KEYS) },
+    { id: 'km-flight', name: 'Flight', dpadMode: 'unbound',  keys: clone(NMS_FLIGHT_KEYS) },
+  ],
+  activeId: 'km-ground',
+};
+
+// ── State management ──────────────────────────────────────────────────────────
+const LS_KEY = 'tartarus-v2';
 let state = loadState();
-let currentLayer = 'ground';
-let editTarget = null; // { layer, keyId }
+let editTarget = null; // { keyId }
 
 function loadState() {
   try {
     const s = localStorage.getItem(LS_KEY);
-    if (s) return JSON.parse(s);
+    if (s) {
+      const parsed = JSON.parse(s);
+      // Accept old v1 format { ground: {...}, flight: {...} } and upgrade it
+      if (parsed.ground && parsed.flight && !parsed.keymaps) {
+        return {
+          profileName: 'Imported Profile',
+          keymaps: [
+            { id: uid(), name: 'Ground', dpadMode: 'joystick', keys: parsed.ground },
+            { id: uid(), name: 'Flight',  dpadMode: 'unbound',  keys: parsed.flight  },
+          ],
+          activeId: 'km-0',
+        };
+      }
+      if (parsed.keymaps) return parsed;
+    }
   } catch (_) {}
-  return clone(DEFAULTS);
+  return clone(DEFAULT_STATE);
 }
+
 function saveState() {
   localStorage.setItem(LS_KEY, JSON.stringify(state));
 }
-function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+function getActiveKeymap() {
+  return state.keymaps.find(km => km.id === state.activeId) ?? state.keymaps[0];
+}
+
 function resetState() {
-  if (!confirm('Reset all bindings to NMS defaults?')) return;
-  state = clone(DEFAULTS);
+  if (!confirm('Reset to NMS defaults (Ground + Flight layers)?')) return;
+  state = clone(DEFAULT_STATE);
+  saveState();
+  renderTabs();
+  render();
+}
+
+// ── Profile name ──────────────────────────────────────────────────────────────
+function syncProfileNameEl() {
+  const el = document.getElementById('profile-name');
+  if (el && el !== document.activeElement) el.textContent = state.profileName;
+}
+
+function onProfileNameBlur() {
+  const el = document.getElementById('profile-name');
+  state.profileName = el.textContent.trim() || 'My Profile';
+  el.textContent = state.profileName;
+  saveState();
+}
+
+function onProfileNameKey(e) {
+  if (e.key === 'Enter') { e.preventDefault(); document.getElementById('profile-name').blur(); }
+  if (e.key === 'Escape') {
+    document.getElementById('profile-name').textContent = state.profileName;
+    document.getElementById('profile-name').blur();
+  }
+}
+
+// ── Layer / tab management ────────────────────────────────────────────────────
+function renderTabs() {
+  const row = document.getElementById('tabs-row');
+  row.innerHTML = '';
+  const canDelete = state.keymaps.length > 1;
+
+  state.keymaps.forEach(km => {
+    const tab = document.createElement('div');
+    tab.className = 'tab' + (km.id === state.activeId ? ' active' : '');
+    tab.onclick = () => switchLayer(km.id);
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'tab-name';
+    nameSpan.textContent = km.name;
+    nameSpan.title = 'Double-click to rename';
+    nameSpan.ondblclick = e => { e.stopPropagation(); renameLayer(km.id); };
+
+    const del = document.createElement('button');
+    del.className = 'tab-del';
+    del.textContent = '×';
+    del.title = 'Delete layer';
+    del.disabled = !canDelete;
+    del.onclick = e => { e.stopPropagation(); deleteLayer(km.id); };
+
+    tab.append(nameSpan, del);
+    row.appendChild(tab);
+  });
+
+  const addBtn = document.createElement('button');
+  addBtn.className = 'btn-add-layer';
+  addBtn.textContent = '+ Layer';
+  addBtn.onclick = addLayer;
+  row.appendChild(addBtn);
+}
+
+function switchLayer(id) {
+  state.activeId = id;
+  saveState();
+  renderTabs();
+  render();
+}
+
+function addLayer() {
+  const name = prompt('New layer name:', `Layer ${state.keymaps.length + 1}`);
+  if (!name || !name.trim()) return;
+  const km = { id: uid(), name: name.trim(), dpadMode: 'unbound', keys: blankKeys() };
+  state.keymaps.push(km);
+  state.activeId = km.id;
+  saveState();
+  renderTabs();
+  render();
+}
+
+function deleteLayer(id) {
+  if (state.keymaps.length <= 1) return;
+  const km = state.keymaps.find(k => k.id === id);
+  if (!confirm(`Delete layer "${km.name}"?`)) return;
+  const idx = state.keymaps.findIndex(k => k.id === id);
+  state.keymaps.splice(idx, 1);
+  if (state.activeId === id) state.activeId = state.keymaps[Math.max(0, idx - 1)].id;
+  saveState();
+  renderTabs();
+  render();
+}
+
+function renameLayer(id) {
+  const km = state.keymaps.find(k => k.id === id);
+  const name = prompt('Rename layer:', km.name);
+  if (!name || !name.trim()) return;
+  km.name = name.trim();
+  saveState();
+  renderTabs();
+  render();
+}
+
+function toggleDpad() {
+  const km = getActiveKeymap();
+  km.dpadMode = km.dpadMode === 'joystick' ? 'unbound' : 'joystick';
   saveState();
   render();
 }
 
-// ── SVG helpers ──────────────────────────────────────────────────────────────
-const NS = 'http://www.w3.org/2000/svg';
+// ── SVG helpers ───────────────────────────────────────────────────────────────
+const NS   = 'http://www.w3.org/2000/svg';
+const FONT = "system-ui, -apple-system, 'Segoe UI', sans-serif";
 
 function svgEl(tag, attrs) {
   const e = document.createElementNS(NS, tag);
@@ -348,60 +489,48 @@ function svgText(txt, x, y, attrs) {
   return e;
 }
 
-// ── Key cell factory ─────────────────────────────────────────────────────────
-const FONT = "system-ui, -apple-system, 'Segoe UI', sans-serif";
-
-function makeKey(keyId, x, y, w, h, layer) {
-  const b = state[layer][keyId];
+// ── Key cell factory ──────────────────────────────────────────────────────────
+function makeKey(keyId, x, y, w, h, km) {
+  const b = km.keys[keyId];
   const color = C[b.cat];
   const unbound = b.cat === 'unbound';
   const lbl = b.label;
 
   const g = svgEl('g', { class: 'key-cell' });
-  g.addEventListener('click', () => openEditor(layer, keyId));
+  g.addEventListener('click', () => openEditor(keyId));
 
-  // Background rect
   const rectAttrs = {
     x, y, width: w, height: h, rx: 6,
     fill: 'var(--bg-primary)',
     stroke: unbound ? 'var(--border-ter)' : color,
-    'stroke-width': unbound ? 0.8 : 1.2,
+    'stroke-width': unbound ? 0.8 : 1.3,
   };
   if (unbound) rectAttrs['stroke-dasharray'] = '4 3';
   g.appendChild(svgEl('rect', rectAttrs));
 
-  // Key number (top-left)
   g.appendChild(svgText(keyId, x + 5, y + 13, {
-    'font-size': 9,
-    fill: 'var(--text-ter)',
-    'font-family': FONT,
-    'font-weight': 500,
+    'font-size': 9, fill: 'var(--text-ter)', 'font-family': FONT, 'font-weight': 500,
   }));
 
-  // Binding label (center)
   const len = lbl.length;
-  let fs = 18, ly = y + h * 0.66;
+  let fs = 18, ly = y + h * 0.67;
   if (len >= 6) { fs = 10; ly = y + h * 0.62; }
   else if (len >= 4) { fs = 12; ly = y + h * 0.64; }
-  else if (len >= 3) { fs = 14; ly = y + h * 0.66; }
+  else if (len >= 3) { fs = 14; ly = y + h * 0.67; }
 
   g.appendChild(svgText(lbl, x + w / 2, ly, {
-    'font-size': fs,
-    'font-weight': 500,
+    'font-size': fs, 'font-weight': 500,
     fill: unbound ? 'var(--text-ter)' : color,
-    'text-anchor': 'middle',
-    'font-family': FONT,
+    'text-anchor': 'middle', 'font-family': FONT,
   }));
 
   return g;
 }
 
-// ── Layout constants ─────────────────────────────────────────────────────────
-// Viewbox: 680 × 350 (tighter than reference — no wasted vertical space)
+// ── Layout constants ──────────────────────────────────────────────────────────
 const KW = 62, KH = 52, KGX = 70, KGY = 60;
 const GRID_X0 = 22, GRID_Y0 = 36;
 const DIVIDER_X = 390;
-
 const GRID_ROWS = [
   ['01','02','03','04','05'],
   ['06','07','08','09','10'],
@@ -409,52 +538,66 @@ const GRID_ROWS = [
   ['16','17','18','19','20'],
 ];
 
-// ── Main render ──────────────────────────────────────────────────────────────
+// ── Main render ───────────────────────────────────────────────────────────────
 function render() {
   const svg = document.getElementById('kp-svg');
+  // Preserve <defs>
+  const defs = svg.querySelector('defs');
   while (svg.firstChild) svg.removeChild(svg.firstChild);
+  if (defs) svg.appendChild(defs);
 
-  const layer = currentLayer;
+  const km = getActiveKeymap();
 
-  // Outer card
+  // Outer card with gradient
   svg.appendChild(svgEl('rect', {
     x:10, y:8, width:660, height:334, rx:20,
-    fill: 'var(--bg-secondary)',
-    stroke: 'var(--border-sec)',
-    'stroke-width': 1.5,
+    fill: 'url(#card-grad)',
+    stroke: 'var(--border-sec)', 'stroke-width': 1.5,
   }));
+  // Top accent line
+  svg.appendChild(svgEl('rect', { x:11, y:9, width:658, height:3, rx:20,
+    fill: 'var(--border-ter)', opacity:0.5 }));
 
   // Layer label
   svg.appendChild(svgText(
-    `NMS — ${layer === 'ground' ? 'Ground' : 'Flight'} layer  ·  top-left = key#  ·  center = output  ·  click to edit`,
+    `${km.name}  ·  top-left = key#  ·  center = output  ·  click to edit`,
     340, 26,
     { 'font-size':10, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT }
   ));
 
-  // ── Key grid ──
+  // ── 4×5 key grid ──
   GRID_ROWS.forEach((row, ri) => {
     row.forEach((keyId, ci) => {
-      const x = GRID_X0 + ci * KGX;
-      const y = GRID_Y0 + ri * KGY;
-      svg.appendChild(makeKey(keyId, x, y, KW, KH, layer));
+      svg.appendChild(makeKey(keyId, GRID_X0 + ci * KGX, GRID_Y0 + ri * KGY, KW, KH, km));
     });
   });
 
-  // ── ALT key (wide, below grid) ──
-  const altY = GRID_Y0 + 4 * KGY + 4;
-  const altBinding = state[layer]['ALT'];
-  const altColor = C[altBinding.cat];
+  // ── ALT key — pill shape (circle button on hardware) ──
+  const altY = GRID_Y0 + 4 * KGY + 8;
+  const altB = km.keys['ALT'];
+  const altColor = C[altB.cat] || 'var(--border-ter)';
   const altG = svgEl('g', { class: 'key-cell' });
-  altG.addEventListener('click', () => openEditor(layer, 'ALT'));
+  altG.addEventListener('click', () => openEditor('ALT'));
+
+  const altW = 100, altH = 40;
+  const altX = GRID_X0;
   altG.appendChild(svgEl('rect', {
-    x: GRID_X0, y: altY, width: 130, height: 40, rx: 6,
-    fill: 'var(--bg-primary)', stroke: altColor, 'stroke-width': 1.2,
+    x: altX, y: altY, width: altW, height: altH,
+    rx: altH / 2,    // full pill
+    fill: 'var(--bg-primary)',
+    stroke: altColor, 'stroke-width': 1.3,
+    ...(altB.cat === 'unbound' ? { 'stroke-dasharray':'4 3', 'stroke-width':0.8 } : {}),
   }));
-  altG.appendChild(svgText('ALT', GRID_X0 + 5, altY + 13, {
-    'font-size':9, fill:'var(--text-ter)', 'font-family':FONT, 'font-weight':500,
+  altG.appendChild(svgText('ALT', altX + 8, altY + 13, {
+    'font-size':8, fill:'var(--text-ter)', 'font-family':FONT, 'font-weight':600,
+    'letter-spacing':'0.05em',
   }));
-  altG.appendChild(svgText(altBinding.label, GRID_X0 + 65, altY + 25, {
-    'font-size':12, 'font-weight':500, fill:altColor, 'text-anchor':'middle', 'font-family':FONT,
+  const altLbl = altB.label;
+  const altFs = altLbl.length >= 7 ? 10 : altLbl.length >= 5 ? 11 : 13;
+  altG.appendChild(svgText(altLbl, altX + altW / 2, altY + altH * 0.63, {
+    'font-size': altFs, 'font-weight': 500,
+    fill: altB.cat === 'unbound' ? 'var(--text-ter)' : altColor,
+    'text-anchor': 'middle', 'font-family': FONT,
   }));
   svg.appendChild(altG);
 
@@ -464,19 +607,18 @@ function render() {
     stroke: 'var(--border-ter)', 'stroke-width': 0.5, 'stroke-dasharray': '5 4',
   }));
 
-  // ── Right panel: Arrow keys ──
-  const RP = DIVIDER_X + 16; // right panel left edge
+  // ── Right panel: Arrow keys (always WASD) ──
+  const RP = DIVIDER_X + 16;
   svg.appendChild(svgText('Arrow keys → WASD', RP, 44, {
     'font-size':10, fill:'var(--text-ter)', 'font-family':FONT,
   }));
 
-  // Arrow cross layout (↑=W, ←=A, ↓=S, →=D)
   const AW = 48, AH = 38;
   const arrows = [
-    { x: RP + 48,      y: 52,  sym:'↑', lbl:'W' },
-    { x: RP,           y: 96,  sym:'←', lbl:'A' },
-    { x: RP + 48,      y: 96,  sym:'↓', lbl:'S' },
-    { x: RP + 96,      y: 96,  sym:'→', lbl:'D' },
+    { x: RP + 48, y: 52,  sym:'↑', lbl:'W' },
+    { x: RP,      y: 96,  sym:'←', lbl:'A' },
+    { x: RP + 48, y: 96,  sym:'↓', lbl:'S' },
+    { x: RP + 96, y: 96,  sym:'→', lbl:'D' },
   ];
   for (const { x, y, sym, lbl } of arrows) {
     const g = svgEl('g', {});
@@ -491,15 +633,21 @@ function render() {
     svg.appendChild(g);
   }
 
-  // ── Right panel: D-pad ──
-  const dpY0 = 152;
-  if (layer === 'ground') {
-    svg.appendChild(svgText('D-pad → joystick axes', RP, dpY0, {
-      'font-size':10, fill:'var(--text-ter)', 'font-family':FONT,
-    }));
+  // ── Right panel: D-pad (click to toggle mode) ──
+  const dpY0 = 150;
+  const dpadG = svgEl('g', { class: 'key-cell', style: 'cursor:pointer' });
+  dpadG.addEventListener('click', toggleDpad);
 
-    const CS = 40, CG = 2; // cell size, gap
-    const dpad = [
+  const modeLabel = km.dpadMode === 'joystick'
+    ? 'D-pad: joystick axes  (click to toggle)'
+    : 'D-pad: unbound  (click to toggle)';
+  dpadG.appendChild(svgText(modeLabel, RP, dpY0, {
+    'font-size':9.5, fill:'var(--text-ter)', 'font-family':FONT,
+  }));
+
+  if (km.dpadMode === 'joystick') {
+    const CS = 40, CG = 2;
+    const dpadCells = [
       { col:0, row:0, sym:'↖' },
       { col:1, row:0, sym:'↑',  sub:'Y−' },
       { col:2, row:0, sym:'↗' },
@@ -510,87 +658,66 @@ function render() {
       { col:1, row:2, sym:'↓',  sub:'Y+' },
       { col:2, row:2, sym:'↘' },
     ];
-    for (const { col, row, sym, sub, center } of dpad) {
+    for (const { col, row, sym, sub, center } of dpadCells) {
       const dx = RP + col * (CS + CG);
-      const dy = dpY0 + 8 + row * (CS + CG);
-      const g = svgEl('g', {});
-      g.appendChild(svgEl('rect', { x:dx, y:dy, width:CS, height:CS, rx:5,
+      const dy = dpY0 + 10 + row * (CS + CG);
+      dpadG.appendChild(svgEl('rect', { x:dx, y:dy, width:CS, height:CS, rx:5,
         fill: center ? 'var(--bg-tertiary)' : 'var(--bg-primary)',
         stroke: center ? 'var(--border-ter)' : '#BA7517',
         'stroke-width': center ? 0.6 : 0.9,
       }));
       if (sub) {
-        g.appendChild(svgText(sym, dx + CS/2, dy + 15, {
+        dpadG.appendChild(svgText(sym, dx+CS/2, dy+15, {
           'font-size':10, fill:'#BA7517', 'text-anchor':'middle', 'font-family':FONT,
         }));
-        g.appendChild(svgText(sub, dx + CS/2, dy + 29, {
+        dpadG.appendChild(svgText(sub, dx+CS/2, dy+29, {
           'font-size':9, fill:'#BA7517', 'text-anchor':'middle', 'font-family':FONT,
         }));
       } else {
-        g.appendChild(svgText(sym, dx + CS/2, dy + CS/2 + 4, {
-          'font-size': center ? 9 : 13,
-          'font-weight': center ? 400 : 500,
+        dpadG.appendChild(svgText(sym, dx+CS/2, dy+CS/2+4, {
+          'font-size': center ? 9 : 13, 'font-weight': center ? 400 : 500,
           fill: center ? 'var(--text-ter)' : '#BA7517',
-          'text-anchor':'middle',
-          'font-family':FONT,
-          'dominant-baseline':'middle',
+          'text-anchor':'middle', 'font-family':FONT, 'dominant-baseline':'middle',
         }));
       }
-      svg.appendChild(g);
     }
-
-    // Scroll wheel label
-    const swX = RP + 3 * (CS + CG) + 6;
-    const swY = dpY0 + 8;
-    svg.appendChild(svgEl('rect', { x:swX, y:swY, width:76, height:CS*3+CG*2, rx:7,
-      fill:'var(--bg-tertiary)', stroke:'var(--border-sec)', 'stroke-width':0.8,
+    // Scroll wheel box
+    const swX = RP + 3*(CS+CG) + 6, swY = dpY0 + 10;
+    dpadG.appendChild(svgEl('rect', { x:swX, y:swY, width:72, height:CS*3+CG*2, rx:7,
+      fill:'var(--bg-tertiary)', stroke:'var(--border-sec)', 'stroke-width':0.8 }));
+    dpadG.appendChild(svgText('scroll', swX+36, swY+48, {
+      'font-size':9.5, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
     }));
-    svg.appendChild(svgText('scroll', swX + 38, swY + (CS*3+CG*2)/2 - 6, {
-      'font-size':10, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
+    dpadG.appendChild(svgText('wheel', swX+36, swY+60, {
+      'font-size':9.5, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
     }));
-    svg.appendChild(svgText('wheel', swX + 38, swY + (CS*3+CG*2)/2 + 7, {
-      'font-size':10, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
-    }));
-    svg.appendChild(svgText('(unbound)', swX + 38, swY + (CS*3+CG*2)/2 + 20, {
+    dpadG.appendChild(svgText('(unbound)', swX+36, swY+73, {
       'font-size':8, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
     }));
-
   } else {
-    // Flight: dpad unbound placeholder
-    svg.appendChild(svgText('D-pad: unbound in this layer', RP, dpY0, {
-      'font-size':10, fill:'var(--text-ter)', 'font-family':FONT,
-    }));
-    svg.appendChild(svgEl('rect', { x:RP, y:dpY0+8, width:200, height:130, rx:8,
+    dpadG.appendChild(svgEl('rect', { x:RP, y:dpY0+10, width:198, height:126, rx:8,
       fill:'var(--bg-tertiary)', stroke:'var(--border-ter)',
-      'stroke-width':0.8, 'stroke-dasharray':'4 3',
-    }));
-    svg.appendChild(svgText('no joystick bindings', RP + 100, dpY0 + 76, {
+      'stroke-width':0.8, 'stroke-dasharray':'4 3' }));
+    dpadG.appendChild(svgText('no joystick bindings', RP+99, dpY0+76, {
       'font-size':11, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
     }));
   }
+  svg.appendChild(dpadG);
 
-  // ── Footer note ──
+  // ── Footer ──
   svg.appendChild(svgText(
-    'key# = hardware number  ·  dashed = unbound  ·  key 20 (physical V) remapped to SPACEBAR in Synapse',
+    'key# = hardware number  ·  dashed = unbound  ·  key 20 = thumb button (spacebar by default)  ·  ALT = circle button',
     20, 338,
-    { 'font-size':9, fill:'var(--text-ter)', 'font-family':FONT }
+    { 'font-size':8.5, fill:'var(--text-ter)', 'font-family':FONT }
   ));
 }
 
-// ── Layer tab switching ───────────────────────────────────────────────────────
-function showLayer(layer) {
-  currentLayer = layer;
-  document.querySelectorAll('.tab').forEach((t, i) => {
-    t.classList.toggle('active', (i === 0 && layer === 'ground') || (i === 1 && layer === 'flight'));
-  });
-  render();
-}
-
-// ── Popover ──────────────────────────────────────────────────────────────────
-function openEditor(layer, keyId) {
-  editTarget = { layer, keyId };
-  const b = state[layer][keyId];
-  document.getElementById('pop-title').textContent = `Edit key ${keyId} (${layer})`;
+// ── Key edit popover ──────────────────────────────────────────────────────────
+function openEditor(keyId) {
+  const km = getActiveKeymap();
+  editTarget = { keyId };
+  const b = km.keys[keyId];
+  document.getElementById('pop-title').textContent = `Edit key ${keyId} — ${km.name}`;
   document.getElementById('pop-label').value = b.label === '—' ? '' : b.label;
   document.getElementById('pop-cat').value = b.cat;
   document.getElementById('backdrop').classList.add('open');
@@ -608,13 +735,10 @@ function onBackdropClick(e) {
 
 function saveEdit() {
   if (!editTarget) return;
-  const { layer, keyId } = editTarget;
+  const km = getActiveKeymap();
   const raw = document.getElementById('pop-label').value.trim();
   const cat = document.getElementById('pop-cat').value;
-  state[layer][keyId] = {
-    label: raw || '—',
-    cat:   raw ? cat : 'unbound',
-  };
+  km.keys[editTarget.keyId] = { label: raw || '—', cat: raw ? cat : 'unbound' };
   saveState();
   closePopover();
   render();
@@ -625,34 +749,145 @@ document.getElementById('pop-label').addEventListener('keydown', e => {
   if (e.key === 'Escape') closePopover();
 });
 
-// ── Import / Export ───────────────────────────────────────────────────────────
+// ── JSON export / import ──────────────────────────────────────────────────────
 function exportJSON() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type:'application/json' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href = url;
-  a.download = 'tartarus-nms-bindings.json';
+  a.download = `tartarus-${state.profileName.replace(/\s+/g,'-').toLowerCase()}.json`;
   a.click();
   URL.revokeObjectURL(url);
 }
 
 function importJSON() {
   const input = document.createElement('input');
-  input.type   = 'file';
-  input.accept = '.json,application/json';
+  input.type = 'file'; input.accept = '.json,application/json';
   input.onchange = e => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
     reader.onload = ev => {
       try {
         const parsed = JSON.parse(ev.target.result);
-        if (!parsed.ground || !parsed.flight) throw new Error('Missing layers');
-        state = parsed;
+        // Accept v2 (keymaps array) or v1 (ground/flight object)
+        if (parsed.keymaps) {
+          state = parsed;
+        } else if (parsed.ground && parsed.flight) {
+          state = {
+            profileName: 'Imported Profile',
+            keymaps: [
+              { id: uid(), name: 'Ground', dpadMode: 'joystick', keys: parsed.ground },
+              { id: uid(), name: 'Flight',  dpadMode: 'unbound',  keys: parsed.flight  },
+            ],
+            activeId: '',
+          };
+          state.activeId = state.keymaps[0].id;
+        } else {
+          throw new Error('Unrecognised format');
+        }
         saveState();
+        syncProfileNameEl();
+        renderTabs();
         render();
       } catch (err) {
-        alert('Invalid file — expected { ground: {...}, flight: {...} }');
+        alert(`Could not parse file: ${err.message}`);
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+// ── Synapse4 import ───────────────────────────────────────────────────────────
+function importSynapse() {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = '.synapse4,.json';
+  input.onchange = e => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const outer = JSON.parse(ev.target.result);
+        const profiles = outer.profiles || outer.Profiles || [];
+        if (!profiles.length) throw new Error('No profiles array found');
+
+        const newKeymaps = [];
+
+        for (const profile of profiles) {
+          // Payload may be base64-encoded string or already-decoded object
+          const payloadRaw = profile.payload ?? profile.Payload;
+          let inner;
+          if (typeof payloadRaw === 'string' && payloadRaw.length > 0) {
+            // base64 → JSON string → object
+            try {
+              inner = JSON.parse(atob(payloadRaw));
+            } catch (_) {
+              // Maybe it's raw JSON, not base64
+              inner = JSON.parse(payloadRaw);
+            }
+          } else if (payloadRaw && typeof payloadRaw === 'object') {
+            inner = payloadRaw;
+          } else {
+            inner = profile; // fallback: treat profile itself as the inner structure
+          }
+
+          const rawKeymaps = inner.keymaps ?? inner.Keymaps ?? [];
+          if (!rawKeymaps.length) throw new Error('No keymaps found in payload');
+
+          for (const rkm of rawKeymaps) {
+            const km = {
+              id: uid(),
+              name: rkm.name ?? rkm.Name ?? `Layer ${newKeymaps.length + 1}`,
+              dpadMode: 'unbound',
+              keys: blankKeys(),
+            };
+
+            const mappings = rkm.mappings ?? rkm.Mappings ?? [];
+            for (const mapping of mappings) {
+              const inputId = mapping.inputID ?? mapping.InputID ?? '';
+              const keyNum  = INPUT_TO_KEY[inputId];
+
+              // Detect d-pad (analog axis) bindings to set dpadMode
+              const oType = mapping.outputType ?? mapping.OutputType ?? '';
+              if (oType === 'analogInputGroup' || oType === 'joystickGroup') {
+                km.dpadMode = 'joystick';
+              }
+
+              if (!keyNum) continue; // arrow keys, d-pad axes, scroll — not in our grid
+
+              if (oType === 'keymapGroup') {
+                const target = mapping.keymapGroup?.name ?? mapping.KeymapGroup?.Name ?? '?';
+                km.keys[keyNum] = { label: `→ ${target}`, cat: 'switch' };
+              } else if (oType === 'keyboardGroup' || oType === 'keyboard') {
+                const outKey = mapping.keyboardGroup?.key ?? mapping.KeyboardGroup?.Key
+                             ?? mapping.outputKey ?? mapping.OutputKey ?? '';
+                km.keys[keyNum] = { label: synKeyToLabel(outKey), cat: inferCat(mapping) };
+              }
+              // Unrecognised output types: leave as unbound (blankKeys default)
+            }
+            newKeymaps.push(km);
+          }
+        }
+
+        if (!newKeymaps.length) throw new Error('No usable keymaps found');
+
+        const profileName = outer.name ?? outer.Name ?? outer.profileName ?? 'Synapse Import';
+        if (!confirm(`Import ${newKeymaps.length} layer(s) from "${profileName}"?\n\nThis replaces all current layers.`)) return;
+
+        state.profileName = profileName;
+        state.keymaps     = newKeymaps;
+        state.activeId    = newKeymaps[0].id;
+        saveState();
+        syncProfileNameEl();
+        renderTabs();
+        render();
+
+      } catch (err) {
+        alert(
+          `Could not parse Synapse file: ${err.message}\n\n` +
+          `Expected format: { "profiles": [{ "payload": "<base64 JSON>" }] }\n` +
+          `The payload should decode to an object with a "keymaps" array.`
+        );
       }
     };
     reader.readAsText(file);
@@ -661,6 +896,8 @@ function importJSON() {
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
+syncProfileNameEl();
+renderTabs();
 render();
 </script>
 </body>
