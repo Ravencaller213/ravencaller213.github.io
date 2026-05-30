@@ -166,6 +166,7 @@
   <div class="legend-item"><div class="swatch" style="background:#3B6D11"></div>ESC</div>
   <div class="legend-item"><div class="swatch" style="background:#533AB7"></div>Layer switch</div>
   <div class="legend-item"><div class="swatch" style="background:#0F6E56"></div>Action (analog)</div>
+  <div class="legend-item"><div class="swatch" style="background:#6B4EA8"></div>Skill slot</div>
   <div class="legend-item"><div class="swatch" style="background:#185FA5"></div>Modifier (analog)</div>
   <div class="legend-item"><div class="swatch" style="background:#BA7517"></div>D-pad / joystick</div>
   <div class="legend-item"><div class="swatch" style="background:#993C1D"></div>Arrow → WASD</div>
@@ -183,6 +184,7 @@
       <option value="unbound">— Unbound</option>
       <option value="esc">ESC</option>
       <option value="action">Action (analog)</option>
+      <option value="skill">Skill slot</option>
       <option value="modifier">Modifier (analog)</option>
       <option value="switch">Layer switch</option>
     </select>
@@ -244,6 +246,7 @@ const C = {
   esc:      '#3B6D11',
   switch:   '#533AB7',
   action:   '#0F6E56',
+  skill:    '#6B4EA8',   // distinct skill-slot purple
   modifier: '#185FA5',
   dpad:     '#BA7517',
   arrow:    '#993C1D',
@@ -760,6 +763,65 @@ function exportJSON() {
   URL.revokeObjectURL(url);
 }
 
+// Detect which JSON format we're looking at
+function detectFormat(parsed) {
+  if (parsed.keymaps && Array.isArray(parsed.keymaps)) return 'v2';
+  if (parsed.ground && parsed.flight) return 'v1';
+  // Flat-profile format: { layerName: { '01': { label, cat, ... }, ... }, ... }
+  // At least one top-level value must be an object containing numeric key IDs or 'ALT'
+  for (const val of Object.values(parsed)) {
+    if (val && typeof val === 'object' && !Array.isArray(val)) {
+      const subKeys = Object.keys(val);
+      if (subKeys.some(k => /^\d{2}$/.test(k) || k === 'ALT' || k === 'dpad')) {
+        return 'flat-profile';
+      }
+    }
+  }
+  return 'unknown';
+}
+
+// Normalise category strings that may differ from our internal set
+function normalisecat(cat) {
+  if (!cat) return 'unbound';
+  if (cat === 'movement') return 'dpad';   // movement → d-pad color
+  // 'skill', 'action', 'modifier', 'esc', 'switch', 'unbound' pass through as-is
+  return cat;
+}
+
+// Convert flat-profile format → v2 state
+function convertFlatProfile(parsed) {
+  const keymaps = [];
+  for (const [layerName, layerData] of Object.entries(parsed)) {
+    if (typeof layerData !== 'object' || Array.isArray(layerData)) continue;
+    const keys = blankKeys();
+    let dpadMode = 'unbound';
+
+    for (const [keyId, keyData] of Object.entries(layerData)) {
+      if (keyId === 'dpad') {
+        // dpad entry signals joystick mode; not a key cell
+        dpadMode = 'joystick';
+        continue;
+      }
+      if (!Object.prototype.hasOwnProperty.call(keys, keyId)) continue;
+
+      const { label, cat: rawCat, ...rest } = keyData;
+      keys[keyId] = {
+        label: label || '—',
+        cat: normalisecat(rawCat),
+        ...rest,   // preserve poe2_default, remap, remap_note etc. as passthrough metadata
+      };
+    }
+
+    keymaps.push({ id: uid(), name: layerName, dpadMode, keys });
+  }
+  if (!keymaps.length) throw new Error('No layers found in flat-profile format');
+  return {
+    profileName: Object.keys(parsed).join(' / ') + ' Profile',
+    keymaps,
+    activeId: keymaps[0].id,
+  };
+}
+
 function importJSON() {
   const input = document.createElement('input');
   input.type = 'file'; input.accept = '.json,application/json';
@@ -769,10 +831,10 @@ function importJSON() {
     reader.onload = ev => {
       try {
         const parsed = JSON.parse(ev.target.result);
-        // Accept v2 (keymaps array) or v1 (ground/flight object)
-        if (parsed.keymaps) {
+        const fmt = detectFormat(parsed);
+        if (fmt === 'v2') {
           state = parsed;
-        } else if (parsed.ground && parsed.flight) {
+        } else if (fmt === 'v1') {
           state = {
             profileName: 'Imported Profile',
             keymaps: [
@@ -782,8 +844,15 @@ function importJSON() {
             activeId: '',
           };
           state.activeId = state.keymaps[0].id;
+        } else if (fmt === 'flat-profile') {
+          state = convertFlatProfile(parsed);
         } else {
-          throw new Error('Unrecognised format');
+          throw new Error(
+            'Unrecognised format.\n\nAccepted formats:\n' +
+            '  • v2 export: { "keymaps": [...] }\n' +
+            '  • v1 export: { "ground": {...}, "flight": {...} }\n' +
+            '  • flat-profile: { "layerName": { "01": { "label": "...", "cat": "..." }, ... } }'
+          );
         }
         saveState();
         syncProfileNameEl();
