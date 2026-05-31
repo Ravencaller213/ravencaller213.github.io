@@ -650,13 +650,29 @@ function render() {
     'font-size':8, fill:'var(--text-ter)', 'font-family':FONT, 'font-weight':600,
     'letter-spacing':'0.05em',
   }));
-  const altLbl = altB.label;
-  const altFs = altLbl.length >= 7 ? 10 : altLbl.length >= 5 ? 11 : 13;
-  altG.appendChild(svgText(altLbl, altX + altW / 2, altY + altH * 0.63, {
-    'font-size': altFs, 'font-weight': 500,
-    fill: altB.cat === 'unbound' ? 'var(--text-ter)' : altColor,
-    'text-anchor': 'middle', 'font-family': FONT,
-  }));
+  const altLbl  = altB.label;
+  const altNote = (altB.note || '').trim();
+  const altFill = altB.cat === 'unbound' ? 'var(--text-ter)' : altColor;
+  if (altNote) {
+    // Game label prominent, output key small below
+    const nFs = altNote.length > 9 ? 8.5 : altNote.length > 6 ? 10 : 11;
+    altG.appendChild(svgText(altNote, altX + altW / 2, altY + 23, {
+      'font-size': nFs, 'font-weight': 600, fill: altFill,
+      'text-anchor': 'middle', 'font-family': FONT,
+    }));
+    if (altLbl && altLbl !== '—') {
+      altG.appendChild(svgText(altLbl, altX + altW / 2, altY + 35, {
+        'font-size': 8, fill: 'var(--text-ter)',
+        'text-anchor': 'middle', 'font-family': FONT,
+      }));
+    }
+  } else {
+    const altFs = altLbl.length >= 7 ? 10 : altLbl.length >= 5 ? 11 : 13;
+    altG.appendChild(svgText(altLbl, altX + altW / 2, altY + altH * 0.63, {
+      'font-size': altFs, 'font-weight': 500, fill: altFill,
+      'text-anchor': 'middle', 'font-family': FONT,
+    }));
+  }
   svg.appendChild(altG);
 
   // ── Divider ──
