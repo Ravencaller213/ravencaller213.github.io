@@ -211,17 +211,21 @@ const INPUT_TO_KEY = {
 // Synapse key string → human-readable label
 function synKeyToLabel(k) {
   const m = {
-    'KEY_ESCAPE':'ESC', 'KEY_SPACEBAR':'SPACE', 'KEY_TAB':'TAB',
+    // Synapse uses both KEY_ESCAPE and KEY_ESC
+    'KEY_ESCAPE':'ESC', 'KEY_ESC':'ESC',
+    'KEY_SPACEBAR':'SPACE', 'KEY_TAB':'TAB',
     'KEY_ENTER':'ENT', 'KEY_BACKSPACE':'BKSP', 'KEY_DELETE':'DEL',
     'KEY_INSERT':'INS', 'KEY_HOME':'HOME', 'KEY_END':'END',
     'KEY_PAGE_UP':'PG↑', 'KEY_PAGE_DOWN':'PG↓',
     'KEY_LEFT_SHIFT':'L-SHF', 'KEY_RIGHT_SHIFT':'R-SHF',
     'KEY_LEFT_ALT':'L-ALT', 'KEY_RIGHT_ALT':'R-ALT',
-    'KEY_LEFT_CONTROL':'L-CTL', 'KEY_RIGHT_CONTROL':'R-CTL',
+    'KEY_LEFT_CONTROL':'L-CTL', 'KEY_LEFT_CTRL':'L-CTL',
+    'KEY_RIGHT_CONTROL':'R-CTL', 'KEY_RIGHT_CTRL':'R-CTL',
     'KEY_CAPS_LOCK':'CAPS',
     'KEY_UP':'↑', 'KEY_DOWN':'↓', 'KEY_LEFT':'←', 'KEY_RIGHT':'→',
     'KEY_COMMA':',', 'KEY_PERIOD':'.', 'KEY_SLASH':'/',
-    'KEY_SEMICOLON':';', 'KEY_APOSTROPHE':"'", 'KEY_GRAVE':'`',
+    'KEY_SEMICOLON':';', 'KEY_APOSTROPHE':"'",
+    'KEY_GRAVE':'`', 'KEY_TILDE':'~',
     'KEY_MINUS':'-', 'KEY_EQUAL':'=',
     'KEY_LEFT_BRACKET':'[', 'KEY_RIGHT_BRACKET':']', 'KEY_BACKSLASH':'\\',
   };
@@ -231,13 +235,41 @@ function synKeyToLabel(k) {
   return match ? match[1] : k;
 }
 
-// Infer category from a Synapse mapping object
-function inferCat(mapping) {
-  if (mapping.outputType === 'keymapGroup') return 'switch';
-  const key = mapping.keyboardGroup?.key || mapping.keyboardGroup?.Key || '';
-  if (key === 'KEY_ESCAPE') return 'esc';
+// Extract the output key string from a mapping, handling both flat (KeyInput)
+// and nested analog (AnalogInput) structures.
+function getOutputKey(mapping) {
+  // Analog: output lives at mapping.mapping[0].keyboardGroup.key
+  if (Array.isArray(mapping.mapping)) {
+    const first = mapping.mapping[0];
+    return first?.keyboardGroup?.key ?? first?.keyboardGroup?.Key ?? null;
+  }
+  // Flat KeyInput: output lives directly on the mapping object
+  return mapping.keyboardGroup?.key ?? mapping.keyboardGroup?.Key ?? null;
+}
+
+// Get the outputType, handling analog nesting
+function getOutputType(mapping) {
+  if (Array.isArray(mapping.mapping)) {
+    return mapping.mapping[0]?.outputType ?? '';
+  }
+  return mapping.outputType ?? mapping.OutputType ?? '';
+}
+
+// Get the mouseAssignment string if this is a mouseGroup output
+function getMouseAssignment(mapping) {
+  if (Array.isArray(mapping.mapping)) {
+    return mapping.mapping[0]?.mouseGroup?.mouseAssignment ?? null;
+  }
+  return mapping.mouseGroup?.mouseAssignment ?? null;
+}
+
+// Infer category from the resolved output key
+function inferCat(outKey) {
+  if (!outKey) return 'action';
+  if (outKey === 'KEY_ESCAPE' || outKey === 'KEY_ESC') return 'esc';
   if (['KEY_LEFT_SHIFT','KEY_RIGHT_SHIFT','KEY_LEFT_ALT','KEY_RIGHT_ALT',
-       'KEY_LEFT_CONTROL','KEY_RIGHT_CONTROL'].includes(key)) return 'modifier';
+       'KEY_LEFT_CONTROL','KEY_LEFT_CTRL',
+       'KEY_RIGHT_CONTROL','KEY_RIGHT_CTRL'].includes(outKey)) return 'modifier';
   return 'action';
 }
 
@@ -911,28 +943,32 @@ function importSynapse() {
               keys: blankKeys(),
             };
 
+            // dpadMode: Synapse stores this as a top-level int on the keymap (1 = joystick)
+            if (rkm.dpadMode === 1 || rkm.dpadMode === '1') km.dpadMode = 'joystick';
+
             const mappings = rkm.mappings ?? rkm.Mappings ?? [];
             for (const mapping of mappings) {
               const inputId = mapping.inputID ?? mapping.InputID ?? '';
               const keyNum  = INPUT_TO_KEY[inputId];
 
-              // Detect d-pad (analog axis) bindings to set dpadMode
-              const oType = mapping.outputType ?? mapping.OutputType ?? '';
-              if (oType === 'analogInputGroup' || oType === 'joystickGroup') {
-                km.dpadMode = 'joystick';
-              }
+              if (!keyNum) continue; // arrow keys, d-pad axes — not in our key grid
 
-              if (!keyNum) continue; // arrow keys, d-pad axes, scroll — not in our grid
+              const oType      = getOutputType(mapping);
+              const mouseAssign = getMouseAssignment(mapping);
 
               if (oType === 'keymapGroup') {
                 const target = mapping.keymapGroup?.name ?? mapping.KeymapGroup?.Name ?? '?';
                 km.keys[keyNum] = { label: `→ ${target}`, cat: 'switch' };
+              } else if (oType === 'mouseGroup' || mouseAssign) {
+                // e.g. ScrollButton → "Scroll↓"
+                const assign = mouseAssign ?? '?';
+                const label  = assign === 'ScrollButton' ? 'Scroll↓' : assign;
+                km.keys[keyNum] = { label, cat: 'action' };
               } else if (oType === 'keyboardGroup' || oType === 'keyboard') {
-                const outKey = mapping.keyboardGroup?.key ?? mapping.KeyboardGroup?.Key
-                             ?? mapping.outputKey ?? mapping.OutputKey ?? '';
-                km.keys[keyNum] = { label: synKeyToLabel(outKey), cat: inferCat(mapping) };
+                const outKey = getOutputKey(mapping) ?? '';
+                km.keys[keyNum] = { label: synKeyToLabel(outKey), cat: inferCat(outKey) };
               }
-              // Unrecognised output types: leave as unbound (blankKeys default)
+              // defaultGroup / unrecognised: leave as unbound
             }
             newKeymaps.push(km);
           }
