@@ -177,8 +177,10 @@
 <div class="backdrop" id="backdrop" onclick="onBackdropClick(event)">
   <div class="popover" onclick="event.stopPropagation()">
     <h3 id="pop-title">Edit binding</h3>
-    <label>Label</label>
-    <input type="text" id="pop-label" placeholder="e.g. ESC, G, SPACE …" autocomplete="off" />
+    <label>Game label <span style="font-weight:400;text-transform:none;letter-spacing:0">(what it does)</span></label>
+    <input type="text" id="pop-note" placeholder="e.g. Dodge, Flask 1, Skill Hotbar …" autocomplete="off" />
+    <label>Output key <span style="font-weight:400;text-transform:none;letter-spacing:0">(what Synapse sends)</span></label>
+    <input type="text" id="pop-label" placeholder="e.g. SPACE, ~, L-SHF …" autocomplete="off" />
     <label>Category</label>
     <select id="pop-cat">
       <option value="unbound">— Unbound</option>
@@ -529,7 +531,8 @@ function makeKey(keyId, x, y, w, h, km) {
   const b = km.keys[keyId];
   const color = C[b.cat];
   const unbound = b.cat === 'unbound';
-  const lbl = b.label;
+  const lbl  = b.label;          // output key (Synapse)
+  const note = (b.note || '').trim(); // game function label
 
   const g = svgEl('g', { class: 'key-cell' });
   g.addEventListener('click', () => openEditor(keyId));
@@ -543,21 +546,41 @@ function makeKey(keyId, x, y, w, h, km) {
   if (unbound) rectAttrs['stroke-dasharray'] = '4 3';
   g.appendChild(svgEl('rect', rectAttrs));
 
+  // Key number — top-left
   g.appendChild(svgText(keyId, x + 5, y + 13, {
     'font-size': 9, fill: 'var(--text-ter)', 'font-family': FONT, 'font-weight': 500,
   }));
 
-  const len = lbl.length;
-  let fs = 18, ly = y + h * 0.67;
-  if (len >= 6) { fs = 10; ly = y + h * 0.62; }
-  else if (len >= 4) { fs = 12; ly = y + h * 0.64; }
-  else if (len >= 3) { fs = 14; ly = y + h * 0.67; }
+  if (note) {
+    // Two-line layout: game label (prominent) + output key (small, below)
+    const nLen = note.length;
+    const nFs = nLen > 9 ? 8.5 : nLen > 6 ? 10 : 11;
+    g.appendChild(svgText(note, x + w / 2, y + 30, {
+      'font-size': nFs, 'font-weight': 600,
+      fill: unbound ? 'var(--text-ter)' : color,
+      'text-anchor': 'middle', 'font-family': FONT,
+    }));
+    // Output key below — small, dimmed
+    if (lbl && lbl !== '—') {
+      g.appendChild(svgText(lbl, x + w / 2, y + 44, {
+        'font-size': 8, fill: 'var(--text-ter)',
+        'text-anchor': 'middle', 'font-family': FONT,
+      }));
+    }
+  } else {
+    // Single-line: output key only (existing behaviour)
+    const len = lbl.length;
+    let fs = 18, ly = y + h * 0.67;
+    if (len >= 6) { fs = 10; ly = y + h * 0.62; }
+    else if (len >= 4) { fs = 12; ly = y + h * 0.64; }
+    else if (len >= 3) { fs = 14; ly = y + h * 0.67; }
 
-  g.appendChild(svgText(lbl, x + w / 2, ly, {
-    'font-size': fs, 'font-weight': 500,
-    fill: unbound ? 'var(--text-ter)' : color,
-    'text-anchor': 'middle', 'font-family': FONT,
-  }));
+    g.appendChild(svgText(lbl, x + w / 2, ly, {
+      'font-size': fs, 'font-weight': 500,
+      fill: unbound ? 'var(--text-ter)' : color,
+      'text-anchor': 'middle', 'font-family': FONT,
+    }));
+  }
 
   return g;
 }
@@ -753,10 +776,11 @@ function openEditor(keyId) {
   editTarget = { keyId };
   const b = km.keys[keyId];
   document.getElementById('pop-title').textContent = `Edit key ${keyId} — ${km.name}`;
+  document.getElementById('pop-note').value  = b.note  || '';
   document.getElementById('pop-label').value = b.label === '—' ? '' : b.label;
-  document.getElementById('pop-cat').value = b.cat;
+  document.getElementById('pop-cat').value   = b.cat;
   document.getElementById('backdrop').classList.add('open');
-  setTimeout(() => document.getElementById('pop-label').focus(), 30);
+  setTimeout(() => document.getElementById('pop-note').focus(), 30);
 }
 
 function closePopover() {
@@ -770,18 +794,29 @@ function onBackdropClick(e) {
 
 function saveEdit() {
   if (!editTarget) return;
-  const km = getActiveKeymap();
-  const raw = document.getElementById('pop-label').value.trim();
-  const cat = document.getElementById('pop-cat').value;
-  km.keys[editTarget.keyId] = { label: raw || '—', cat: raw ? cat : 'unbound' };
+  const km  = getActiveKeymap();
+  const raw  = document.getElementById('pop-label').value.trim();
+  const note = document.getElementById('pop-note').value.trim();
+  const cat  = document.getElementById('pop-cat').value;
+  const existing = km.keys[editTarget.keyId];
+  km.keys[editTarget.keyId] = {
+    ...existing,                        // preserve passthrough metadata (poe2_default etc.)
+    label: raw  || '—',
+    cat:   raw  ? cat : 'unbound',
+    ...(note ? { note } : {}),         // omit key entirely if blank (don't store empty string)
+  };
+  if (!note) delete km.keys[editTarget.keyId].note;
   saveState();
   closePopover();
   render();
 }
 
-document.getElementById('pop-label').addEventListener('keydown', e => {
-  if (e.key === 'Enter')  { e.preventDefault(); saveEdit(); }
-  if (e.key === 'Escape') closePopover();
+// Enter/Escape on either input field
+['pop-note', 'pop-label'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if (e.key === 'Enter')  { e.preventDefault(); saveEdit(); }
+    if (e.key === 'Escape') closePopover();
+  });
 });
 
 // ── JSON export / import ──────────────────────────────────────────────────────
