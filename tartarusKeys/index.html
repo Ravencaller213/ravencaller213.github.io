@@ -125,6 +125,57 @@
       cursor: pointer; font-family: var(--font);
     }
     .btn-save:hover { background: #3a8eef; }
+
+    /* ── Combos section ── */
+    .combos-section { padding: 0 24px 28px; }
+    .combos-rule {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 14px; color: var(--text-ter);
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em;
+    }
+    .combos-rule::before,
+    .combos-rule::after { content: ''; flex: 1; height: 1px; background: var(--border-sec); }
+    .combos-rule span { padding: 0 4px; white-space: nowrap; }
+    .combos-grid { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; }
+
+    .combo-card {
+      position: relative;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 82px; height: 58px; gap: 3px;
+      background: var(--bg-secondary); border: 1px solid var(--border-sec);
+      border-radius: 8px; cursor: pointer; transition: border-color 0.12s;
+      padding: 6px 8px;
+    }
+    .combo-card:hover { border-color: var(--border-ter); }
+    .combo-chord {
+      font-size: 10px; font-weight: 600; font-family: var(--font);
+      text-align: center;
+    }
+    .combo-note-lbl {
+      font-size: 9.5px; font-family: var(--font);
+      color: var(--text-sec); text-align: center;
+      max-width: 74px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .combo-note-lbl.empty { color: var(--text-ter); font-style: italic; }
+    .combo-del {
+      position: absolute; top: 3px; right: 5px;
+      background: none; border: none; color: var(--text-ter); cursor: pointer;
+      font-size: 13px; line-height: 1; padding: 0; opacity: 0;
+      transition: opacity 0.1s; font-family: var(--font);
+    }
+    .combo-card:hover .combo-del { opacity: 1; }
+    .combo-del:hover { color: #c06060; }
+
+    .btn-add-combo {
+      width: 82px; height: 58px;
+      border-radius: 8px; border: 1px dashed var(--border-sec);
+      background: transparent; font-size: 12px; cursor: pointer;
+      color: var(--text-ter); transition: all 0.12s; font-family: var(--font);
+    }
+    .btn-add-combo:hover { color: var(--text-sec); border-color: var(--border-ter); }
+
+    /* mod row in popover — hidden for key edits */
+    #pop-mod-row { display: none; }
   </style>
 </head>
 <body>
@@ -173,13 +224,28 @@
   <div class="legend-item"><div class="swatch unbound"></div>Unbound</div>
 </div>
 
-<!-- Key edit popover -->
+<!-- Combos section -->
+<div class="combos-section">
+  <div class="combos-rule"><span>Modifier Combos</span></div>
+  <div class="combos-grid" id="combos-grid"></div>
+</div>
+
+<!-- Key / combo edit popover -->
 <div class="backdrop" id="backdrop" onclick="onBackdropClick(event)">
   <div class="popover" onclick="event.stopPropagation()">
     <h3 id="pop-title">Edit binding</h3>
     <label>Game label <span style="font-weight:400;text-transform:none;letter-spacing:0">(what it does)</span></label>
-    <input type="text" id="pop-note" placeholder="e.g. Dodge, Flask 1, Skill Hotbar …" autocomplete="off" />
-    <label>Output key <span style="font-weight:400;text-transform:none;letter-spacing:0">(what Synapse sends)</span></label>
+    <input type="text" id="pop-note" placeholder="e.g. Dodge, Flask 1, Skill 5 …" autocomplete="off" />
+    <div id="pop-mod-row">
+      <label>Modifier</label>
+      <select id="pop-mod">
+        <option value="CTRL">CTRL</option>
+        <option value="SHIFT">SHIFT</option>
+        <option value="ALT">ALT</option>
+        <option value="WIN">WIN</option>
+      </select>
+    </div>
+    <label id="pop-key-lbl">Output key <span style="font-weight:400;text-transform:none;letter-spacing:0">(what Synapse sends)</span></label>
     <input type="text" id="pop-label" placeholder="e.g. SPACE, ~, L-SHF …" autocomplete="off" />
     <label>Category</label>
     <select id="pop-cat">
@@ -358,8 +424,8 @@ function clone(o) { return JSON.parse(JSON.stringify(o)); }
 const DEFAULT_STATE = {
   profileName: 'NMS Profile',
   keymaps: [
-    { id: 'km-ground', name: 'Ground', dpadMode: 'joystick', keys: clone(NMS_GROUND_KEYS) },
-    { id: 'km-flight', name: 'Flight', dpadMode: 'unbound',  keys: clone(NMS_FLIGHT_KEYS) },
+    { id: 'km-ground', name: 'Ground', dpadMode: 'joystick', keys: clone(NMS_GROUND_KEYS), combos: [] },
+    { id: 'km-flight', name: 'Flight', dpadMode: 'unbound',  keys: clone(NMS_FLIGHT_KEYS), combos: [] },
   ],
   activeId: 'km-ground',
 };
@@ -468,12 +534,13 @@ function switchLayer(id) {
   saveState();
   renderTabs();
   render();
+  renderCombos();
 }
 
 function addLayer() {
   const name = prompt('New layer name:', `Layer ${state.keymaps.length + 1}`);
   if (!name || !name.trim()) return;
-  const km = { id: uid(), name: name.trim(), dpadMode: 'unbound', keys: blankKeys() };
+  const km = { id: uid(), name: name.trim(), dpadMode: 'unbound', keys: blankKeys(), combos: [] };
   state.keymaps.push(km);
   state.activeId = km.id;
   saveState();
@@ -789,12 +856,32 @@ function render() {
 // ── Key edit popover ──────────────────────────────────────────────────────────
 function openEditor(keyId) {
   const km = getActiveKeymap();
-  editTarget = { keyId };
+  editTarget = { type: 'key', keyId };
   const b = km.keys[keyId];
   document.getElementById('pop-title').textContent = `Edit key ${keyId} — ${km.name}`;
   document.getElementById('pop-note').value  = b.note  || '';
   document.getElementById('pop-label').value = b.label === '—' ? '' : b.label;
   document.getElementById('pop-cat').value   = b.cat;
+  document.getElementById('pop-mod-row').style.display = 'none';
+  document.getElementById('pop-key-lbl').innerHTML =
+    'Output key <span style="font-weight:400;text-transform:none;letter-spacing:0">(what Synapse sends)</span>';
+  document.getElementById('backdrop').classList.add('open');
+  setTimeout(() => document.getElementById('pop-note').focus(), 30);
+}
+
+// ── Combo open ────────────────────────────────────────────────────────────────
+function openComboEditor(comboId) {
+  const km = getActiveKeymap();
+  const c  = comboId ? (km.combos || []).find(x => x.id === comboId) : null;
+  editTarget = { type: 'combo', comboId: comboId || null };
+  document.getElementById('pop-title').textContent = comboId
+    ? `Edit combo — ${km.name}` : `Add combo — ${km.name}`;
+  document.getElementById('pop-note').value  = c?.note  || '';
+  document.getElementById('pop-mod').value   = c?.mod   || 'CTRL';
+  document.getElementById('pop-label').value = c?.key   || '';
+  document.getElementById('pop-cat').value   = c?.cat   || 'action';
+  document.getElementById('pop-mod-row').style.display = '';
+  document.getElementById('pop-key-lbl').innerHTML = 'Base key';
   document.getElementById('backdrop').classList.add('open');
   setTimeout(() => document.getElementById('pop-note').focus(), 30);
 }
@@ -810,21 +897,36 @@ function onBackdropClick(e) {
 
 function saveEdit() {
   if (!editTarget) return;
-  const km  = getActiveKeymap();
+  const km   = getActiveKeymap();
   const raw  = document.getElementById('pop-label').value.trim();
   const note = document.getElementById('pop-note').value.trim();
   const cat  = document.getElementById('pop-cat').value;
-  const existing = km.keys[editTarget.keyId];
-  km.keys[editTarget.keyId] = {
-    ...existing,                        // preserve passthrough metadata (poe2_default etc.)
-    label: raw  || '—',
-    cat:   raw  ? cat : 'unbound',
-    ...(note ? { note } : {}),         // omit key entirely if blank (don't store empty string)
-  };
-  if (!note) delete km.keys[editTarget.keyId].note;
-  saveState();
-  closePopover();
-  render();
+
+  if (editTarget.type === 'combo') {
+    const mod = document.getElementById('pop-mod').value;
+    if (!km.combos) km.combos = [];
+    if (editTarget.comboId) {
+      const idx = km.combos.findIndex(c => c.id === editTarget.comboId);
+      if (idx >= 0) km.combos[idx] = { ...km.combos[idx], mod, key: raw || '?', note, cat };
+    } else {
+      km.combos.push({ id: uid(), mod, key: raw || '?', note, cat });
+    }
+    saveState();
+    closePopover();
+    renderCombos();
+  } else {
+    const existing = km.keys[editTarget.keyId];
+    km.keys[editTarget.keyId] = {
+      ...existing,
+      label: raw || '—',
+      cat:   raw ? cat : 'unbound',
+      ...(note ? { note } : {}),
+    };
+    if (!note) delete km.keys[editTarget.keyId].note;
+    saveState();
+    closePopover();
+    render();
+  }
 }
 
 // Enter/Escape on either input field
@@ -895,7 +997,7 @@ function convertFlatProfile(parsed) {
       };
     }
 
-    keymaps.push({ id: uid(), name: layerName, dpadMode, keys });
+    keymaps.push({ id: uid(), name: layerName, dpadMode, keys, combos: [] });
   }
   if (!keymaps.length) throw new Error('No layers found in flat-profile format');
   return {
@@ -921,8 +1023,8 @@ function importJSON() {
           state = {
             profileName: 'Imported Profile',
             keymaps: [
-              { id: uid(), name: 'Ground', dpadMode: 'joystick', keys: parsed.ground },
-              { id: uid(), name: 'Flight',  dpadMode: 'unbound',  keys: parsed.flight  },
+              { id: uid(), name: 'Ground', dpadMode: 'joystick', keys: parsed.ground, combos: [] },
+              { id: uid(), name: 'Flight',  dpadMode: 'unbound',  keys: parsed.flight,  combos: [] },
             ],
             activeId: '',
           };
@@ -992,6 +1094,7 @@ function importSynapse() {
               name: rkm.name ?? rkm.Name ?? `Layer ${newKeymaps.length + 1}`,
               dpadMode: 'unbound',
               keys: blankKeys(),
+              combos: [],
             };
 
             // dpadMode: Synapse stores this as a top-level int on the keymap (1 = joystick)
@@ -1051,10 +1154,62 @@ function importSynapse() {
   input.click();
 }
 
+// ── Modifier Combos ───────────────────────────────────────────────────────────
+function renderCombos() {
+  const grid = document.getElementById('combos-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const km = getActiveKeymap();
+  const combos = km.combos || [];
+
+  combos.forEach(c => {
+    const color = C[c.cat] || C.action;
+    const card  = document.createElement('div');
+    card.className = 'combo-card';
+    card.onclick   = () => openComboEditor(c.id);
+    card.style.borderColor = color + '55'; // subtle tint
+
+    const chord = document.createElement('div');
+    chord.className = 'combo-chord';
+    chord.style.color = color;
+    chord.textContent = `${c.mod}+${c.key}`;
+
+    const noteLbl = document.createElement('div');
+    noteLbl.className = 'combo-note-lbl' + (c.note ? '' : ' empty');
+    noteLbl.textContent = c.note || 'label…';
+
+    const del = document.createElement('button');
+    del.className   = 'combo-del';
+    del.textContent = '×';
+    del.title       = 'Remove';
+    del.onclick     = e => { e.stopPropagation(); deleteCombo(c.id); };
+
+    card.append(chord, noteLbl, del);
+    grid.appendChild(card);
+  });
+
+  const addBtn = document.createElement('button');
+  addBtn.className   = 'btn-add-combo';
+  addBtn.textContent = '+ Combo';
+  addBtn.onclick     = () => openComboEditor(null);
+  grid.appendChild(addBtn);
+}
+
+function deleteCombo(id) {
+  const km = getActiveKeymap();
+  const c  = (km.combos || []).find(x => x.id === id);
+  if (!c) return;
+  if (!confirm(`Remove ${c.mod}+${c.key}?`)) return;
+  km.combos = km.combos.filter(x => x.id !== id);
+  saveState();
+  renderCombos();
+}
+
 // ── Init ──────────────────────────────────────────────────────────────────────
 syncProfileNameEl();
 renderTabs();
 render();
+renderCombos();
 </script>
 </body>
 </html>
