@@ -574,6 +574,99 @@
     </a>
     <!-- ══ END CARD: Sprites ═══════════════════════════════════ -->
 
+    <!-- ══ CARD: Tartarus Keys ══════════════════════════════════ -->
+    <a class="card" href="/tartarusKeys/index.html">
+      <div class="card-inner">
+
+        <div class="card-img">
+          <!-- SVG illustration: Razer Tartarus Pro keypad motif -->
+          <svg viewBox="0 0 340 191" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <radialGradient id="tk-bg" cx="50%" cy="50%" r="80%">
+                <stop offset="0%"   stop-color="#14161e"/>
+                <stop offset="100%" stop-color="#0a0a10"/>
+              </radialGradient>
+              <linearGradient id="tk-opal" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%"   stop-color="#4dd9c0" stop-opacity="0.8"/>
+                <stop offset="50%"  stop-color="#38bdf8" stop-opacity="0.55"/>
+                <stop offset="100%" stop-color="#7b6fff" stop-opacity="0.8"/>
+              </linearGradient>
+              <linearGradient id="tk-key" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%"   stop-color="#20202c"/>
+                <stop offset="100%" stop-color="#16161f"/>
+              </linearGradient>
+              <filter id="tk-glow">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+              </filter>
+            </defs>
+
+            <!-- background -->
+            <rect width="340" height="191" fill="url(#tk-bg)"/>
+
+            <!-- ambient orbs -->
+            <ellipse cx="260" cy="150" rx="90" ry="55" fill="#4dd9c0" opacity="0.05"/>
+            <ellipse cx="70"  cy="35"  rx="80" ry="50" fill="#7b6fff" opacity="0.05"/>
+
+            <!-- keypad grid (3x4 mechanical keys) -->
+            <g>
+              <rect x="88"  y="40"  width="42" height="38" rx="6" fill="url(#tk-key)" stroke="url(#tk-opal)" stroke-width="1" opacity="0.9"/>
+              <rect x="136" y="40"  width="42" height="38" rx="6" fill="url(#tk-key)" stroke="url(#tk-opal)" stroke-width="1" opacity="0.9"/>
+              <rect x="184" y="40"  width="42" height="38" rx="6" fill="url(#tk-key)" stroke="url(#tk-opal)" stroke-width="1" opacity="0.9"/>
+
+              <rect x="88"  y="84"  width="42" height="38" rx="6" fill="url(#tk-key)" stroke="url(#tk-opal)" stroke-width="1" opacity="0.9"/>
+              <rect x="136" y="84"  width="42" height="38" rx="6" fill="url(#tk-key)" stroke="url(#tk-opal)" stroke-width="1.4" opacity="1"/>
+              <rect x="184" y="84"  width="42" height="38" rx="6" fill="url(#tk-key)" stroke="url(#tk-opal)" stroke-width="1" opacity="0.9"/>
+
+              <rect x="88"  y="128" width="42" height="38" rx="6" fill="url(#tk-key)" stroke="url(#tk-opal)" stroke-width="1" opacity="0.9"/>
+              <rect x="136" y="128" width="42" height="38" rx="6" fill="url(#tk-key)" stroke="url(#tk-opal)" stroke-width="1" opacity="0.9"/>
+              <rect x="184" y="128" width="42" height="38" rx="6" fill="url(#tk-key)" stroke="url(#tk-opal)" stroke-width="1" opacity="0.9"/>
+
+              <!-- highlighted center key glow (active remap) -->
+              <rect x="136" y="84" width="42" height="38" rx="6" fill="#4dd9c0" opacity="0.12" filter="url(#tk-glow)"/>
+              <text x="157" y="108" text-anchor="middle" font-family="'DM Sans', sans-serif"
+                    font-size="12" fill="#ddd8f0" opacity="0.85">Q</text>
+            </g>
+
+            <!-- thumbstick, offset to the right like the Tartarus Pro -->
+            <circle cx="252" cy="103" r="20" fill="url(#tk-key)" stroke="url(#tk-opal)" stroke-width="1.2" opacity="0.9"/>
+            <circle cx="252" cy="103" r="7" fill="#38bdf8" opacity="0.5" filter="url(#tk-glow)"/>
+            <circle cx="252" cy="103" r="3" fill="#e0f9ff" opacity="0.9"/>
+
+            <!-- connecting lines suggesting remap mapping -->
+            <g opacity="0.3" stroke="url(#tk-opal)" stroke-width="1" fill="none">
+              <path d="M178 60 Q205 55 232 90"/>
+              <path d="M178 146 Q205 150 234 118"/>
+            </g>
+
+            <!-- feather strokes top-left -->
+            <g opacity="0.15" stroke="url(#tk-opal)" stroke-width="1.2" fill="none" stroke-linecap="round">
+              <path d="M20 20 Q45 16 53 6"/>
+              <path d="M16 32 Q43 26 54 16"/>
+            </g>
+
+            <!-- label -->
+            <text x="20" y="175" font-family="'DM Sans', sans-serif"
+                  font-size="8" letter-spacing="3"
+                  fill="#7a7495" opacity="0.8">razer · tartarus pro v2</text>
+          </svg>
+        </div>
+
+        <div class="card-body">
+          <div class="card-title">
+            Tartarus Keys
+            <span class="card-tag">Keymap Editor</span>
+          </div>
+          <p class="card-blurb">
+            A visual keymap editor for the Razer Tartarus Pro v2 — layer-based profiles, per-key remapping, and exportable configs.
+          </p>
+          <div class="card-arrow">Open project →</div>
+        </div>
+
+      </div>
+    </a>
+    <!-- ══ END CARD: Tartarus Keys ══════════════════════════════ -->
+
     <!-- ══ CARD: Repo List ══════════════════════════════════════ -->
     <a class="card" href="https://github.com/Ravencaller213?tab=repositories" target="_blank" rel="noopener">
       <div class="card-inner">
