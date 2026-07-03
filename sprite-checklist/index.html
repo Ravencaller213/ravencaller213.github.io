@@ -458,10 +458,10 @@
 </div><!-- end .page -->
 
 <script>
-  const SPRITES = ["Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Fish","Striker","Aura","Zero Point","Boss","Reaper","Air","Foundation"];
+  const SPRITES = ["Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Fishy","Striker","Aura","Zero Point","Boss","Reaper","Air","Foundation"];
   const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Crystal"];
   const BURNT = "Burnt Peanut";
-  const ALL_SPRITES = [...SPRITES.slice(0, SPRITES.indexOf("Boss")), BURNT, ...SPRITES.slice(SPRITES.indexOf("Boss"))];
+  const ALL_SPRITES = [...SPRITES.slice(0, SPRITES.indexOf("King") + 1), BURNT, ...SPRITES.slice(SPRITES.indexOf("King") + 1)];
   const KEY = "fn_sprites_v1";
   const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Crystal: "v-crystal" };
 
