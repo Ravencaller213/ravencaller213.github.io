@@ -430,6 +430,8 @@
   <div class="toolbar">
     <button class="btn" onclick="checkAll()">Check all</button>
     <button class="btn" onclick="uncheckAll()">Uncheck all</button>
+    <button class="btn" onclick="expandAll()">Expand all</button>
+    <button class="btn" onclick="collapseAll()">Collapse all</button>
     <button class="btn accent" onclick="exportState()">Export</button>
     <button class="btn accent" onclick="document.getElementById('importFile').click()">Import</button>
     <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this.files[0])">
@@ -571,6 +573,10 @@
   }
 
   function uncheckAll() { state = {}; save(); render(); }
+
+  function expandAll() { collapsed = {}; render(); }
+
+  function collapseAll() { ALL_SPRITES.forEach(s => { collapsed[s] = true; }); render(); }
 
   function exportState() {
     const blob = new Blob([JSON.stringify(state)], { type: "application/json" });
