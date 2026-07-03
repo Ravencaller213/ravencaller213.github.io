@@ -222,6 +222,7 @@
   <div class="legend-item"><div class="swatch" style="background:#BA7517"></div>D-pad / joystick</div>
   <div class="legend-item"><div class="swatch" style="background:#993C1D"></div>Arrow → WASD</div>
   <div class="legend-item"><div class="swatch unbound"></div>Unbound</div>
+  <div class="legend-item"><div class="swatch" style="background:#5A5560"></div>Disabled</div>
 </div>
 
 <!-- Combos section -->
@@ -250,6 +251,7 @@
     <label>Category</label>
     <select id="pop-cat">
       <option value="unbound">— Unbound</option>
+      <option value="disabled">Disabled</option>
       <option value="esc">ESC</option>
       <option value="action">Action (analog)</option>
       <option value="skill">Skill slot</option>
@@ -351,6 +353,7 @@ const C = {
   dpad:     '#BA7517',
   arrow:    '#993C1D',
   unbound:  null,
+  disabled: '#5A5560',
 };
 
 // ── Blank / default key sets ──────────────────────────────────────────────────
@@ -919,7 +922,9 @@ function saveEdit() {
     km.keys[editTarget.keyId] = {
       ...existing,
       label: raw || '—',
-      cat:   raw ? cat : 'unbound',
+      // A blank output key normally means "unbound" — but "Disabled" is a
+      // deliberate no-output state, so it shouldn't get collapsed back to unbound.
+      cat:   (raw || cat === 'disabled') ? cat : 'unbound',
       ...(note ? { note } : {}),
     };
     if (!note) delete km.keys[editTarget.keyId].note;
