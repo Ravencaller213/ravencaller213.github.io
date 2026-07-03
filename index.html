@@ -500,6 +500,80 @@
     </a>
     <!-- ══ END CARD: ButBetter ═══════════════════════════════════ -->
 
+    <!-- ══ CARD: Sprites ═══════════════════════════════════════ -->
+    <a class="card" href="/sprite-checklist/index.html">
+      <div class="card-inner">
+
+        <div class="card-img">
+          <!-- SVG illustration: Fortnite sprite / Zero Point motif -->
+          <svg viewBox="0 0 340 191" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <radialGradient id="sp-bg" cx="50%" cy="45%" r="80%">
+                <stop offset="0%"   stop-color="#15111f"/>
+                <stop offset="100%" stop-color="#0a0910"/>
+              </radialGradient>
+              <linearGradient id="sp-opal" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%"   stop-color="#7b6fff" stop-opacity="0.85"/>
+                <stop offset="50%"  stop-color="#38bdf8" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#a78bfa" stop-opacity="0.85"/>
+              </linearGradient>
+              <filter id="sp-glow">
+                <feGaussianBlur stdDeviation="3.5" result="blur"/>
+                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+              </filter>
+            </defs>
+
+            <!-- background -->
+            <rect width="340" height="191" fill="url(#sp-bg)"/>
+
+            <!-- ambient orbs -->
+            <ellipse cx="70"  cy="150" rx="90" ry="55" fill="#7b6fff" opacity="0.06"/>
+            <ellipse cx="280" cy="35"  rx="80" ry="50" fill="#38bdf8" opacity="0.05"/>
+
+            <!-- Zero Point storm rings -->
+            <g transform="translate(170, 92)" fill="none" stroke="url(#sp-opal)" stroke-width="1.2">
+              <circle r="14" opacity="0.9"/>
+              <circle r="26" opacity="0.6"/>
+              <circle r="38" opacity="0.35"/>
+              <circle r="50" opacity="0.18" stroke-dasharray="2 4"/>
+            </g>
+            <circle cx="170" cy="92" r="6" fill="#a78bfa" opacity="0.9" filter="url(#sp-glow)"/>
+
+            <!-- variant gem chips orbiting -->
+            <rect x="225" y="60" width="16" height="16" rx="4" fill="#f5c842" opacity="0.85" transform="rotate(20 233 68)"/>
+            <rect x="95"  y="115" width="16" height="16" rx="4" fill="#e84545" opacity="0.8" transform="rotate(-12 103 123)"/>
+            <rect x="215" y="128" width="16" height="16" rx="4" fill="#3b82f6" opacity="0.8" transform="rotate(10 223 136)"/>
+            <rect x="108" y="52" width="16" height="16" rx="4" fill="#f9a8d4" opacity="0.8" transform="rotate(-18 116 60)"/>
+
+            <!-- feather strokes top-left -->
+            <g opacity="0.16" stroke="url(#sp-opal)" stroke-width="1.3" fill="none" stroke-linecap="round">
+              <path d="M22 24 Q48 20 56 10"/>
+              <path d="M18 36 Q46 30 58 20"/>
+              <path d="M24 48 Q50 42 60 32"/>
+            </g>
+
+            <!-- label -->
+            <text x="20" y="175" font-family="'DM Sans', sans-serif"
+                  font-size="8" letter-spacing="3"
+                  fill="#7a7495" opacity="0.8">fortnite · sprites</text>
+          </svg>
+        </div>
+
+        <div class="card-body">
+          <div class="card-title">
+            Sprites
+            <span class="card-tag">Fortnite Tracker</span>
+          </div>
+          <p class="card-blurb">
+            A collection checklist for Fortnite sprite variants — Normal, Gold, Gummi, Galaxy, Holofoil, and Crystal — with live progress and export/import.
+          </p>
+          <div class="card-arrow">Open project →</div>
+        </div>
+
+      </div>
+    </a>
+    <!-- ══ END CARD: Sprites ═══════════════════════════════════ -->
+
     <!-- ══ CARD: Repo List ══════════════════════════════════════ -->
     <a class="card" href="https://github.com/Ravencaller213?tab=repositories" target="_blank" rel="noopener">
       <div class="card-inner">
