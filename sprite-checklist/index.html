@@ -237,7 +237,7 @@
     /* ─── MAIN LAYOUT ────────────────────────────────────────── */
     .layout {
       display: grid;
-      grid-template-columns: 1fr 300px;
+      grid-template-columns: 1fr 440px;
       gap: 1.75rem;
       align-items: start;
     }
@@ -288,7 +288,7 @@
 
     .variants {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 1px;
       background: var(--border);
       border-top: 1px solid var(--border);
@@ -349,7 +349,13 @@
       margin-bottom: 1rem;
     }
 
-    .remaining-sprite { margin-bottom: 1.1rem; }
+    #remaining {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 1.5rem;
+    }
+
+    .remaining-sprite { margin-bottom: 1.1rem; break-inside: avoid; }
     .remaining-sprite:last-child { margin-bottom: 0; }
 
     .remaining-sprite-name {
@@ -372,7 +378,7 @@
       color: var(--text-dim);
     }
 
-    .none-left { font-size: 0.82rem; color: var(--opal-2); }
+    .none-left { grid-column: 1 / -1; font-size: 0.82rem; color: var(--opal-2); }
 
     /* ─── FOOTER ─────────────────────────────────────────────── */
     footer {
@@ -404,7 +410,8 @@
     @media (max-width: 480px) {
       .page { padding: 0 1.25rem 4rem; }
       header { padding: 2rem 0 2rem; }
-      .variants { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+      .variants { grid-template-columns: repeat(2, 1fr); }
+      #remaining { grid-template-columns: 1fr; }
     }
   </style>
 </head>
