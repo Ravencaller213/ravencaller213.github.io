@@ -203,7 +203,7 @@
 </div>
 
 <div class="svg-wrap">
-  <svg id="kp-svg" width="100%" viewBox="0 0 680 350" role="img" aria-label="Tartarus Pro v2 keymap">
+  <svg id="kp-svg" width="100%" viewBox="0 0 680 400" role="img" aria-label="Tartarus Pro v2 keymap">
     <defs>
       <linearGradient id="card-grad" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%"   stop-color="#272727"/>
@@ -364,8 +364,36 @@ function blankKeys() {
     keys[k] = { label:'—', cat:'unbound' };
   });
   keys['ALT'] = { label:'—', cat:'unbound' };
+  keys['SCROLL_UP']    = { label:'—', cat:'unbound' };
+  keys['SCROLL_DOWN']  = { label:'—', cat:'unbound' };
+  keys['SCROLL_CLICK'] = { label:'—', cat:'unbound' };
+  keys['DPAD_UP']    = { label:'—', cat:'unbound' };
+  keys['DPAD_DOWN']  = { label:'—', cat:'unbound' };
+  keys['DPAD_LEFT']  = { label:'—', cat:'unbound' };
+  keys['DPAD_RIGHT'] = { label:'—', cat:'unbound' };
   return keys;
 }
+
+// Backfill scroll-wheel + 4-way d-pad keys onto any keymap that predates
+// them — older saved states, v1 imports, and flat-profile imports won't have
+// these yet, and render() assumes they exist.
+function ensureExtraKeys(keys) {
+  ['SCROLL_UP','SCROLL_DOWN','SCROLL_CLICK','DPAD_UP','DPAD_DOWN','DPAD_LEFT','DPAD_RIGHT'].forEach(k => {
+    if (!keys[k]) keys[k] = { label:'—', cat:'unbound' };
+  });
+  return keys;
+}
+
+// Friendly display names for non-numbered keys, used in the edit popover title
+const KEY_DISPLAY_NAMES = {
+  SCROLL_UP:    'Scroll Up',
+  SCROLL_DOWN:  'Scroll Down',
+  SCROLL_CLICK: 'Scroll Click',
+  DPAD_UP:      'D-pad Up',
+  DPAD_DOWN:    'D-pad Down',
+  DPAD_LEFT:    'D-pad Left',
+  DPAD_RIGHT:   'D-pad Right',
+};
 
 const NMS_GROUND_KEYS = {
   '01':{ label:'ESC',       cat:'esc'      },
@@ -389,6 +417,13 @@ const NMS_GROUND_KEYS = {
   '19':{ label:'G',         cat:'action'   },
   '20':{ label:'X',         cat:'action'   },
   'ALT':{ label:'→ Flight', cat:'switch'   },
+  'SCROLL_UP':    { label:'—', cat:'unbound' },
+  'SCROLL_DOWN':  { label:'—', cat:'unbound' },
+  'SCROLL_CLICK': { label:'—', cat:'unbound' },
+  'DPAD_UP':      { label:'—', cat:'unbound' },
+  'DPAD_DOWN':    { label:'—', cat:'unbound' },
+  'DPAD_LEFT':    { label:'—', cat:'unbound' },
+  'DPAD_RIGHT':   { label:'—', cat:'unbound' },
 };
 
 const NMS_FLIGHT_KEYS = {
@@ -413,6 +448,13 @@ const NMS_FLIGHT_KEYS = {
   '19':{ label:'/',          cat:'action'   },
   '20':{ label:'X',          cat:'action'   },
   'ALT':{ label:'→ Ground',  cat:'switch'   },
+  'SCROLL_UP':    { label:'—', cat:'unbound' },
+  'SCROLL_DOWN':  { label:'—', cat:'unbound' },
+  'SCROLL_CLICK': { label:'—', cat:'unbound' },
+  'DPAD_UP':      { label:'—', cat:'unbound' },
+  'DPAD_DOWN':    { label:'—', cat:'unbound' },
+  'DPAD_LEFT':    { label:'—', cat:'unbound' },
+  'DPAD_RIGHT':   { label:'—', cat:'unbound' },
 };
 
 function uid() {
@@ -424,13 +466,15 @@ function uid() {
 function clone(o) { return JSON.parse(JSON.stringify(o)); }
 
 // ── Default state ─────────────────────────────────────────────────────────────
+// Blank single-layer profile — no preset game bindings. (NMS_GROUND_KEYS /
+// NMS_FLIGHT_KEYS above are kept as reference data in case you want to
+// reintroduce a preset later, but nothing wires them up by default anymore.)
 const DEFAULT_STATE = {
-  profileName: 'NMS Profile',
+  profileName: 'My Profile',
   keymaps: [
-    { id: 'km-ground', name: 'Ground', dpadMode: 'joystick', keys: clone(NMS_GROUND_KEYS), combos: [] },
-    { id: 'km-flight', name: 'Flight', dpadMode: 'unbound',  keys: clone(NMS_FLIGHT_KEYS), combos: [] },
+    { id: 'km-1', name: 'Layer 1', dpadMode: 'unbound', keys: blankKeys(), combos: [] },
   ],
-  activeId: 'km-ground',
+  activeId: 'km-1',
 };
 
 // ── State management ──────────────────────────────────────────────────────────
@@ -439,13 +483,14 @@ let state = loadState();
 let editTarget = null; // { keyId }
 
 function loadState() {
+  let result = null;
   try {
     const s = localStorage.getItem(LS_KEY);
     if (s) {
       const parsed = JSON.parse(s);
       // Accept old v1 format { ground: {...}, flight: {...} } and upgrade it
       if (parsed.ground && parsed.flight && !parsed.keymaps) {
-        return {
+        result = {
           profileName: 'Imported Profile',
           keymaps: [
             { id: uid(), name: 'Ground', dpadMode: 'joystick', keys: parsed.ground },
@@ -453,11 +498,16 @@ function loadState() {
           ],
           activeId: 'km-0',
         };
+      } else if (parsed.keymaps) {
+        result = parsed;
       }
-      if (parsed.keymaps) return parsed;
     }
   } catch (_) {}
-  return clone(DEFAULT_STATE);
+  if (!result) result = clone(DEFAULT_STATE);
+  // Normalize: guarantee scroll-wheel + 4-way d-pad keys exist even on
+  // states saved before they were introduced.
+  result.keymaps.forEach(km => ensureExtraKeys(km.keys));
+  return result;
 }
 
 function saveState() {
@@ -469,7 +519,7 @@ function getActiveKeymap() {
 }
 
 function resetState() {
-  if (!confirm('Reset to NMS defaults (Ground + Flight layers)?')) return;
+  if (!confirm('Reset to a blank profile? This clears all layers and bindings.')) return;
   state = clone(DEFAULT_STATE);
   saveState();
   renderTabs();
@@ -573,9 +623,15 @@ function renameLayer(id) {
   render();
 }
 
+// D-pad cycles through three modes: analog joystick-axis emulation, 4-way
+// discrete key bindings (Up/Down/Left/Right, each independently bindable
+// like any other key), and fully unbound. Unrecognised/legacy values fall
+// back to 'joystick' (indexOf → -1 → (-1+1)%3 → 0).
+const DPAD_MODES = ['joystick', '4way', 'unbound'];
 function toggleDpad() {
   const km = getActiveKeymap();
-  km.dpadMode = km.dpadMode === 'joystick' ? 'unbound' : 'joystick';
+  const idx = DPAD_MODES.indexOf(km.dpadMode);
+  km.dpadMode = DPAD_MODES[(idx + 1) % DPAD_MODES.length];
   saveState();
   render();
 }
@@ -655,6 +711,48 @@ function makeKey(keyId, x, y, w, h, km) {
   return g;
 }
 
+// Compact clickable cell for small controls (scroll wheel up/click/down) —
+// same click → openEditor(keyId) wiring as makeKey, but a simpler single-row
+// icon + label layout sized for cells too short for makeKey's two-line logic.
+function makeCompactKey(keyId, x, y, w, h, km, icon) {
+  const b = km.keys[keyId];
+  const color = C[b.cat];
+  const unbound = b.cat === 'unbound';
+  const note = (b.note || '').trim();
+  const display = note || (b.label && b.label !== '—' ? b.label : '');
+
+  const g = svgEl('g', { class: 'key-cell' });
+  g.addEventListener('click', () => openEditor(keyId));
+
+  const rectAttrs = {
+    x, y, width: w, height: h, rx: 5,
+    fill: 'var(--bg-primary)',
+    stroke: unbound ? 'var(--border-ter)' : color,
+    'stroke-width': unbound ? 0.8 : 1.2,
+  };
+  if (unbound) rectAttrs['stroke-dasharray'] = '3 2';
+  g.appendChild(svgEl('rect', rectAttrs));
+
+  const iconFill = unbound ? 'var(--text-ter)' : color;
+  g.appendChild(svgText(icon, x + 11, y + h / 2 + 3.5, {
+    'font-size': 10, fill: iconFill, 'text-anchor': 'middle', 'font-family': FONT,
+  }));
+
+  g.appendChild(svgEl('line', {
+    x1: x + 20, y1: y + 4, x2: x + 20, y2: y + h - 4,
+    stroke: 'var(--border-sec)', 'stroke-width': 0.6,
+  }));
+
+  const txt = display || '—';
+  const fs = txt.length > 8 ? 8 : txt.length > 5 ? 8.5 : 9.5;
+  g.appendChild(svgText(txt, x + 20 + (w - 20) / 2, y + h / 2 + 3.5, {
+    'font-size': fs, 'font-weight': unbound ? 400 : 500,
+    fill: iconFill, 'text-anchor': 'middle', 'font-family': FONT,
+  }));
+
+  return g;
+}
+
 // ── Layout constants ──────────────────────────────────────────────────────────
 const KW = 62, KH = 52, KGX = 70, KGY = 60;
 const GRID_X0 = 22, GRID_Y0 = 36;
@@ -678,7 +776,7 @@ function render() {
 
   // Outer card with gradient
   svg.appendChild(svgEl('rect', {
-    x:10, y:8, width:660, height:334, rx:20,
+    x:10, y:8, width:660, height:384, rx:20,
     fill: 'url(#card-grad)',
     stroke: 'var(--border-sec)', 'stroke-width': 1.5,
   }));
@@ -747,7 +845,7 @@ function render() {
 
   // ── Divider ──
   svg.appendChild(svgEl('line', {
-    x1: DIVIDER_X, y1: 20, x2: DIVIDER_X, y2: 340,
+    x1: DIVIDER_X, y1: 20, x2: DIVIDER_X, y2: 390,
     stroke: 'var(--border-ter)', 'stroke-width': 0.5, 'stroke-dasharray': '5 4',
   }));
 
@@ -777,20 +875,52 @@ function render() {
     svg.appendChild(g);
   }
 
-  // ── Right panel: D-pad (click to toggle mode) ──
+  // ── Right panel: D-pad box + Scroll wheel box, side by side ──
+  // Both are self-contained bordered/titled boxes so the clickable area is
+  // visually obvious. The D-pad's mode-cycle control is a dedicated header
+  // strip spanning the FULL box width (an invisible hit-rect under the
+  // title text) — previously the only way to toggle was to click exactly on
+  // the thin label text or a grid cell, so clicking anywhere else in the
+  // "dead space" around the D-pad silently did nothing.
   const dpY0 = 150;
-  const dpadG = svgEl('g', { class: 'key-cell', style: 'cursor:pointer' });
-  dpadG.addEventListener('click', toggleDpad);
+  const boxHeaderH = 34;
+  const boxPad = 8;
 
-  const modeLabel = km.dpadMode === 'joystick'
-    ? 'D-pad: joystick axes  (click to toggle)'
-    : 'D-pad: unbound  (click to toggle)';
-  dpadG.appendChild(svgText(modeLabel, RP, dpY0, {
-    'font-size':9.5, fill:'var(--text-ter)', 'font-family':FONT,
-  }));
+  function drawBoxFrame(x, y, w, h, title, subtitle, onHeaderClick) {
+    svg.appendChild(svgEl('rect', { x, y, width:w, height:h, rx:8,
+      fill:'var(--bg-tertiary)', stroke:'var(--border-sec)', 'stroke-width':0.8 }));
+
+    const headerG = svgEl('g', onHeaderClick ? { class:'key-cell', style:'cursor:pointer' } : {});
+    if (onHeaderClick) {
+      headerG.appendChild(svgEl('rect', { x, y, width:w, height:boxHeaderH, fill:'transparent' }));
+      headerG.addEventListener('click', onHeaderClick);
+    }
+    headerG.appendChild(svgText(title, x + boxPad, y + 14, {
+      'font-size':9, 'font-weight':700, fill:'var(--text-sec)', 'font-family':FONT, 'letter-spacing':'0.06em',
+    }));
+    headerG.appendChild(svgText(subtitle, x + boxPad, y + 27, {
+      'font-size':8.5, fill:'var(--text-ter)', 'font-family':FONT,
+    }));
+    headerG.appendChild(svgEl('line', { x1:x+boxPad, y1:y+boxHeaderH, x2:x+w-boxPad, y2:y+boxHeaderH,
+      stroke:'var(--border-sec)', 'stroke-width':0.6 }));
+    svg.appendChild(headerG);
+  }
+
+  // ── D-pad box ──
+  const dpadBoxW = 144, dpadContentH = 124;
+  const dpadBoxH = boxHeaderH + 6 + dpadContentH + boxPad;
+  const dpadContentX = RP + boxPad;
+  const dpadContentY = dpY0 + boxHeaderH + 6;
+  const dpadContentW = dpadBoxW - boxPad * 2;
+
+  const dpadModeName = km.dpadMode === 'joystick' ? 'Joystick axes'
+    : km.dpadMode === '4way' ? '4-way keys'
+    : 'Unbound';
+  drawBoxFrame(RP, dpY0, dpadBoxW, dpadBoxH, 'D-PAD', `${dpadModeName}  ·  tap to cycle ⟳`, toggleDpad);
 
   if (km.dpadMode === 'joystick') {
     const CS = 40, CG = 2;
+    const gx0 = dpadContentX + (dpadContentW - (CS*3+CG*2)) / 2;
     const dpadCells = [
       { col:0, row:0, sym:'↖' },
       { col:1, row:0, sym:'↑',  sub:'Y−' },
@@ -802,9 +932,10 @@ function render() {
       { col:1, row:2, sym:'↓',  sub:'Y+' },
       { col:2, row:2, sym:'↘' },
     ];
+    const dpadG = svgEl('g', {});
     for (const { col, row, sym, sub, center } of dpadCells) {
-      const dx = RP + col * (CS + CG);
-      const dy = dpY0 + 10 + row * (CS + CG);
+      const dx = gx0 + col * (CS + CG);
+      const dy = dpadContentY + row * (CS + CG);
       dpadG.appendChild(svgEl('rect', { x:dx, y:dy, width:CS, height:CS, rx:5,
         fill: center ? 'var(--bg-tertiary)' : 'var(--bg-primary)',
         stroke: center ? 'var(--border-ter)' : '#BA7517',
@@ -825,33 +956,62 @@ function render() {
         }));
       }
     }
-    // Scroll wheel box
-    const swX = RP + 3*(CS+CG) + 6, swY = dpY0 + 10;
-    dpadG.appendChild(svgEl('rect', { x:swX, y:swY, width:72, height:CS*3+CG*2, rx:7,
-      fill:'var(--bg-tertiary)', stroke:'var(--border-sec)', 'stroke-width':0.8 }));
-    dpadG.appendChild(svgText('scroll', swX+36, swY+48, {
-      'font-size':9.5, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
+    svg.appendChild(dpadG);
+  } else if (km.dpadMode === '4way') {
+    // Discrete Up/Down/Left/Right bindings, each independently clickable →
+    // openEditor(keyId) — arranged in a plus/cross layout. Center cell is
+    // decorative only (no binding target on real d-pad hardware).
+    const CW = 42, CH = 36, CG = 4;
+    const gridW = CW*3 + CG*2, gridH = CH*3 + CG*2;
+    const gx0 = dpadContentX + (dpadContentW - gridW) / 2;
+    const gy0 = dpadContentY + (dpadContentH - gridH) / 2;
+    const col0 = gx0, col1 = gx0 + CW + CG, col2 = gx0 + (CW+CG)*2;
+    const row0 = gy0, row1 = gy0 + CH + CG, row2 = gy0 + (CH+CG)*2;
+
+    // decorative center
+    svg.appendChild(svgEl('rect', { x:col1, y:row1, width:CW, height:CH, rx:5,
+      fill:'var(--bg-primary)', stroke:'var(--border-ter)', 'stroke-width':0.6 }));
+    svg.appendChild(svgText('+', col1+CW/2, row1+CH/2+4, {
+      'font-size':11, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
     }));
-    dpadG.appendChild(svgText('wheel', swX+36, swY+60, {
-      'font-size':9.5, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
-    }));
-    dpadG.appendChild(svgText('(unbound)', swX+36, swY+73, {
-      'font-size':8, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
-    }));
+
+    svg.appendChild(makeCompactKey('DPAD_UP',    col1, row0, CW, CH, km, '↑'));
+    svg.appendChild(makeCompactKey('DPAD_LEFT',  col0, row1, CW, CH, km, '←'));
+    svg.appendChild(makeCompactKey('DPAD_RIGHT', col2, row1, CW, CH, km, '→'));
+    svg.appendChild(makeCompactKey('DPAD_DOWN',  col1, row2, CW, CH, km, '↓'));
   } else {
-    dpadG.appendChild(svgEl('rect', { x:RP, y:dpY0+10, width:198, height:126, rx:8,
-      fill:'var(--bg-tertiary)', stroke:'var(--border-ter)',
+    svg.appendChild(svgEl('rect', { x:dpadContentX, y:dpadContentY, width:dpadContentW, height:dpadContentH, rx:8,
+      fill:'var(--bg-primary)', stroke:'var(--border-ter)',
       'stroke-width':0.8, 'stroke-dasharray':'4 3' }));
-    dpadG.appendChild(svgText('no joystick bindings', RP+99, dpY0+76, {
+    svg.appendChild(svgText('unbound', dpadContentX+dpadContentW/2, dpadContentY+dpadContentH/2+4, {
       'font-size':11, fill:'var(--text-ter)', 'text-anchor':'middle', 'font-family':FONT,
     }));
   }
-  svg.appendChild(dpadG);
+
+  // ── Scroll wheel box ── (independent of D-pad mode — it's separate hardware)
+  const scrollBoxX = RP + dpadBoxW + 12;
+  const scrollBoxW = 96;
+  const scrollContentH = 24*3 + 3*2; // 3 rows + 2 gaps
+  const scrollBoxH = boxHeaderH + 6 + scrollContentH + boxPad;
+  const scrollContentX = scrollBoxX + boxPad;
+  const scrollContentY = dpY0 + boxHeaderH + 6;
+  const scrollContentW = scrollBoxW - boxPad * 2;
+
+  drawBoxFrame(scrollBoxX, dpY0, scrollBoxW, scrollBoxH, 'SCROLL WHEEL', 'click a row to bind', null);
+
+  const scrollCells = [
+    { keyId: 'SCROLL_UP',    icon: '▲' },
+    { keyId: 'SCROLL_CLICK', icon: '●' },
+    { keyId: 'SCROLL_DOWN',  icon: '▼' },
+  ];
+  scrollCells.forEach((sc, i) => {
+    svg.appendChild(makeCompactKey(sc.keyId, scrollContentX, scrollContentY + i * 27, scrollContentW, 24, km, sc.icon));
+  });
 
   // ── Footer ──
   svg.appendChild(svgText(
     'key# = hardware number  ·  dashed = unbound  ·  key 20 = thumb button (spacebar by default)  ·  ALT = circle button',
-    20, 338,
+    20, 388,
     { 'font-size':8.5, fill:'var(--text-ter)', 'font-family':FONT }
   ));
 }
@@ -861,7 +1021,7 @@ function openEditor(keyId) {
   const km = getActiveKeymap();
   editTarget = { type: 'key', keyId };
   const b = km.keys[keyId];
-  document.getElementById('pop-title').textContent = `Edit key ${keyId} — ${km.name}`;
+  document.getElementById('pop-title').textContent = `Edit ${KEY_DISPLAY_NAMES[keyId] || keyId} — ${km.name}`;
   document.getElementById('pop-note').value  = b.note  || '';
   document.getElementById('pop-label').value = b.label === '—' ? '' : b.label;
   document.getElementById('pop-cat').value   = b.cat;
@@ -1044,6 +1204,8 @@ function importJSON() {
             '  • flat-profile: { "layerName": { "01": { "label": "...", "cat": "..." }, ... } }'
           );
         }
+        // Backfill scroll-wheel + 4-way d-pad keys for any imported format that predates them.
+        state.keymaps.forEach(km => ensureExtraKeys(km.keys));
         saveState();
         syncProfileNameEl();
         renderTabs();
