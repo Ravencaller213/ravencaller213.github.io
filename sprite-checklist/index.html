@@ -606,8 +606,19 @@
 
   function collapseAll() { ALL_SPRITES.forEach(s => { collapsed[s] = true; }); render(); }
 
+  function buildFullExport() {
+    const full = {};
+    ALL_SPRITES.forEach(sprite => {
+      const isBurnt = sprite === BURNT;
+      const variants = isBurnt ? ["Normal"] : VARIANTS;
+      variants.forEach(v => { full[sprite + "||" + v] = !!state[sprite + "||" + v]; });
+    });
+    return full;
+  }
+
   function exportState() {
-    const blob = new Blob([JSON.stringify(state)], { type: "application/json" });
+    const full = buildFullExport();
+    const blob = new Blob([JSON.stringify(full, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = "fortnite_sprites_save.json";
