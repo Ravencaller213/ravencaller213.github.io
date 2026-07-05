@@ -176,10 +176,16 @@
     /* ─── TOOLBAR ────────────────────────────────────────────── */
     .toolbar {
       display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .toolbar-row {
+      display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 0.9rem;
-      margin-bottom: 2rem;
     }
 
     .btn {
@@ -435,16 +441,21 @@
   <div class="divider"></div>
 
   <div class="toolbar">
-    <button class="btn" onclick="checkAll()">Check all</button>
-    <button class="btn" onclick="uncheckAll()">Uncheck all</button>
-    <button class="btn" onclick="expandAll()">Expand all</button>
-    <button class="btn" onclick="collapseAll()">Collapse all</button>
-    <button class="btn accent" onclick="exportState()">Export</button>
-    <button class="btn accent" onclick="document.getElementById('importFile').click()">Import</button>
-    <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this.files[0])">
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
-      <span class="progress-label" id="prog">0 / 103</span>
+    <div class="toolbar-row">
+      <button class="btn accent" id="groupToggleBtn" onclick="toggleGrouping()">By Sprite</button>
+      <button class="btn accent" onclick="exportState()">Export</button>
+      <button class="btn accent" onclick="document.getElementById('importFile').click()">Import</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this.files[0])">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+        <span class="progress-label" id="prog">0 / 103</span>
+      </div>
+    </div>
+    <div class="toolbar-row">
+      <button class="btn" onclick="checkAll()">Check all</button>
+      <button class="btn" onclick="uncheckAll()">Uncheck all</button>
+      <button class="btn" onclick="expandAll()">Expand all</button>
+      <button class="btn" onclick="collapseAll()">Collapse all</button>
     </div>
   </div>
 
@@ -535,62 +546,92 @@
     el.innerHTML = html;
   }
 
-  function spriteCount(s, isBurnt) {
-    if (isBurnt) return state[s + "||Normal"] ? 1 : 0;
-    return VARIANTS.filter(v => state[s + "||" + v]).length;
+  // Display grouping: "sprite" lists Water/Earth/Fire.. each expanding to its variants (default).
+  // "variant" lists Normal/Gold/Gummi.. each expanding to the sprites that have that variant.
+  // This only changes how the checklist is drawn — the underlying state keys, and the
+  // Export/Import JSON shape, are unaffected either way.
+  let groupBy = "sprite";
+
+  function getGroups() { return groupBy === "sprite" ? ALL_SPRITES : VARIANTS; }
+
+  function getItemsForGroup(group) {
+    if (groupBy === "sprite") return group === BURNT ? ["Normal"] : VARIANTS;
+    return group === "Normal" ? ALL_SPRITES : SPRITES; // only "Normal" includes Burnt Peanut
   }
 
-  function renderVariants(sprite, isBurnt) {
-    const variants = isBurnt ? ["Normal"] : VARIANTS;
-    return `<div class="variants">${variants.map(v => {
-      const key = sprite + "||" + v, checked = !!state[key];
-      return `<label class="variant-item${checked ? ' checked' : ''}"><input type="checkbox" ${checked ? 'checked' : ''} onchange="toggle('${sprite}','${v}',this)"><span class="variant-label ${VCLS[v] || ''}">${v}</span></label>`;
+  function keyFor(group, item) {
+    return groupBy === "sprite" ? (group + "||" + item) : (item + "||" + group);
+  }
+
+  function itemClass(item) { return groupBy === "sprite" ? (VCLS[item] || "") : ""; }
+
+  function toggleGrouping() {
+    groupBy = groupBy === "sprite" ? "variant" : "sprite";
+    collapsed = {};
+    render();
+    updateGroupButton();
+  }
+
+  function updateGroupButton() {
+    document.getElementById("groupToggleBtn").textContent = groupBy === "sprite" ? "By Sprite" : "By Variant";
+  }
+
+  function groupCount(group) {
+    const items = getItemsForGroup(group);
+    return items.filter(item => state[keyFor(group, item)]).length;
+  }
+
+  function renderItems(group) {
+    const items = getItemsForGroup(group);
+    return `<div class="variants">${items.map(item => {
+      const key = keyFor(group, item), checked = !!state[key];
+      return `<label class="variant-item${checked ? ' checked' : ''}"><input type="checkbox" ${checked ? 'checked' : ''} onchange="toggle('${group}','${item}',this)"><span class="variant-label ${itemClass(item)}">${item}</span></label>`;
     }).join("")}</div>`;
   }
 
-  function renderSprite(sprite, isBurnt) {
-    const total = isBurnt ? 1 : VARIANTS.length, ch = spriteCount(sprite, isBurnt), isOpen = !collapsed[sprite];
-    const sid = "sp-" + sprite.replace(/ /g, "_");
-    return `<div class="sprite" id="${sid}">
-      <div class="sprite-header" onclick="toggleSprite('${sprite}')">
-        <span class="sprite-name">${sprite}</span>
+  function renderGroup(group) {
+    const items = getItemsForGroup(group);
+    const total = items.length, ch = groupCount(group), isOpen = !collapsed[group];
+    const gid = "grp-" + group.replace(/ /g, "_");
+    return `<div class="sprite" id="${gid}">
+      <div class="sprite-header" onclick="toggleGroup('${group}')">
+        <span class="sprite-name">${group}</span>
         <span class="sprite-count${ch === total ? ' done' : ''}">${ch} / ${total}</span>
-        <span class="chevron${isOpen ? ' open' : ''}" id="ch-${sprite.replace(/ /g, "_")}">&#8964;</span>
+        <span class="chevron${isOpen ? ' open' : ''}" id="ch-${group.replace(/ /g, "_")}">&#8964;</span>
       </div>
-      ${isOpen ? renderVariants(sprite, isBurnt) : ""}
+      ${isOpen ? renderItems(group) : ""}
     </div>`;
   }
 
   function render() {
-    document.getElementById("list").innerHTML = ALL_SPRITES.map(s => renderSprite(s, s === BURNT)).join("");
+    document.getElementById("list").innerHTML = getGroups().map(g => renderGroup(g)).join("");
     updateProgress(); updateRemaining();
   }
 
-  function toggle(sprite, variant, el) {
-    const key = sprite + "||" + variant; state[key] = el.checked; save();
-    const item = el.closest(".variant-item");
-    el.checked ? item.classList.add("checked") : item.classList.remove("checked");
-    const isBurnt = sprite === BURNT, total = isBurnt ? 1 : VARIANTS.length;
-    const countEl = document.querySelector("#sp-" + sprite.replace(/ /g, "_") + " .sprite-count");
-    const ch = spriteCount(sprite, isBurnt);
+  function toggle(group, item, el) {
+    const key = keyFor(group, item); state[key] = el.checked; save();
+    const itemEl = el.closest(".variant-item");
+    el.checked ? itemEl.classList.add("checked") : itemEl.classList.remove("checked");
+    const total = getItemsForGroup(group).length;
+    const countEl = document.querySelector("#grp-" + group.replace(/ /g, "_") + " .sprite-count");
+    const ch = groupCount(group);
     countEl.textContent = ch + " / " + total;
     countEl.classList.toggle("done", ch === total);
     updateProgress(); updateRemaining();
   }
 
-  function toggleSprite(sprite) {
-    collapsed[sprite] = !collapsed[sprite];
-    const isBurnt = sprite === BURNT;
-    const ch = document.getElementById("ch-" + sprite.replace(/ /g, "_"));
-    const sp = document.getElementById("sp-" + sprite.replace(/ /g, "_"));
-    if (collapsed[sprite]) {
-      sp.querySelector(".variants")?.remove();
+  function toggleGroup(group) {
+    collapsed[group] = !collapsed[group];
+    const ch = document.getElementById("ch-" + group.replace(/ /g, "_"));
+    const grp = document.getElementById("grp-" + group.replace(/ /g, "_"));
+    if (collapsed[group]) {
+      grp.querySelector(".variants")?.remove();
       ch.classList.remove("open");
     } else {
       ch.classList.add("open");
       const div = document.createElement("div");
-      div.innerHTML = renderVariants(sprite, isBurnt);
-      sp.appendChild(div.firstChild);
+      div.innerHTML = renderItems(group);
+      grp.appendChild(div.firstChild);
     }
   }
 
@@ -604,7 +645,7 @@
 
   function expandAll() { collapsed = {}; render(); }
 
-  function collapseAll() { ALL_SPRITES.forEach(s => { collapsed[s] = true; }); render(); }
+  function collapseAll() { getGroups().forEach(g => { collapsed[g] = true; }); render(); }
 
   // lowercase variant key <-> internal capitalized variant name
   const VARIANT_KEY = { Normal: "normal", Gold: "gold", Gummi: "gummi", Galaxy: "galaxy", Holofoil: "holofoil", Crystal: "crystal" };
@@ -665,6 +706,7 @@
     reader.readAsText(file);
   }
 
+  updateGroupButton();
   render();
 </script>
 
