@@ -188,6 +188,42 @@
       gap: 0.9rem;
     }
 
+    .unreleased-toggles {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-left: 0.3rem;
+      padding-left: 1rem;
+      border-left: 1px solid var(--border);
+    }
+
+    .unreleased-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-faint);
+    }
+
+    .toggle-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .toggle-chip input[type="checkbox"] {
+      accent-color: var(--opal-4);
+      width: 13px;
+      height: 13px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
     .btn {
       font-family: 'DM Sans', sans-serif;
       font-size: 0.78rem;
@@ -456,6 +492,13 @@
       <button class="btn" onclick="uncheckAll()">Uncheck all</button>
       <button class="btn" onclick="expandAll()">Expand all</button>
       <button class="btn" onclick="collapseAll()">Collapse all</button>
+      <div class="unreleased-toggles">
+        <span class="unreleased-label">Unreleased</span>
+        <label class="toggle-chip"><input type="checkbox" id="include-Holofoil" checked onchange="toggleInclude('Holofoil', this.checked)"><span class="v-holofoil">Holofoil</span></label>
+        <label class="toggle-chip"><input type="checkbox" id="include-Crystal" checked onchange="toggleInclude('Crystal', this.checked)"><span class="v-crystal">Crystal</span></label>
+        <label class="toggle-chip"><input type="checkbox" id="include-Air" checked onchange="toggleInclude('Air', this.checked)">Air</label>
+        <label class="toggle-chip"><input type="checkbox" id="include-Foundation" checked onchange="toggleInclude('Foundation', this.checked)">Foundation</label>
+      </div>
     </div>
   </div>
 
@@ -487,6 +530,44 @@
   // (from before a rename) working instead of leaving orphaned duplicate entries.
   const RENAMES = { "Fish": "Fishy" };
 
+  // Unreleased content toggles. Unchecking one hides it from the checklist and excludes
+  // it from the progress bar / Remaining panel, but never touches its stored checked
+  // state — re-checking the box brings any prior progress on it right back.
+  const EXCLUDABLE_VARIANTS = ["Holofoil", "Crystal"];
+  const EXCLUDABLE_SPRITES = ["Air", "Foundation"];
+  const INCLUDE_KEY = "fn_sprites_include_v1";
+
+  let included = { Holofoil: true, Crystal: true, Air: true, Foundation: true };
+  try {
+    const savedInclude = localStorage.getItem(INCLUDE_KEY);
+    if (savedInclude) included = { ...included, ...JSON.parse(savedInclude) };
+  } catch (e) {}
+
+  function saveInclude() { try { localStorage.setItem(INCLUDE_KEY, JSON.stringify(included)); } catch (e) {} }
+
+  function activeVariants() { return VARIANTS.filter(v => included[v] !== false); }
+  function activeSprites() { return SPRITES.filter(s => included[s] !== false); }
+
+  function activeAllSprites() {
+    const as = activeSprites();
+    const idx = as.indexOf("King");
+    return [...as.slice(0, idx + 1), BURNT, ...as.slice(idx + 1)];
+  }
+
+  function toggleInclude(name, checked) {
+    included[name] = checked;
+    saveInclude();
+    collapsed = {};
+    render();
+  }
+
+  function syncIncludeCheckboxes() {
+    Object.keys(included).forEach(name => {
+      const cb = document.getElementById("include-" + name);
+      if (cb) cb.checked = included[name] !== false;
+    });
+  }
+
   function migrateState(obj) {
     const result = { ...(obj && typeof obj === "object" ? obj : {}) };
     Object.keys(RENAMES).forEach(oldName => {
@@ -514,11 +595,11 @@
 
   save(); // persist migration immediately so the cleaned-up state survives even without a toggle
 
-  function getTotal() { return SPRITES.length * VARIANTS.length + 1; }
+  function getTotal() { return activeSprites().length * activeVariants().length + 1; }
 
   function getChecked() {
     let n = 0;
-    SPRITES.forEach(s => VARIANTS.forEach(v => { if (state[s + "||" + v]) n++; }));
+    activeSprites().forEach(s => activeVariants().forEach(v => { if (state[s + "||" + v]) n++; }));
     if (state[BURNT + "||Normal"]) n++;
     return n;
   }
@@ -532,9 +613,9 @@
   function updateRemaining() {
     const el = document.getElementById("remaining");
     let html = ""; let allDone = true;
-    ALL_SPRITES.forEach(sprite => {
+    activeAllSprites().forEach(sprite => {
       const isBurnt = sprite === BURNT;
-      const variants = isBurnt ? ["Normal"] : VARIANTS;
+      const variants = isBurnt ? ["Normal"] : activeVariants();
       const missing = variants.filter(v => !state[sprite + "||" + v]);
       if (missing.length === 0) return;
       allDone = false;
@@ -552,11 +633,11 @@
   // Export/Import JSON shape, are unaffected either way.
   let groupBy = "sprite";
 
-  function getGroups() { return groupBy === "sprite" ? ALL_SPRITES : VARIANTS; }
+  function getGroups() { return groupBy === "sprite" ? activeAllSprites() : activeVariants(); }
 
   function getItemsForGroup(group) {
-    if (groupBy === "sprite") return group === BURNT ? ["Normal"] : VARIANTS;
-    return group === "Normal" ? ALL_SPRITES : SPRITES; // only "Normal" includes Burnt Peanut
+    if (groupBy === "sprite") return group === BURNT ? ["Normal"] : activeVariants();
+    return group === "Normal" ? activeAllSprites() : activeSprites(); // only "Normal" includes Burnt Peanut
   }
 
   function keyFor(group, item) {
@@ -635,13 +716,19 @@
     }
   }
 
+  // Check all / Uncheck all only touch currently visible (included) entries — progress on
+  // anything hidden via the unreleased toggles is left untouched either way.
   function checkAll() {
-    SPRITES.forEach(s => VARIANTS.forEach(v => { state[s + "||" + v] = true; }));
+    activeSprites().forEach(s => activeVariants().forEach(v => { state[s + "||" + v] = true; }));
     state[BURNT + "||Normal"] = true;
     save(); render();
   }
 
-  function uncheckAll() { state = {}; save(); render(); }
+  function uncheckAll() {
+    activeSprites().forEach(s => activeVariants().forEach(v => { delete state[s + "||" + v]; }));
+    delete state[BURNT + "||Normal"];
+    save(); render();
+  }
 
   function expandAll() { collapsed = {}; render(); }
 
@@ -707,6 +794,7 @@
   }
 
   updateGroupButton();
+  syncIncludeCheckboxes();
   render();
 </script>
 
