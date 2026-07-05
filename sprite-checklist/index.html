@@ -606,14 +606,18 @@
 
   function collapseAll() { ALL_SPRITES.forEach(s => { collapsed[s] = true; }); render(); }
 
+  // lowercase variant key <-> internal capitalized variant name
+  const VARIANT_KEY = { Normal: "normal", Gold: "gold", Gummi: "gummi", Galaxy: "galaxy", Holofoil: "holofoil", Crystal: "crystal" };
+  const VARIANT_KEY_REVERSE = Object.fromEntries(Object.entries(VARIANT_KEY).map(([k, v]) => [v, k]));
+
   function buildFullExport() {
-    const full = {};
-    ALL_SPRITES.forEach(sprite => {
+    return ALL_SPRITES.map(sprite => {
       const isBurnt = sprite === BURNT;
-      const variants = isBurnt ? ["Normal"] : VARIANTS;
-      variants.forEach(v => { full[sprite + "||" + v] = !!state[sprite + "||" + v]; });
+      const variantList = isBurnt ? ["Normal"] : VARIANTS;
+      const variants = {};
+      variantList.forEach(v => { variants[VARIANT_KEY[v]] = !!state[sprite + "||" + v]; });
+      return { sprite, variants };
     });
-    return full;
   }
 
   function exportState() {
@@ -626,13 +630,33 @@
     URL.revokeObjectURL(a.href);
   }
 
+  // Accepts the current { sprite, variants: { normal: bool, ... } } array format,
+  // and falls back to the older flat "Sprite||Variant": bool object format
+  // (this tool's earlier exports, or the desktop tracker's save file).
+  function parseImport(data) {
+    let flat = {};
+    if (Array.isArray(data)) {
+      data.forEach(entry => {
+        if (!entry || typeof entry !== "object" || !entry.sprite || typeof entry.variants !== "object") return;
+        Object.keys(entry.variants).forEach(vKey => {
+          const variantName = VARIANT_KEY_REVERSE[vKey.toLowerCase()]
+            || (vKey.charAt(0).toUpperCase() + vKey.slice(1).toLowerCase());
+          flat[entry.sprite + "||" + variantName] = !!entry.variants[vKey];
+        });
+      });
+    } else if (data && typeof data === "object") {
+      flat = data;
+    }
+    return migrateState(flat);
+  }
+
   function importState(file) {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = e => {
       try {
         const data = JSON.parse(e.target.result);
-        state = migrateState(data);
+        state = parseImport(data);
         save(); render();
       } catch (err) {
         alert("Couldn't read that file — expected a JSON export from this tool or the desktop tracker.");
