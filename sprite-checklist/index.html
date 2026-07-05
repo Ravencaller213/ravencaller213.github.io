@@ -610,17 +610,20 @@
     document.getElementById("fill").style.width = Math.round(ch / tot * 100) + "%";
   }
 
+  // Mirrors whatever grouping the main checklist is currently using: by-sprite listing
+  // shows missing variants under each sprite, by-variant listing shows missing sprites
+  // under each variant. Reuses the same getGroups()/getItemsForGroup() the list uses,
+  // so unreleased-content filtering stays in sync automatically.
   function updateRemaining() {
     const el = document.getElementById("remaining");
     let html = ""; let allDone = true;
-    activeAllSprites().forEach(sprite => {
-      const isBurnt = sprite === BURNT;
-      const variants = isBurnt ? ["Normal"] : activeVariants();
-      const missing = variants.filter(v => !state[sprite + "||" + v]);
+    getGroups().forEach(group => {
+      const items = getItemsForGroup(group);
+      const missing = items.filter(item => !state[keyFor(group, item)]);
       if (missing.length === 0) return;
       allDone = false;
-      html += `<div class="remaining-sprite"><div class="remaining-sprite-name">${sprite}</div><ul>`;
-      missing.forEach(v => { html += `<li class="${VCLS[v] || ''}">${v}</li>`; });
+      html += `<div class="remaining-sprite"><div class="remaining-sprite-name">${group}</div><ul>`;
+      missing.forEach(item => { html += `<li class="${itemClass(item)}">${item}</li>`; });
       html += `</ul></div>`;
     });
     if (allDone) html = `<div class="none-left">All collected!</div>`;
