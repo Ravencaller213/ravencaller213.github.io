@@ -472,15 +472,36 @@
   const KEY = "fn_sprites_v1";
   const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Crystal: "v-crystal" };
 
+  // Renamed sprites: old key prefix -> current key prefix. Keeps older saves/exports
+  // (from before a rename) working instead of leaving orphaned duplicate entries.
+  const RENAMES = { "Fish": "Fishy" };
+
+  function migrateState(obj) {
+    const result = { ...(obj && typeof obj === "object" ? obj : {}) };
+    Object.keys(RENAMES).forEach(oldName => {
+      const newName = RENAMES[oldName];
+      const prefix = oldName + "||";
+      Object.keys(result).forEach(key => {
+        if (!key.startsWith(prefix)) return;
+        const newKey = newName + "||" + key.slice(prefix.length);
+        if (result[key]) result[newKey] = true;
+        delete result[key];
+      });
+    });
+    return result;
+  }
+
   let state = {};
   try {
     const saved = localStorage.getItem(KEY);
-    state = saved ? JSON.parse(saved) : {};
+    state = migrateState(saved ? JSON.parse(saved) : {});
   } catch (e) { state = {}; }
 
   let collapsed = {};
 
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+
+  save(); // persist migration immediately so the cleaned-up state survives even without a toggle
 
   function getTotal() { return SPRITES.length * VARIANTS.length + 1; }
 
@@ -600,7 +621,7 @@
     reader.onload = e => {
       try {
         const data = JSON.parse(e.target.result);
-        state = data && typeof data === "object" ? data : {};
+        state = migrateState(data);
         save(); render();
       } catch (err) {
         alert("Couldn't read that file — expected a JSON export from this tool or the desktop tracker.");
