@@ -622,7 +622,7 @@
       const missing = items.filter(item => !state[keyFor(group, item)]);
       if (missing.length === 0) return;
       allDone = false;
-      html += `<div class="remaining-sprite"><div class="remaining-sprite-name">${group}</div><ul>`;
+      html += `<div class="remaining-sprite"><div class="remaining-sprite-name ${groupClass(group)}">${group}</div><ul>`;
       missing.forEach(item => { html += `<li class="${itemClass(item)}">${item}</li>`; });
       html += `</ul></div>`;
     });
@@ -648,6 +648,11 @@
   }
 
   function itemClass(item) { return groupBy === "sprite" ? (VCLS[item] || "") : ""; }
+
+  // Opposite of itemClass: when grouped by variant, the variant name is the group's
+  // own label (its card title, and its heading in the Remaining panel) rather than an
+  // item inside it, so the color-coding needs to move there instead.
+  function groupClass(group) { return groupBy === "variant" ? (VCLS[group] || "") : ""; }
 
   function toggleGrouping() {
     groupBy = groupBy === "sprite" ? "variant" : "sprite";
@@ -679,7 +684,7 @@
     const gid = "grp-" + group.replace(/ /g, "_");
     return `<div class="sprite" id="${gid}">
       <div class="sprite-header" onclick="toggleGroup('${group}')">
-        <span class="sprite-name">${group}</span>
+        <span class="sprite-name ${groupClass(group)}">${group}</span>
         <span class="sprite-count${ch === total ? ' done' : ''}">${ch} / ${total}</span>
         <span class="chevron${isOpen ? ' open' : ''}" id="ch-${group.replace(/ /g, "_")}">&#8964;</span>
       </div>
