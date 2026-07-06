@@ -223,6 +223,8 @@
   <div class="legend-item"><div class="swatch" style="background:#993C1D"></div>Arrow → WASD</div>
   <div class="legend-item"><div class="swatch unbound"></div>Unbound</div>
   <div class="legend-item"><div class="swatch" style="background:#C0392B"></div>Disabled</div>
+  <div class="legend-item"><div class="swatch" style="background:#C17817"></div>Hypershift trigger</div>
+  <div class="legend-item"><div class="swatch" style="background:#F4C430;border-radius:50%"></div>Has Hypershift binding</div>
 </div>
 
 <!-- Combos section -->
@@ -257,7 +259,24 @@
       <option value="skill">Skill slot</option>
       <option value="modifier">Modifier (analog)</option>
       <option value="switch">Layer switch</option>
+      <option value="hypershift">Hypershift trigger</option>
     </select>
+
+    <div id="pop-hyper-section">
+      <label style="margin-top:6px;">Hypershift binding <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional — active only while the Hypershift key is held)</span></label>
+      <input type="text" id="pop-hyper-note" placeholder="e.g. Ability 1" autocomplete="off" />
+      <input type="text" id="pop-hyper-label" placeholder="e.g. SHFT+1" autocomplete="off" style="margin-top:-6px;" />
+      <select id="pop-hyper-cat">
+        <option value="unbound">— None</option>
+        <option value="disabled">Disabled</option>
+        <option value="esc">ESC</option>
+        <option value="action">Action (analog)</option>
+        <option value="skill">Skill slot</option>
+        <option value="modifier">Modifier (analog)</option>
+        <option value="switch">Layer switch</option>
+      </select>
+    </div>
+
     <div class="popover-actions">
       <button class="btn-cancel" onclick="closePopover()">Cancel</button>
       <button class="btn-save"   onclick="saveEdit()">Save</button>
@@ -354,7 +373,13 @@ const C = {
   arrow:    '#993C1D',
   unbound:  null,
   disabled: '#C0392B',
+  hypershift: '#C17817',
 };
+
+// Fixed color for the "has a Hypershift binding" corner badge — distinct from
+// the category palette above so it never gets mistaken for the key's own
+// primary-binding color.
+const HYPER_BADGE_COLOR = '#F4C430';
 
 // ── Blank / default key sets ──────────────────────────────────────────────────
 function blankKeys() {
@@ -652,6 +677,22 @@ function svgText(txt, x, y, attrs) {
   return e;
 }
 
+// Small gold corner dot + native tooltip marking "this key also has a
+// Hypershift binding". Shared by makeKey, makeCompactKey, and the ALT pill —
+// purely a presence indicator; the actual Hypershift binding is only edited
+// via the popover, not shown in full on the cell itself (no room, and it'd
+// clutter the grid).
+function addHyperBadge(g, x, y, w, b) {
+  if (!b.hyper || b.hyper.cat === 'unbound') return;
+  g.appendChild(svgEl('circle', {
+    cx: x + w - 7, cy: y + 7, r: 3.5,
+    fill: HYPER_BADGE_COLOR, stroke: 'var(--bg-primary)', 'stroke-width': 1,
+  }));
+  const title = svgEl('title', {});
+  title.textContent = `Hypershift: ${(b.hyper.note || b.hyper.label || '').trim() || '(set)'}`;
+  g.appendChild(title);
+}
+
 // ── Key cell factory ──────────────────────────────────────────────────────────
 function makeKey(keyId, x, y, w, h, km) {
   const b = km.keys[keyId];
@@ -708,6 +749,7 @@ function makeKey(keyId, x, y, w, h, km) {
     }));
   }
 
+  addHyperBadge(g, x, y, w, b);
   return g;
 }
 
@@ -750,6 +792,7 @@ function makeCompactKey(keyId, x, y, w, h, km, icon) {
     fill: iconFill, 'text-anchor': 'middle', 'font-family': FONT,
   }));
 
+  addHyperBadge(g, x, y, w, b);
   return g;
 }
 
@@ -841,6 +884,7 @@ function render() {
       'text-anchor': 'middle', 'font-family': FONT,
     }));
   }
+  addHyperBadge(altG, altX, altY, altW, altB);
   svg.appendChild(altG);
 
   // ── Divider ──
@@ -1028,6 +1072,10 @@ function openEditor(keyId) {
   document.getElementById('pop-mod-row').style.display = 'none';
   document.getElementById('pop-key-lbl').innerHTML =
     'Output key <span style="font-weight:400;text-transform:none;letter-spacing:0">(what Synapse sends)</span>';
+  document.getElementById('pop-hyper-section').style.display = '';
+  document.getElementById('pop-hyper-note').value  = b.hyper?.note  || '';
+  document.getElementById('pop-hyper-label').value = (b.hyper?.label && b.hyper.label !== '—') ? b.hyper.label : '';
+  document.getElementById('pop-hyper-cat').value   = b.hyper?.cat   || 'unbound';
   document.getElementById('backdrop').classList.add('open');
   setTimeout(() => document.getElementById('pop-note').focus(), 30);
 }
@@ -1044,6 +1092,7 @@ function openComboEditor(comboId) {
   document.getElementById('pop-label').value = c?.key   || '';
   document.getElementById('pop-cat').value   = c?.cat   || 'action';
   document.getElementById('pop-mod-row').style.display = '';
+  document.getElementById('pop-hyper-section').style.display = 'none';
   document.getElementById('pop-key-lbl').innerHTML = 'Base key';
   document.getElementById('backdrop').classList.add('open');
   setTimeout(() => document.getElementById('pop-note').focus(), 30);
@@ -1079,6 +1128,15 @@ function saveEdit() {
     renderCombos();
   } else {
     const existing = km.keys[editTarget.keyId];
+    const hyperNote = document.getElementById('pop-hyper-note').value.trim();
+    const hyperRaw  = document.getElementById('pop-hyper-label').value.trim();
+    const hyperCat  = document.getElementById('pop-hyper-cat').value;
+    // Same "blank output collapses to unbound (unless Disabled)" rule as the
+    // primary binding, so an empty Hypershift section just means "no
+    // Hypershift binding on this key" rather than leaving stray state around.
+    const hyperEffectiveCat = (hyperRaw || hyperCat === 'disabled') ? hyperCat : 'unbound';
+    const hasHyper = hyperEffectiveCat !== 'unbound' || hyperNote || hyperRaw;
+
     km.keys[editTarget.keyId] = {
       ...existing,
       label: raw || '—',
@@ -1086,8 +1144,10 @@ function saveEdit() {
       // deliberate no-output state, so it shouldn't get collapsed back to unbound.
       cat:   (raw || cat === 'disabled') ? cat : 'unbound',
       ...(note ? { note } : {}),
+      ...(hasHyper ? { hyper: { label: hyperRaw || '—', cat: hyperEffectiveCat, ...(hyperNote ? { note: hyperNote } : {}) } } : {}),
     };
     if (!note) delete km.keys[editTarget.keyId].note;
+    if (!hasHyper) delete km.keys[editTarget.keyId].hyper;
     saveState();
     closePopover();
     render();
@@ -1095,7 +1155,7 @@ function saveEdit() {
 }
 
 // Enter/Escape on either input field
-['pop-note', 'pop-label'].forEach(id => {
+['pop-note', 'pop-label', 'pop-hyper-note', 'pop-hyper-label'].forEach(id => {
   document.getElementById(id).addEventListener('keydown', e => {
     if (e.key === 'Enter')  { e.preventDefault(); saveEdit(); }
     if (e.key === 'Escape') closePopover();
