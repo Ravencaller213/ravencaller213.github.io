@@ -348,16 +348,36 @@
     }
     .variant-item:hover { background: var(--surface-hi); }
 
-    .variant-item input[type="checkbox"] {
-      accent-color: var(--opal-4);
-      width: 14px;
-      height: 14px;
-      cursor: pointer;
+    .variant-check {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1px solid var(--border-hi);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      line-height: 1;
       flex-shrink: 0;
+      color: transparent;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .variant-item.checked .variant-check {
+      background: var(--opal-4);
+      border-color: var(--opal-4);
+      color: var(--bg);
+    }
+
+    .variant-item.mastered .variant-check {
+      background: linear-gradient(135deg, var(--opal-1), var(--opal-3));
+      border-color: transparent;
+      color: #fff;
     }
 
     .variant-label { font-size: 0.82rem; color: var(--text); }
-    .variant-item.checked .variant-label {
+    .variant-item.checked .variant-label,
+    .variant-item.mastered .variant-label {
       color: var(--text-faint);
       text-decoration: line-through;
       text-decoration-color: var(--text-faint);
@@ -391,7 +411,9 @@
       margin-bottom: 1rem;
     }
 
-    #remaining {
+    .sidebar h3:not(:first-child) { margin-top: 1.75rem; }
+
+    .remaining-list {
       display: grid;
       grid-template-columns: 1fr 1fr;
       column-gap: 1.5rem;
@@ -453,7 +475,7 @@
       .page { padding: 0 1.25rem 4rem; }
       header { padding: 2rem 0 2rem; }
       .variants { grid-template-columns: repeat(2, 1fr); }
-      #remaining { grid-template-columns: 1fr; }
+      .remaining-list { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -470,7 +492,7 @@
     <h1 class="wordmark">Sprites</h1>
     <p class="tagline">
       Fortnite sprite collection tracker — every base skin across Normal, Gold, Gummi, Galaxy, Holofoil, and Crystal variants.
-      Progress saves automatically in your browser; export a backup any time.
+      Click a variant to cycle none &rarr; collected &rarr; mastered. Progress saves automatically in your browser; export a backup any time.
     </p>
   </header>
 
@@ -507,7 +529,9 @@
 
     <div class="sidebar">
       <h3>Remaining</h3>
-      <div id="remaining"></div>
+      <div id="remaining" class="remaining-list"></div>
+      <h3>Collected, Not Mastered</h3>
+      <div id="not-mastered" class="remaining-list"></div>
     </div>
   </div>
 
@@ -568,6 +592,28 @@
     });
   }
 
+  // Progress levels per (sprite, variant): 0 = none, 1 = collected, 2 = mastered.
+  // A single control cycles through these; mastered implies collected, matching the
+  // game (you can only master a variant you've already extracted to max level).
+  const LEVEL_LABEL = { 0: "none", 1: "collected", 2: "mastered" };
+  const LABEL_LEVEL = { none: 0, collected: 1, mastered: 2 };
+
+  function valueToLevel(v) {
+    if (typeof v === "string") { const n = LABEL_LEVEL[v.toLowerCase()]; return n === undefined ? 0 : n; }
+    if (v === true) return 1;
+    if (typeof v === "number" && !isNaN(v)) return Math.max(0, Math.min(2, Math.round(v)));
+    return 0;
+  }
+
+  function normalizeStateLevels(obj) {
+    const result = {};
+    Object.keys(obj || {}).forEach(k => {
+      const lvl = valueToLevel(obj[k]);
+      if (lvl > 0) result[k] = lvl;
+    });
+    return result;
+  }
+
   function migrateState(obj) {
     const result = { ...(obj && typeof obj === "object" ? obj : {}) };
     Object.keys(RENAMES).forEach(oldName => {
@@ -576,11 +622,11 @@
       Object.keys(result).forEach(key => {
         if (!key.startsWith(prefix)) return;
         const newKey = newName + "||" + key.slice(prefix.length);
-        if (result[key]) result[newKey] = true;
+        if (result[key]) result[newKey] = result[key];
         delete result[key];
       });
     });
-    return result;
+    return normalizeStateLevels(result);
   }
 
   let state = {};
@@ -610,24 +656,28 @@
     document.getElementById("fill").style.width = Math.round(ch / tot * 100) + "%";
   }
 
-  // Mirrors whatever grouping the main checklist is currently using: by-sprite listing
-  // shows missing variants under each sprite, by-variant listing shows missing sprites
-  // under each variant. Reuses the same getGroups()/getItemsForGroup() the list uses,
-  // so unreleased-content filtering stays in sync automatically.
-  function updateRemaining() {
-    const el = document.getElementById("remaining");
+  // Shared by both sidebar lists: walks the same groups/items the main checklist uses,
+  // filtering by a predicate on each cell's stored level. Keeps "Remaining" and
+  // "Collected, Not Mastered" in sync with grouping mode and unreleased filters
+  // automatically — no separate logic to drift out of sync.
+  function buildSidebarListHTML(predicate, emptyMessage) {
     let html = ""; let allDone = true;
     getGroups().forEach(group => {
       const items = getItemsForGroup(group);
-      const missing = items.filter(item => !state[keyFor(group, item)]);
-      if (missing.length === 0) return;
+      const matching = items.filter(item => predicate(state[keyFor(group, item)] || 0));
+      if (matching.length === 0) return;
       allDone = false;
       html += `<div class="remaining-sprite"><div class="remaining-sprite-name ${groupClass(group)}">${group}</div><ul>`;
-      missing.forEach(item => { html += `<li class="${itemClass(item)}">${item}</li>`; });
+      matching.forEach(item => { html += `<li class="${itemClass(item)}">${item}</li>`; });
       html += `</ul></div>`;
     });
-    if (allDone) html = `<div class="none-left">All collected!</div>`;
-    el.innerHTML = html;
+    if (allDone) html = `<div class="none-left">${emptyMessage}</div>`;
+    return html;
+  }
+
+  function updateRemaining() {
+    document.getElementById("remaining").innerHTML = buildSidebarListHTML(lvl => lvl === 0, "All collected!");
+    document.getElementById("not-mastered").innerHTML = buildSidebarListHTML(lvl => lvl === 1, "Nothing pending mastery!");
   }
 
   // Display grouping: "sprite" lists Water/Earth/Fire.. each expanding to its variants (default).
@@ -673,8 +723,13 @@
   function renderItems(group) {
     const items = getItemsForGroup(group);
     return `<div class="variants">${items.map(item => {
-      const key = keyFor(group, item), checked = !!state[key];
-      return `<label class="variant-item${checked ? ' checked' : ''}"><input type="checkbox" ${checked ? 'checked' : ''} onchange="toggle('${group}','${item}',this)"><span class="variant-label ${itemClass(item)}">${item}</span></label>`;
+      const key = keyFor(group, item), level = state[key] || 0;
+      const stateClass = level === 2 ? ' mastered' : level === 1 ? ' checked' : '';
+      const icon = level === 2 ? '★' : level === 1 ? '✓' : '';
+      return `<div class="variant-item${stateClass}" onclick="cycleState('${group}','${item}')">
+        <span class="variant-check">${icon}</span>
+        <span class="variant-label ${itemClass(item)}">${item}</span>
+      </div>`;
     }).join("")}</div>`;
   }
 
@@ -697,16 +752,12 @@
     updateProgress(); updateRemaining();
   }
 
-  function toggle(group, item, el) {
-    const key = keyFor(group, item); state[key] = el.checked; save();
-    const itemEl = el.closest(".variant-item");
-    el.checked ? itemEl.classList.add("checked") : itemEl.classList.remove("checked");
-    const total = getItemsForGroup(group).length;
-    const countEl = document.querySelector("#grp-" + group.replace(/ /g, "_") + " .sprite-count");
-    const ch = groupCount(group);
-    countEl.textContent = ch + " / " + total;
-    countEl.classList.toggle("done", ch === total);
-    updateProgress(); updateRemaining();
+  function cycleState(group, item) {
+    const key = keyFor(group, item);
+    const next = ((state[key] || 0) + 1) % 3;
+    if (next === 0) delete state[key]; else state[key] = next;
+    save();
+    render();
   }
 
   function toggleGroup(group) {
@@ -725,10 +776,11 @@
   }
 
   // Check all / Uncheck all only touch currently visible (included) entries — progress on
-  // anything hidden via the unreleased toggles is left untouched either way.
+  // anything hidden via the unreleased toggles is left untouched either way. "Check all"
+  // marks everything collected (not mastered) — mastery still has to be earned in-game.
   function checkAll() {
-    activeSprites().forEach(s => activeVariants().forEach(v => { state[s + "||" + v] = true; }));
-    state[BURNT + "||Normal"] = true;
+    activeSprites().forEach(s => activeVariants().forEach(v => { state[s + "||" + v] = 1; }));
+    state[BURNT + "||Normal"] = 1;
     save(); render();
   }
 
@@ -751,7 +803,7 @@
       const isBurnt = sprite === BURNT;
       const variantList = isBurnt ? ["Normal"] : VARIANTS;
       const variants = {};
-      variantList.forEach(v => { variants[VARIANT_KEY[v]] = !!state[sprite + "||" + v]; });
+      variantList.forEach(v => { variants[VARIANT_KEY[v]] = LEVEL_LABEL[state[sprite + "||" + v] || 0]; });
       return { sprite, variants };
     });
   }
@@ -766,9 +818,9 @@
     URL.revokeObjectURL(a.href);
   }
 
-  // Accepts the current { sprite, variants: { normal: bool, ... } } array format,
-  // and falls back to the older flat "Sprite||Variant": bool object format
-  // (this tool's earlier exports, or the desktop tracker's save file).
+  // Accepts the current { sprite, variants: { normal: "none"|"collected"|"mastered", ... } }
+  // array format, and falls back to older formats: this tool's earlier boolean-per-variant
+  // exports, and the flat "Sprite||Variant": bool object format from the desktop tracker.
   function parseImport(data) {
     let flat = {};
     if (Array.isArray(data)) {
@@ -777,11 +829,11 @@
         Object.keys(entry.variants).forEach(vKey => {
           const variantName = VARIANT_KEY_REVERSE[vKey.toLowerCase()]
             || (vKey.charAt(0).toUpperCase() + vKey.slice(1).toLowerCase());
-          flat[entry.sprite + "||" + variantName] = !!entry.variants[vKey];
+          flat[entry.sprite + "||" + variantName] = valueToLevel(entry.variants[vKey]);
         });
       });
     } else if (data && typeof data === "object") {
-      flat = data;
+      Object.keys(data).forEach(k => { flat[k] = valueToLevel(data[k]); });
     }
     return migrateState(flat);
   }
