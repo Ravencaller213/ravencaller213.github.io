@@ -223,7 +223,7 @@
   <div class="legend-item"><div class="swatch" style="background:#993C1D"></div>Arrow → WASD</div>
   <div class="legend-item"><div class="swatch unbound"></div>Unbound</div>
   <div class="legend-item"><div class="swatch" style="background:#C0392B"></div>Disabled</div>
-  <div class="legend-item"><div class="swatch" style="background:#C17817"></div>Hypershift trigger</div>
+  <div class="legend-item"><div class="swatch" style="background:#C17817"></div>Hypershift</div>
   <div class="legend-item"><div class="swatch" style="background:#F4C430;border-radius:50%"></div>Has Hypershift binding</div>
 </div>
 
@@ -259,7 +259,7 @@
       <option value="skill">Skill slot</option>
       <option value="modifier">Modifier (analog)</option>
       <option value="switch">Layer switch</option>
-      <option value="hypershift">Hypershift trigger</option>
+      <option value="hypershift">Hypershift</option>
     </select>
 
     <div id="pop-hyper-section">
@@ -718,6 +718,8 @@ function makeKey(keyId, x, y, w, h, km) {
     'font-size': 9, fill: 'var(--text-ter)', 'font-family': FONT, 'font-weight': 500,
   }));
 
+  const hasHyper = b.hyper && b.hyper.cat !== 'unbound';
+
   if (note) {
     // Two-line layout: game label (prominent) + output key (small, below)
     const nLen = note.length;
@@ -735,12 +737,18 @@ function makeKey(keyId, x, y, w, h, km) {
       }));
     }
   } else {
-    // Single-line: output key only (existing behaviour)
+    // Single-line: output key only (existing behaviour). When a Hypershift
+    // binding is also present, shift up a bit so it doesn't crowd the
+    // Hypershift line reserved at the bottom of the cell.
     const len = lbl.length;
-    let fs = 18, ly = y + h * 0.67;
-    if (len >= 6) { fs = 10; ly = y + h * 0.62; }
-    else if (len >= 4) { fs = 12; ly = y + h * 0.64; }
-    else if (len >= 3) { fs = 14; ly = y + h * 0.67; }
+    let fs = 18, ly = hasHyper ? y + 28 : y + h * 0.67;
+    if (!hasHyper) {
+      if (len >= 6) { fs = 10; ly = y + h * 0.62; }
+      else if (len >= 4) { fs = 12; ly = y + h * 0.64; }
+      else if (len >= 3) { fs = 14; ly = y + h * 0.67; }
+    } else if (len >= 6) { fs = 12; }
+    else if (len >= 4) { fs = 13; }
+    else if (len >= 3) { fs = 15; }
 
     g.appendChild(svgText(lbl, x + w / 2, ly, {
       'font-size': fs, 'font-weight': 500,
@@ -749,7 +757,19 @@ function makeKey(keyId, x, y, w, h, km) {
     }));
   }
 
-  addHyperBadge(g, x, y, w, b);
+  // Hypershift binding — shown directly on the cell (not just a badge) so
+  // it's readable at a glance, matching how the primary binding is already
+  // fully visible without clicking. One line only (note, falling back to the
+  // output key) — full detail for both is still available via the popover.
+  if (hasHyper) {
+    const hTxt = (b.hyper.note || (b.hyper.label !== '—' ? b.hyper.label : '') || '').trim() || '(set)';
+    const hFs = hTxt.length > 12 ? 6.5 : hTxt.length > 9 ? 7 : 7.5;
+    g.appendChild(svgText(`⇧ ${hTxt}`, x + w / 2, y + h - 8, {
+      'font-size': hFs, 'font-weight': 700,
+      fill: HYPER_BADGE_COLOR, 'text-anchor': 'middle', 'font-family': FONT,
+    }));
+  }
+
   return g;
 }
 
@@ -797,7 +817,10 @@ function makeCompactKey(keyId, x, y, w, h, km, icon) {
 }
 
 // ── Layout constants ──────────────────────────────────────────────────────────
-const KW = 62, KH = 52, KGX = 70, KGY = 60;
+// KH/KGY grew from 52/60 to fit a 4th line (the Hypershift binding, shown
+// directly on the cell — see makeKey) below the existing key#/note/output-key
+// lines, without cells overlapping row to row.
+const KW = 62, KH = 64, KGX = 70, KGY = 70;
 const GRID_X0 = 22, GRID_Y0 = 36;
 const DIVIDER_X = 390;
 const GRID_ROWS = [
