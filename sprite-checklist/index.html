@@ -523,7 +523,7 @@
       <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this.files[0])">
       <div class="progress-wrap">
         <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
-        <span class="progress-label" id="prog">0 / 103</span>
+        <span class="progress-label" id="prog">0 / 104</span>
       </div>
     </div>
     <div class="toolbar-row">
@@ -533,10 +533,7 @@
       <button class="btn" onclick="collapseAll()">Collapse all</button>
       <div class="unreleased-toggles">
         <span class="unreleased-label">Unreleased</span>
-        <label class="toggle-chip"><input type="checkbox" id="include-Holofoil" checked onchange="toggleInclude('Holofoil', this.checked)"><span class="v-holofoil">Holofoil</span></label>
         <label class="toggle-chip"><input type="checkbox" id="include-Crystal" checked onchange="toggleInclude('Crystal', this.checked)"><span class="v-crystal">Crystal</span></label>
-        <label class="toggle-chip"><input type="checkbox" id="include-Air" checked onchange="toggleInclude('Air', this.checked)">Air</label>
-        <label class="toggle-chip"><input type="checkbox" id="include-Foundation" checked onchange="toggleInclude('Foundation', this.checked)">Foundation</label>
       </div>
     </div>
   </div>
@@ -560,29 +557,46 @@
 </div><!-- end .page -->
 
 <script>
-  const SPRITES = ["Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Foundation"];
+  const SPRITES = ["Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Batman"];
   const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Crystal"];
   const BURNT = "Burnt Peanut";
   const ALL_SPRITES = [...SPRITES.slice(0, SPRITES.indexOf("King") + 1), BURNT, ...SPRITES.slice(SPRITES.indexOf("King") + 1)];
   const KEY = "fn_sprites_v1";
   const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Crystal: "v-crystal" };
 
+  // Most sprites offer every variant in VARIANTS. A few are restricted to a specific
+  // subset — Burnt Peanut only ever had a Normal release, and Batman is Holofoil-only.
+  // Centralizing this here keeps every consumer (rendering, totals, export) in sync
+  // instead of hardcoding a one-off special case per sprite as they come up.
+  const SPRITE_VARIANT_OVERRIDES = {
+    [BURNT]: ["Normal"],
+    "Batman": ["Holofoil"],
+  };
+  function variantsForSprite(sprite) { return SPRITE_VARIANT_OVERRIDES[sprite] || VARIANTS; }
+  function activeVariantsForSprite(sprite) { return variantsForSprite(sprite).filter(v => activeVariants().includes(v)); }
+  function spritesForVariant(variantName) { return activeAllSprites().filter(s => variantsForSprite(s).includes(variantName)); }
+
   // Renamed sprites: old key prefix -> current key prefix. Keeps older saves/exports
   // (from before a rename) working instead of leaving orphaned duplicate entries.
-  const RENAMES = { "Fish": "Fishy" };
+  const RENAMES = { "Fish": "Fishy", "Foundation": "Seven" };
 
   // Unreleased content toggles. Unchecking one hides it from the checklist and excludes
   // it from the progress bar / Remaining panel, but never touches its stored checked
   // state — re-checking the box brings any prior progress on it right back.
-  const EXCLUDABLE_VARIANTS = ["Holofoil", "Crystal"];
-  const EXCLUDABLE_SPRITES = ["Air", "Foundation"];
+  const EXCLUDABLE_VARIANTS = ["Crystal"];
   const INCLUDE_KEY = "fn_sprites_include_v1";
 
-  let included = { Holofoil: true, Crystal: true, Air: true, Foundation: true };
+  let included = { Crystal: true };
   try {
     const savedInclude = localStorage.getItem(INCLUDE_KEY);
     if (savedInclude) included = { ...included, ...JSON.parse(savedInclude) };
   } catch (e) {}
+  // Holofoil, Air, and Foundation/Seven are no longer excludable — clear any stale
+  // false flags left over from before their toggles were removed, so old data can't
+  // silently keep them hidden with no UI left to re-enable them.
+  delete included.Holofoil;
+  delete included.Air;
+  delete included.Foundation;
 
   function saveInclude() { try { localStorage.setItem(INCLUDE_KEY, JSON.stringify(included)); } catch (e) {} }
 
@@ -683,12 +697,17 @@
 
   save(); // persist migration immediately so the cleaned-up state survives even without a toggle
 
-  function getTotal() { return activeSprites().length * activeVariants().length + 1; }
+  function getTotal() {
+    let n = 0;
+    activeAllSprites().forEach(s => { n += activeVariantsForSprite(s).length; });
+    return n;
+  }
 
   function getChecked() {
     let n = 0;
-    activeSprites().forEach(s => activeVariants().forEach(v => { if (state[s + "||" + v]) n++; }));
-    if (state[BURNT + "||Normal"]) n++;
+    activeAllSprites().forEach(s => {
+      activeVariantsForSprite(s).forEach(v => { if (state[s + "||" + v]) n++; });
+    });
     return n;
   }
 
@@ -731,8 +750,8 @@
   function getGroups() { return groupBy === "sprite" ? activeAllSprites() : activeVariants(); }
 
   function getItemsForGroup(group) {
-    if (groupBy === "sprite") return group === BURNT ? ["Normal"] : activeVariants();
-    return group === "Normal" ? activeAllSprites() : activeSprites(); // only "Normal" includes Burnt Peanut
+    if (groupBy === "sprite") return activeVariantsForSprite(group);
+    return spritesForVariant(group);
   }
 
   function keyFor(group, item) {
@@ -821,14 +840,12 @@
   // anything hidden via the unreleased toggles is left untouched either way. "Check all"
   // marks everything collected (not mastered) — mastery still has to be earned in-game.
   function checkAll() {
-    activeSprites().forEach(s => activeVariants().forEach(v => { state[s + "||" + v] = 1; }));
-    state[BURNT + "||Normal"] = 1;
+    activeAllSprites().forEach(s => activeVariantsForSprite(s).forEach(v => { state[s + "||" + v] = 1; }));
     save(); render();
   }
 
   function uncheckAll() {
-    activeSprites().forEach(s => activeVariants().forEach(v => { delete state[s + "||" + v]; }));
-    delete state[BURNT + "||Normal"];
+    activeAllSprites().forEach(s => activeVariantsForSprite(s).forEach(v => { delete state[s + "||" + v]; }));
     save(); render();
   }
 
@@ -842,8 +859,7 @@
 
   function buildFullExport() {
     return ALL_SPRITES.map(sprite => {
-      const isBurnt = sprite === BURNT;
-      const variantList = isBurnt ? ["Normal"] : VARIANTS;
+      const variantList = variantsForSprite(sprite);
       const variants = {};
       variantList.forEach(v => { variants[VARIANT_KEY[v]] = LEVEL_LABEL[state[sprite + "||" + v] || 0]; });
       return { sprite, variants };
