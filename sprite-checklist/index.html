@@ -3,59 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sprites — ravencaller</title>
+  <title>Sprites (table prototype) — ravencaller</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Serif+Display:ital@1&display=swap" rel="stylesheet" />
 
   <style>
-    /* ─── TOKENS (matches ravencaller213.github.io home page) ──── */
     :root {
       --bg:          #09090d;
       --surface:     #0f0f18;
       --surface-hi:  #15151f;
       --border:      rgba(180,160,255,0.12);
       --border-hi:   rgba(180,160,255,0.32);
-
-      /* opal accent band */
-      --opal-1: #7b6fff;   /* indigo */
-      --opal-2: #4dd9c0;   /* teal */
-      --opal-3: #a78bfa;   /* violet */
-      --opal-4: #38bdf8;   /* ice */
-      --opal-5: #6ee7b7;   /* green */
-
+      --opal-1: #7b6fff;
+      --opal-2: #4dd9c0;
+      --opal-3: #a78bfa;
+      --opal-4: #38bdf8;
+      --opal-5: #6ee7b7;
       --text:        #ddd8f0;
       --text-dim:    #7a7495;
       --text-faint:  #4f4a63;
       --radius:      14px;
-
-      /* variant accent colors, carried over from the desktop tracker */
       --v-gold-1: #f5c842; --v-gold-2: #e8972a;
       --v-gummi-1: #e84545; --v-gummi-2: #50c878;
       --v-galaxy-1: #a855f7; --v-galaxy-2: #22c55e; --v-galaxy-3: #3b82f6;
       --v-holo-1: #e8e8f8; --v-holo-2: #c8d8f0; --v-holo-3: #d8c8f0;
       --v-crystal-1: #f9a8d4; --v-crystal-2: #a5f3fc; --v-crystal-3: #c4b5fd; --v-crystal-4: #fbcfe8;
     }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+    body { background-color: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ─── BACKGROUND IRIDESCENCE (same recipe as home) ──────────── */
     body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background:
         radial-gradient(ellipse 60% 40% at 20% 10%,  rgba(123,111,255,0.07) 0%, transparent 70%),
         radial-gradient(ellipse 50% 35% at 80% 80%,  rgba(77,217,192,0.06) 0%, transparent 70%),
@@ -63,339 +43,149 @@
         radial-gradient(ellipse 70% 30% at 10% 90%,  rgba(56,189,248,0.04) 0%, transparent 70%);
     }
 
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.03;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 256px 256px;
-    }
+    .page { position: relative; z-index: 1; max-width: min(96vw, 1900px); margin: 0 auto; padding: 0 2rem 6rem; }
 
-    /* ─── LAYOUT WRAPPER ─────────────────────────────────────── */
-    .page {
-      position: relative;
-      z-index: 1;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 2rem 6rem;
-    }
-
-    /* ─── NAV ────────────────────────────────────────────────── */
-    nav.top {
-      padding: 2rem 0 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .nav-back {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      text-decoration: none;
-      letter-spacing: 0.02em;
-      transition: color 0.25s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
+    nav.top { padding: 2rem 0 0; display: flex; justify-content: space-between; align-items: center; }
+    .nav-back { font-size: 0.85rem; color: var(--text-dim); text-decoration: none; letter-spacing: 0.02em; transition: color 0.25s ease; display: inline-flex; align-items: center; gap: 0.4rem; }
     .nav-back:hover { color: var(--opal-4); }
+    .nav-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; }
+    .nav-tag { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--border-hi); color: var(--text-dim); }
+    .save-timestamp { font-size: 0.68rem; color: var(--text-faint); letter-spacing: 0.02em; white-space: nowrap; }
 
-    .nav-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0.4rem;
-    }
-
-    .nav-tag {
-      font-size: 0.65rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 3px 9px;
-      border-radius: 99px;
-      border: 1px solid var(--border-hi);
-      color: var(--text-dim);
-    }
-
-    .save-timestamp {
-      font-size: 0.68rem;
-      color: var(--text-faint);
-      letter-spacing: 0.02em;
-      white-space: nowrap;
-    }
-
-    /* ─── HEADER ─────────────────────────────────────────────── */
-    header {
-      padding: 2.5rem 0 3rem;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.6rem;
-    }
-
+    header { padding: 2.5rem 0 2rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
     .wordmark {
-      font-family: 'DM Serif Display', serif;
-      font-style: italic;
-      font-size: clamp(2.4rem, 5.5vw, 3.8rem);
-      letter-spacing: -0.02em;
-      line-height: 1;
-
-      background: linear-gradient(
-        105deg,
-        var(--opal-3) 0%,
-        var(--text)   28%,
-        var(--opal-4) 50%,
-        var(--text)   72%,
-        var(--opal-2) 100%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      background-size: 200% 100%;
+      font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(2.2rem, 5vw, 3.4rem); letter-spacing: -0.02em; line-height: 1;
+      background: linear-gradient(105deg, var(--opal-3) 0%, var(--text) 28%, var(--opal-4) 50%, var(--text) 72%, var(--opal-2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200% 100%;
       animation: shimmer 8s ease-in-out infinite alternate;
     }
+    @keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+    .tagline { font-size: 0.9rem; color: var(--text-dim); letter-spacing: 0.04em; max-width: 680px; line-height: 1.7; }
+    .proto-badge { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--opal-4); border: 1px solid rgba(56,189,248,0.35); padding: 3px 9px; border-radius: 99px; }
 
-    @keyframes shimmer {
-      0%   { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
-    }
+    .divider { width: 100%; height: 1px; margin-bottom: 2rem; background: linear-gradient(90deg, transparent 0%, var(--opal-1) 20%, var(--opal-2) 50%, var(--opal-3) 80%, transparent 100%); opacity: 0.35; }
 
-    .tagline {
-      font-size: 0.95rem;
-      color: var(--text-dim);
-      letter-spacing: 0.04em;
-      max-width: 620px;
-      line-height: 1.7;
-    }
+    /* ── Toolbar: one outer frame, four sections inside ─────────────────────────
+       Instead of four separately-bordered boxes (which never came out matched in
+       size no matter how they were constrained), the whole toolbar is one bordered
+       "main frame" and View/Filters/Save/Completion are just flex columns inside
+       it, divided by a hairline rule. flex:1 on each section splits the available
+       width evenly by construction — no manual sizing needed — and Completion gets
+       a slightly larger share (flex: 1.3) since its progress bars need the room. */
+    .toolbar-frame { display: flex; flex-wrap: wrap; gap: 1.4rem; border: 1px solid var(--border); border-radius: 14px; padding: 1rem 1.3rem; background: var(--surface); margin-bottom: 1.5rem; }
+    .tool-section { display: flex; flex-direction: column; gap: 10px; padding-bottom: 10px; }
+    .tool-section + .tool-section { border-left: 1px solid var(--border); padding-left: 1.4rem; }
 
-    .divider {
-      width: 100%;
-      height: 1px;
-      margin-bottom: 2.75rem;
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        var(--opal-1) 20%,
-        var(--opal-2) 50%,
-        var(--opal-3) 80%,
-        transparent 100%
-      );
-      opacity: 0.35;
-    }
+    /* Section 1 (View): 140px wide. The label stays pinned to the top of the
+       section; the buttons live in their own flex column beneath it that grows
+       to fill the remaining height and centers the (now slightly larger) 128x88
+       buttons within it. */
+    .tool-section-view { width: 140px; flex: 0 0 140px; }
+    .tool-section-view-buttons { display: flex; flex-direction: column; gap: 10px; flex: 1; justify-content: center; }
+    .tool-section-view .btn { width: 128px; height: 88px; margin: 0 auto; padding: 0; display: flex; align-items: center; justify-content: center; text-align: center; }
 
-    /* ─── TOOLBAR ────────────────────────────────────────────── */
-    .toolbar {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-bottom: 2rem;
-    }
+    /* Section 2 (Filters): same 140px width as View. Contents unchanged — they
+       already scale to the section's content width. */
+    .tool-section-filters { width: 140px; flex: 0 0 140px; }
 
-    .toolbar-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.9rem;
-    }
+    /* Section 3 (Save): 120px wide, buttons centered to 100px — 10px buffer each
+       side. Buttons flex to fill whatever vertical room the row has (Filters is
+       the tallest section, so Save's buttons stretch to match), landing in the
+       ~70-95px range depending on content. Rectangular now (not the pill radius),
+       icon glyph above a small label. */
+    .tool-section-save { width: 120px; flex: 0 0 120px; }
+    .tool-section-save .btn { width: 100px; flex: 1 1 0; min-height: 70px; max-height: 95px; margin: 0 auto; padding: 0; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+    .save-icon { font-size: 1.35rem; line-height: 1; }
+    .save-label { font-size: 0.66rem; letter-spacing: 0.03em; }
 
-    .unreleased-toggles {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.7rem;
-      margin-left: 0.3rem;
-      padding-left: 1rem;
-      border-left: 1px solid var(--border);
-    }
+    /* Section 4 (Completion): takes whatever width is left in the frame. Label
+       stays pinned top-left like the others; the bars live in their own centered
+       body beneath it. */
+    .tool-section-completion { flex: 1 1 auto; min-width: 260px; }
+    .completion-body { display: flex; flex-direction: column; gap: 14px; flex: 1; justify-content: center; }
+    /* stat-top / stat-bottom share the same 2-column grid (label column + bar
+       column) so the ratio+% text on the row below lands directly under the bar,
+       not under the label. The label column is pushed 30px right of where it used
+       to sit, which is what actually shrinks the bar's available width. */
+    .stat-block { display: grid; grid-template-columns: 108px 1fr; column-gap: 0.9rem; row-gap: 0.4rem; align-items: center; }
+    .stat-top { display: contents; }
+    .stat-bottom { display: contents; }
+    .frame-subgroup { display: flex; flex-direction: column; gap: 0.4rem; }
+    .frame-legend { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); padding: 0 0.2rem; }
+    .frame { border: 1px solid var(--border); border-radius: 12px; padding: 0.8rem; display: flex; flex-direction: column; gap: 0.6rem; background: var(--surface-hi); }
+    .frame-sub { padding: 0.6rem 0.7rem; gap: 0.5rem; }
 
-    .unreleased-label {
-      font-size: 0.65rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-faint);
-    }
+    .filter-field { display: flex; flex-direction: column; gap: 0.25rem; }
+    .filter-field label { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); font-style: italic; }
+    .filter-select { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: var(--text); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.45rem 0.6rem; cursor: pointer; }
+    .filter-select:hover { border-color: var(--border-hi); }
 
-    .toggle-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      cursor: pointer;
-      user-select: none;
-    }
+    .toggle-chip { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--text-dim); cursor: pointer; user-select: none; }
+    .toggle-chip input[type="checkbox"] { accent-color: var(--opal-4); width: 13px; height: 13px; cursor: pointer; flex-shrink: 0; }
 
-    .toggle-chip input[type="checkbox"] {
-      accent-color: var(--opal-4);
-      width: 13px;
-      height: 13px;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .btn {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 500;
-      letter-spacing: 0.03em;
-      color: var(--text-dim);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 99px;
-      padding: 0.5rem 1.1rem;
-      cursor: pointer;
-      transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
-    }
-    .btn:hover {
-      color: var(--text);
-      border-color: var(--border-hi);
-      background: var(--surface-hi);
-    }
+    .btn { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.03em; color: var(--text-dim); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 99px; padding: 0.5rem 1.1rem; cursor: pointer; transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease; }
+    .btn:hover { color: var(--text); border-color: var(--border-hi); }
     .btn.accent { color: var(--opal-4); border-color: rgba(56,189,248,0.35); }
     .btn.accent:hover { background: rgba(56,189,248,0.08); }
+    .axis-btn { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; line-height: 1.25; }
+    .axis-btn .axis-sub { font-size: 0.6rem; font-style: italic; color: var(--text-dim); font-weight: 400; letter-spacing: 0.02em; }
 
-    .progress-wrap {
-      flex: 1;
-      min-width: 160px;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
+    /* stat-label sits 30px further right than it used to (via left margin) — the
+       bar (grid col 2) picks up that lost width automatically since the column
+       template is fixed at 108px regardless of where the text sits inside it. */
+    .stat-label { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-left: 30px; }
+    .stat-label-spacer { display: block; }
+    .progress-bar { height: 16px; border-radius: 99px; background: var(--surface-hi); border: 1px solid var(--border); overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--opal-1), var(--opal-4), var(--opal-2)); transition: width 0.3s ease; }
+    .progress-fill.mastery-fill { background: linear-gradient(90deg, #f5c842, #e8972a); }
+    .stat-ratio { font-size: 0.78rem; color: var(--text-dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-    .progress-bar {
-      flex: 1;
-      height: 6px;
-      border-radius: 99px;
-      background: var(--surface-hi);
-      border: 1px solid var(--border);
-      overflow: hidden;
-    }
+    .legend { display: flex; flex-wrap: wrap; gap: 1.2rem; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 1.25rem; }
+    .legend-item { display: flex; align-items: center; gap: 0.45rem; }
+    .legend-swatch { width: 16px; height: 16px; border-radius: 5px; border: 1px solid var(--border-hi); background: var(--surface); }
+    .legend-swatch.collected { border-color: var(--opal-4); background: rgba(56,189,248,0.12); }
+    .legend-swatch.mastered { border: none; background: linear-gradient(135deg, var(--opal-1), var(--opal-3)); }
+    .legend-swatch.invalid { border-style: dashed; opacity: 0.35; }
 
-    .progress-fill {
-      height: 100%;
-      border-radius: 99px;
-      background: linear-gradient(90deg, var(--opal-1), var(--opal-4), var(--opal-2));
-      transition: width 0.3s ease;
-    }
+    .table-wrap { border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); overflow: auto; max-height: calc(100vh - 3rem); padding: 0.5rem; }
 
-    .progress-label {
-      font-size: 0.78rem;
-      color: var(--text-dim);
-      white-space: nowrap;
-      font-variant-numeric: tabular-nums;
-    }
+    /* CSS Grid instead of an HTML table: each data column is minmax(44px, 1fr), so
+       columns split whatever width is actually available evenly among however many
+       there really are (7 vs 19 depending on axis) and only shrink to the 44px floor
+       — at which point the grid overflows and .table-wrap's overflow:auto scrolls it,
+       rather than cells quietly staying small while empty space sits unused elsewhere.
+       grid-template-columns is set inline by JS per render since the column count varies. */
+    .sprite-grid { display: grid; gap: 6px; }
+    .g-header { font-size: 0.68rem; font-weight: 500; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; padding: 0.4rem 0.3rem; text-align: center; position: sticky; top: 0; background: var(--surface); z-index: 3; overflow: hidden; text-overflow: ellipsis; }
+    .g-header.row-label-col { text-align: left; position: sticky; left: 0; z-index: 4; }
+    .g-row-label { position: sticky; left: 0; background: var(--surface); font-size: 0.82rem; font-weight: 500; color: var(--text); padding: 0.4rem 0.9rem 0.4rem 0.3rem; text-align: left; white-space: nowrap; z-index: 2; display: flex; align-items: center; }
 
-    /* ─── MAIN LAYOUT ────────────────────────────────────────── */
-    .layout {
-      display: grid;
-      grid-template-columns: 1fr 440px;
-      gap: 1.75rem;
-      align-items: start;
-    }
+    .cell { width: 100%; aspect-ratio: 1 / 1; border-radius: 10px; background: var(--surface-hi); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: border-color 0.2s ease, background 0.2s ease; }
+    .cell:hover { border-color: var(--border-hi); }
+    /* Was border:var(--border) at opacity:0.3 — that's a ~3.5% alpha dashed line on
+       a near-black background, which reads as nothing at all rather than a faint
+       placeholder. Burnt Peanut/Batman rows (mostly invalid combos) looked like an
+       empty gap in the table because of this, not because of any missing markup. */
+    .cell.invalid { background: rgba(255,255,255,0.025); border: 1px dashed var(--border-hi); cursor: default; opacity: 0.6; }
+    .cell.collected { border-color: var(--opal-4); }
+    .cell.mastered { border-color: transparent; background: linear-gradient(135deg, rgba(123,111,255,0.35), rgba(167,139,250,0.35)); }
+    .cell img { width: 100%; height: 100%; object-fit: contain; border-radius: 9px; filter: grayscale(1) brightness(0.5); transition: filter 0.2s ease; padding: 4px; }
+    .cell.collected img, .cell.mastered img { filter: none; }
+    .cell .placeholder { width: 70%; height: 70%; border-radius: 8px; border: 1px dashed var(--border-hi); }
+    .cell .badge { position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; background: var(--opal-4); color: var(--bg); }
+    .cell.mastered .badge { background: linear-gradient(135deg, var(--opal-1), var(--opal-3)); color: #fff; }
 
-    /* ─── SPRITE CARD ────────────────────────────────────────── */
-    .sprite-list { display: flex; flex-direction: column; gap: 0.7rem; }
+    .cell.text-mode { aspect-ratio: 3 / 2; font-size: clamp(0.7rem, 1.3vw, 1.05rem); color: var(--text-faint); }
+    .cell.text-mode.collected { color: var(--opal-4); background: rgba(56,189,248,0.08); }
+    .cell.text-mode.mastered { color: #fff; }
 
-    .sprite {
-      border-radius: var(--radius);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      overflow: hidden;
-      transition: border-color 0.25s ease;
-    }
-    .sprite:hover { border-color: var(--border-hi); }
-
-    .sprite-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.9rem 1.2rem;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .sprite-name {
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: var(--text);
-      flex: 1;
-    }
-
-    .sprite-count {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .sprite-count.done { color: var(--opal-2); }
-
-    .chevron {
-      font-size: 0.7rem;
-      color: var(--text-dim);
-      transition: transform 0.25s ease;
-      display: inline-block;
-    }
-    .chevron.open { transform: rotate(180deg); }
-
-    .variants {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border-top: 1px solid var(--border);
-    }
-
-    .variant-item {
-      background: var(--surface);
-      padding: 0.7rem 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.2s ease;
-    }
-    .variant-item:hover { background: var(--surface-hi); }
-
-    .variant-check {
-      width: 16px;
-      height: 16px;
-      border-radius: 4px;
-      border: 1px solid var(--border-hi);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      line-height: 1;
-      flex-shrink: 0;
-      color: transparent;
-      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-    }
-
-    .variant-item.checked .variant-check {
-      background: var(--opal-4);
-      border-color: var(--opal-4);
-      color: var(--bg);
-    }
-
-    .variant-item.mastered .variant-check {
-      background: linear-gradient(135deg, var(--opal-1), var(--opal-3));
-      border-color: transparent;
-      color: #fff;
-    }
-
-    .variant-label { font-size: 0.82rem; color: var(--text); }
-    .variant-item.checked .variant-label,
-    .variant-item.mastered .variant-label {
-      color: var(--text-faint);
-      text-decoration: line-through;
-      text-decoration-color: var(--text-faint);
-    }
+    /* Filtered "Unowned" / "Need to Master" grid — replaces the table when a filter
+       is active. Same cell rendering (image or text) as the table, laid out as its
+       own auto-filling grid with a caption per tile since there's no row/column
+       context to imply the sprite/variant name. */
+    .filter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 0.9rem; padding: 0.5rem; }
+    .filter-tile { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+    .filter-caption { font-size: 0.68rem; color: var(--text-dim); text-align: center; line-height: 1.3; }
 
     .v-normal { color: #c8c8d8; }
     .v-gold   { background: linear-gradient(90deg, var(--v-gold-1), var(--v-gold-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
@@ -408,93 +198,10 @@
     .v-holofoil { background: linear-gradient(90deg, var(--v-crystal-1), var(--v-crystal-2), var(--v-crystal-3), var(--v-crystal-4)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
     .v-crystal { background: linear-gradient(90deg, var(--v-holo-1), var(--v-holo-2), var(--v-holo-3), var(--v-holo-1)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
 
-    /* ─── SIDEBAR ────────────────────────────────────────────── */
-    .sidebar {
-      border-radius: var(--radius);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 1.4rem 1.5rem;
-      position: sticky;
-      top: 1.5rem;
-      max-height: calc(100vh - 3rem);
-      overflow-y: auto;
-    }
-
-    .sidebar h3 {
-      font-size: 0.7rem;
-      font-weight: 500;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 1rem;
-    }
-
-    .sidebar h3:not(:first-child) { margin-top: 1.75rem; }
-
-    .remaining-list {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      column-gap: 1.5rem;
-    }
-
-    .remaining-sprite { margin-bottom: 1.1rem; break-inside: avoid; }
-    .remaining-sprite:last-child { margin-bottom: 0; }
-
-    .remaining-sprite-name {
-      font-size: 0.88rem;
-      font-weight: 500;
-      color: var(--text);
-      margin-bottom: 0.3rem;
-    }
-
-    .remaining-sprite ul { list-style: none; }
-    .remaining-sprite ul li {
-      font-size: 0.78rem;
-      padding: 2px 0 2px 14px;
-      position: relative;
-    }
-    .remaining-sprite ul li::before {
-      content: '·';
-      position: absolute;
-      left: 4px;
-      color: var(--text-dim);
-    }
-
-    .none-left { grid-column: 1 / -1; font-size: 0.82rem; color: var(--opal-2); }
-
-    /* ─── FOOTER ─────────────────────────────────────────────── */
-    footer {
-      margin-top: 4rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-
-    footer p {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      letter-spacing: 0.05em;
-    }
-
+    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+    footer p { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.05em; }
     footer a { color: var(--opal-3); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
-
-    /* ─── RESPONSIVE ─────────────────────────────────────────── */
-    @media (max-width: 760px) {
-      .layout { grid-template-columns: 1fr; }
-      .sidebar { position: static; max-height: none; }
-    }
-
-    @media (max-width: 480px) {
-      .page { padding: 0 1.25rem 4rem; }
-      header { padding: 2rem 0 2rem; }
-      .variants { grid-template-columns: repeat(2, 1fr); }
-      .remaining-list { grid-template-columns: 1fr; }
-    }
   </style>
 </head>
 <body>
@@ -510,58 +217,122 @@
   </nav>
 
   <header>
+    <span class="proto-badge">Prototype — table layout</span>
     <h1 class="wordmark">Sprites</h1>
     <p class="tagline">
-      Fortnite sprite collection tracker — every base skin across Normal, Gold, Gummi, Galaxy, Holofoil, Gem, and Cube variants.
-      Click a variant to cycle none &rarr; collected &rarr; mastered. Progress saves automatically in your browser; export a backup any time.
+      Same data as the main checklist (shares your saved progress). Click any cell to cycle none &rarr; collected &rarr; mastered.
+      Flip the axes, switch between image and text cells, or filter down to what's left.
     </p>
   </header>
 
   <div class="divider"></div>
 
-  <div class="toolbar">
-    <div class="toolbar-row">
-      <button class="btn accent" id="groupToggleBtn" onclick="toggleGrouping()">By Sprite</button>
-      <button class="btn accent" onclick="exportState()">Export</button>
-      <button class="btn accent" onclick="document.getElementById('importFile').click()">Import</button>
+  <div class="toolbar-frame">
+
+    <div class="tool-section tool-section-view">
+      <div class="frame-legend">View</div>
+      <div class="tool-section-view-buttons">
+        <button class="btn accent" id="viewModeBtn" onclick="toggleViewMode()">Image View</button>
+        <button class="btn accent axis-btn" id="groupToggleBtn" onclick="toggleGrouping()">
+          <span id="axisMain">Sprites</span>
+          <span class="axis-sub">on rows</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="tool-section tool-section-filters">
+      <div class="frame-legend">Filters</div>
+      <div class="filter-field">
+        <label for="collectionFilter">Collection</label>
+        <select class="filter-select" id="collectionFilter" onchange="onFilterChange()">
+          <option value="all">All</option>
+          <option value="owned">Owned</option>
+          <option value="unowned">Unowned</option>
+        </select>
+      </div>
+      <div class="filter-field">
+        <label for="masteryFilter">Mastery</label>
+        <select class="filter-select" id="masteryFilter" onchange="onFilterChange()">
+          <option value="all">All</option>
+          <option value="unmastered">Unmastered</option>
+          <option value="mastered">Mastered</option>
+        </select>
+      </div>
+      <div class="frame-subgroup">
+        <div class="frame-legend">Include?</div>
+        <div class="frame frame-sub">
+          <label class="toggle-chip"><input type="checkbox" id="include-Gem" checked onchange="toggleInclude('Gem', this.checked)"><span class="v-crystal">Gem</span></label>
+          <label class="toggle-chip"><input type="checkbox" id="include-Cube" checked onchange="toggleInclude('Cube', this.checked)">Cube</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-section tool-section-save">
+      <div class="frame-legend">Save</div>
+      <button class="btn accent save-btn" onclick="document.getElementById('importFile').click()">
+        <span class="save-icon">&#8681;</span><span class="save-label">Import</span>
+      </button>
       <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this.files[0])">
-      <div class="progress-wrap">
-        <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
-        <span class="progress-label" id="prog">0 / 121</span>
+      <button class="btn accent save-btn" onclick="exportState()">
+        <span class="save-icon">&#8679;</span><span class="save-label">Export</span>
+      </button>
+    </div>
+
+    <div class="tool-section tool-section-completion">
+      <div class="frame-legend">Completion</div>
+      <div class="completion-body">
+        <div class="stat-block">
+          <div class="stat-top">
+            <span class="stat-label">Completion</span>
+            <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+          </div>
+          <div class="stat-bottom">
+            <span class="stat-label-spacer"></span>
+            <span class="stat-ratio" id="prog">0 / 121 &middot; 0%</span>
+          </div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-top">
+            <span class="stat-label">Mastery</span>
+            <div class="progress-bar"><div class="progress-fill mastery-fill" id="masteryFill"></div></div>
+          </div>
+          <div class="stat-bottom">
+            <span class="stat-label-spacer"></span>
+            <span class="stat-ratio" id="masteryProg">0 / 0 &middot; 0%</span>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="toolbar-row">
-      <button class="btn" onclick="checkAll()">Check all</button>
-      <button class="btn" onclick="uncheckAll()">Uncheck all</button>
-      <button class="btn" onclick="expandAll()">Expand all</button>
-      <button class="btn" onclick="collapseAll()">Collapse all</button>
-      <div class="unreleased-toggles">
-        <span class="unreleased-label">Unreleased</span>
-        <label class="toggle-chip"><input type="checkbox" id="include-Gem" checked onchange="toggleInclude('Gem', this.checked)"><span class="v-crystal">Gem</span></label>
-        <label class="toggle-chip"><input type="checkbox" id="include-Cube" checked onchange="toggleInclude('Cube', this.checked)">Cube</label>
-      </div>
-    </div>
+
   </div>
 
-  <div class="layout">
-    <div class="sprite-list" id="list"></div>
+  <!-- Check all / Uncheck all are dev/testing tools only — not for the published
+       page, so they're commented out here. The checkAll()/uncheckAll() functions
+       are still defined below and callable from the browser console. -->
+  <!--
+  <button class="btn" onclick="checkAll()">Check all</button>
+  <button class="btn" onclick="uncheckAll()">Uncheck all</button>
+  -->
 
-    <div class="sidebar">
-      <h3>Remaining</h3>
-      <div id="remaining" class="remaining-list"></div>
-      <h3>Collected, Not Mastered</h3>
-      <div id="not-mastered" class="remaining-list"></div>
-    </div>
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch"></span> Unowned</div>
+    <div class="legend-item"><span class="legend-swatch collected"></span> Collected</div>
+    <div class="legend-item"><span class="legend-swatch mastered"></span> Mastered</div>
+    <div class="legend-item"><span class="legend-swatch invalid"></span> Not a valid combo</div>
   </div>
+
+  <div class="table-wrap"><div id="list"></div></div>
 
   <footer>
-    <p>ravencaller213 &middot; sprite checklist</p>
-    <p><a href="/index.html">back to projects</a></p>
+    <p>ravencaller213 &middot; sprite checklist (table prototype, not linked from the site)</p>
+    <p><a href="index.html">back to card view</a></p>
   </footer>
 
 </div><!-- end .page -->
 
 <script>
+  // ---- Data layer: copied verbatim from index.html so this prototype reads/writes
+  // the exact same localStorage state. Anything you click here shows up there too. ----
   const SPRITES = ["Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Batman"];
   const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube"];
   const BURNT = "Burnt Peanut";
@@ -569,10 +340,6 @@
   const KEY = "fn_sprites_v1";
   const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Gem: "v-crystal" };
 
-  // Most sprites offer every variant in VARIANTS. A few are restricted to a specific
-  // subset — Burnt Peanut only ever had a Normal release, and Batman is Holofoil-only.
-  // Centralizing this here keeps every consumer (rendering, totals, export) in sync
-  // instead of hardcoding a one-off special case per sprite as they come up.
   const SPRITE_VARIANT_OVERRIDES = {
     [BURNT]: ["Normal"],
     "Batman": ["Normal", "Holofoil", "Cube"],
@@ -581,16 +348,9 @@
   function activeVariantsForSprite(sprite) { return variantsForSprite(sprite).filter(v => activeVariants().includes(v)); }
   function spritesForVariant(variantName) { return activeAllSprites().filter(s => variantsForSprite(s).includes(variantName)); }
 
-  // Renamed sprites: old key prefix -> current key prefix. Keeps older saves/exports
-  // (from before a rename) working instead of leaving orphaned duplicate entries.
   const RENAMES = { "Fish": "Fishy", "Foundation": "Seven" };
-
-  // Renamed variants: same idea as RENAMES but matched on the "||OldVariant" suffix.
   const VARIANT_RENAMES = { "Crystal": "Gem" };
 
-  // Unreleased content toggles. Unchecking one hides it from the checklist and excludes
-  // it from the progress bar / Remaining panel, but never touches its stored checked
-  // state — re-checking the box brings any prior progress on it right back.
   const EXCLUDABLE_VARIANTS = ["Gem", "Cube"];
   const INCLUDE_KEY = "fn_sprites_include_v1";
 
@@ -599,33 +359,20 @@
     const savedInclude = localStorage.getItem(INCLUDE_KEY);
     if (savedInclude) included = { ...included, ...JSON.parse(savedInclude) };
   } catch (e) {}
-  // Crystal's toggle preference (if any) carries over to its new name, Gem.
   if ("Crystal" in included) { included.Gem = included.Crystal; delete included.Crystal; }
-  // Holofoil, Air, and Foundation/Seven are no longer excludable — clear any stale
-  // false flags left over from before their toggles were removed, so old data can't
-  // silently keep them hidden with no UI left to re-enable them.
   delete included.Holofoil;
   delete included.Air;
   delete included.Foundation;
 
   function saveInclude() { try { localStorage.setItem(INCLUDE_KEY, JSON.stringify(included)); } catch (e) {} }
-
   function activeVariants() { return VARIANTS.filter(v => included[v] !== false); }
   function activeSprites() { return SPRITES.filter(s => included[s] !== false); }
-
   function activeAllSprites() {
     const as = activeSprites();
     const idx = as.indexOf("King");
     return [...as.slice(0, idx + 1), BURNT, ...as.slice(idx + 1)];
   }
-
-  function toggleInclude(name, checked) {
-    included[name] = checked;
-    saveInclude();
-    collapsed = {};
-    render();
-  }
-
+  function toggleInclude(name, checked) { included[name] = checked; saveInclude(); render(); }
   function syncIncludeCheckboxes() {
     Object.keys(included).forEach(name => {
       const cb = document.getElementById("include-" + name);
@@ -633,28 +380,19 @@
     });
   }
 
-  // Progress levels per (sprite, variant): 0 = none, 1 = collected, 2 = mastered.
-  // A single control cycles through these; mastered implies collected, matching the
-  // game (you can only master a variant you've already extracted to max level).
   const LEVEL_LABEL = { 0: "none", 1: "collected", 2: "mastered" };
   const LABEL_LEVEL = { none: 0, collected: 1, mastered: 2 };
-
   function valueToLevel(v) {
     if (typeof v === "string") { const n = LABEL_LEVEL[v.toLowerCase()]; return n === undefined ? 0 : n; }
     if (v === true) return 1;
     if (typeof v === "number" && !isNaN(v)) return Math.max(0, Math.min(2, Math.round(v)));
     return 0;
   }
-
   function normalizeStateLevels(obj) {
     const result = {};
-    Object.keys(obj || {}).forEach(k => {
-      const lvl = valueToLevel(obj[k]);
-      if (lvl > 0) result[k] = lvl;
-    });
+    Object.keys(obj || {}).forEach(k => { const lvl = valueToLevel(obj[k]); if (lvl > 0) result[k] = lvl; });
     return result;
   }
-
   function migrateState(obj) {
     const result = { ...(obj && typeof obj === "object" ? obj : {}) };
     Object.keys(RENAMES).forEach(oldName => {
@@ -686,26 +424,16 @@
     state = migrateState(saved ? JSON.parse(saved) : {});
   } catch (e) { state = {}; }
 
-  let collapsed = {};
-
-  // Last-write timestamp, shown in the nav so a silently-failed or unexpectedly-evicted
-  // save (browser storage has no persistence guarantee — extensions/settings can clear it)
-  // is visible at a glance instead of only discovered after progress is already gone.
   const SAVED_AT_KEY = "fn_sprites_saved_at_v1";
-
   function formatSavedAt(ts) {
     const d = new Date(ts);
-    const datePart = d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-    const timePart = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
-    return "Saved " + datePart + ", " + timePart;
+    return "Saved " + d.toLocaleDateString(undefined, { month: "short", day: "numeric" }) + ", " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
   }
-
   function updateSavedLabel(ts) {
     const el = document.getElementById("lastSaved");
     if (!el) return;
     el.textContent = ts ? formatSavedAt(ts) : "Not saved yet";
   }
-
   function save() {
     try {
       localStorage.setItem(KEY, JSON.stringify(state));
@@ -714,166 +442,208 @@
       updateSavedLabel(now);
     } catch (e) {}
   }
+  save();
 
-  save(); // persist migration immediately so the cleaned-up state survives even without a toggle
-
-  function getTotal() {
-    let n = 0;
-    activeAllSprites().forEach(s => { n += activeVariantsForSprite(s).length; });
-    return n;
-  }
-
+  function getTotal() { let n = 0; activeAllSprites().forEach(s => { n += activeVariantsForSprite(s).length; }); return n; }
   function getChecked() {
     let n = 0;
-    activeAllSprites().forEach(s => {
-      activeVariantsForSprite(s).forEach(v => { if (state[s + "||" + v]) n++; });
-    });
+    activeAllSprites().forEach(s => { activeVariantsForSprite(s).forEach(v => { if (state[s + "||" + v]) n++; }); });
     return n;
   }
-
   function updateProgress() {
     const tot = getTotal(), ch = getChecked();
-    document.getElementById("prog").textContent = ch + " / " + tot;
-    document.getElementById("fill").style.width = Math.round(ch / tot * 100) + "%";
+    const pct = tot > 0 ? Math.round(ch / tot * 100) : 0;
+    document.getElementById("prog").textContent = ch + " / " + tot + " · " + pct + "%";
+    document.getElementById("fill").style.width = pct + "%";
   }
 
-  // Shared by both sidebar lists: walks the same groups/items the main checklist uses,
-  // filtering by a predicate on each cell's stored level. Keeps "Remaining" and
-  // "Collected, Not Mastered" in sync with grouping mode and unreleased filters
-  // automatically — no separate logic to drift out of sync.
-  function buildSidebarListHTML(predicate, emptyMessage) {
-    let html = ""; let allDone = true;
-    getGroups().forEach(group => {
-      const items = getItemsForGroup(group);
-      const matching = items.filter(item => predicate(state[keyFor(group, item)] || 0));
-      if (matching.length === 0) return;
-      allDone = false;
-      html += `<div class="remaining-sprite"><div class="remaining-sprite-name ${groupClass(group)}">${group}</div><ul>`;
-      matching.forEach(item => { html += `<li class="${itemClass(item)}">${item}</li>`; });
-      html += `</ul></div>`;
+  // Mastery bar's denominator is what you've actually collected, not the full possible
+  // total — mastering everything you own is "100%" even if plenty is still unowned.
+  function getMasteryStats() {
+    let collected = 0, mastered = 0;
+    activeAllSprites().forEach(s => {
+      activeVariantsForSprite(s).forEach(v => {
+        const lvl = state[s + "||" + v] || 0;
+        if (lvl >= 1) collected++;
+        if (lvl === 2) mastered++;
+      });
     });
-    if (allDone) html = `<div class="none-left">${emptyMessage}</div>`;
-    return html;
+    return { collected, mastered };
+  }
+  function updateMasteryProgress() {
+    const { collected, mastered } = getMasteryStats();
+    const pct = collected > 0 ? Math.round(mastered / collected * 100) : 0;
+    document.getElementById("masteryProg").textContent = mastered + " / " + collected + " · " + pct + "%";
+    document.getElementById("masteryFill").style.width = pct + "%";
   }
 
-  function updateRemaining() {
-    document.getElementById("remaining").innerHTML = buildSidebarListHTML(lvl => lvl === 0, "All collected!");
-    document.getElementById("not-mastered").innerHTML = buildSidebarListHTML(lvl => lvl === 1, "Nothing pending mastery!");
-  }
-
-  // Display grouping: "sprite" lists Water/Earth/Fire.. each expanding to its variants (default).
-  // "variant" lists Normal/Gold/Gummi.. each expanding to the sprites that have that variant.
-  // This only changes how the checklist is drawn — the underlying state keys, and the
-  // Export/Import JSON shape, are unaffected either way.
+  // groupBy doubles as "which axis is the row": "sprite" = sprite rows / variant columns,
+  // "variant" = variant rows / sprite columns.
   let groupBy = "sprite";
-
   function getGroups() { return groupBy === "sprite" ? activeAllSprites() : activeVariants(); }
-
   function getItemsForGroup(group) {
     if (groupBy === "sprite") return activeVariantsForSprite(group);
     return spritesForVariant(group);
   }
-
-  function keyFor(group, item) {
-    return groupBy === "sprite" ? (group + "||" + item) : (item + "||" + group);
-  }
-
-  function itemClass(item) { return groupBy === "sprite" ? (VCLS[item] || "") : ""; }
-
-  // Opposite of itemClass: when grouped by variant, the variant name is the group's
-  // own label (its card title, and its heading in the Remaining panel) rather than an
-  // item inside it, so the color-coding needs to move there instead.
-  function groupClass(group) { return groupBy === "variant" ? (VCLS[group] || "") : ""; }
-
+  function keyFor(group, item) { return groupBy === "sprite" ? (group + "||" + item) : (item + "||" + group); }
   function toggleGrouping() {
     groupBy = groupBy === "sprite" ? "variant" : "sprite";
-    collapsed = {};
     render();
     updateGroupButton();
   }
-
   function updateGroupButton() {
-    document.getElementById("groupToggleBtn").textContent = groupBy === "sprite" ? "By Sprite" : "By Variant";
+    document.getElementById("axisMain").textContent = groupBy === "sprite" ? "Sprites" : "Variants";
   }
 
-  function groupCount(group) {
-    const items = getItemsForGroup(group);
-    return items.filter(item => state[keyFor(group, item)]).length;
+  let viewMode = "image"; // "image" | "text"
+  function toggleViewMode() {
+    viewMode = viewMode === "image" ? "text" : "image";
+    render();
+    updateViewModeButton();
+  }
+  function updateViewModeButton() {
+    document.getElementById("viewModeBtn").textContent = viewMode === "image" ? "Image View" : "Table View";
   }
 
-  function renderItems(group) {
-    const items = getItemsForGroup(group);
-    return `<div class="variants">${items.map(item => {
-      const key = keyFor(group, item), level = state[key] || 0;
-      const stateClass = level === 2 ? ' mastered' : level === 1 ? ' checked' : '';
-      const icon = level === 2 ? '★' : level === 1 ? '✓' : '';
-      return `<div class="variant-item${stateClass}" onclick="cycleState('${group}','${item}')">
-        <span class="variant-check">${icon}</span>
-        <span class="variant-label ${itemClass(item)}">${item}</span>
-      </div>`;
-    }).join("")}</div>`;
+  // Filters replace the old Remaining / Collected-Not-Mastered sidebar: instead of a
+  // side list, the main area switches to a flat grid of just the matching cells,
+  // rendered with whichever cell style (image/text) is currently active. Two
+  // independent dropdowns combine into one predicate:
+  //   Unowned + anything      -> level 0 only (mastery is moot if you don't own it)
+  //   All + All                -> no filter, full table
+  //   */Unmastered              -> level 1 only, regardless of Collection
+  //   */Mastered                -> level 2 only, regardless of Collection
+  //   Owned + All               -> level 1 or 2 (owned, mastered or not)
+  let collectionFilter = "all"; // "all" | "owned" | "unowned"
+  let masteryFilter = "all";    // "all" | "unmastered" | "mastered"
+  function onFilterChange() {
+    collectionFilter = document.getElementById("collectionFilter").value;
+    masteryFilter = document.getElementById("masteryFilter").value;
+    render();
+  }
+  function filterPredicate() {
+    if (collectionFilter === "unowned") return lvl => lvl === 0;
+    if (masteryFilter === "unmastered") return lvl => lvl === 1;
+    if (masteryFilter === "mastered") return lvl => lvl === 2;
+    if (collectionFilter === "owned") return lvl => lvl > 0;
+    return null; // All + All: no filter
   }
 
-  function renderGroup(group) {
-    const items = getItemsForGroup(group);
-    const total = items.length, ch = groupCount(group), isOpen = !collapsed[group];
-    const gid = "grp-" + group.replace(/ /g, "_");
-    return `<div class="sprite" id="${gid}">
-      <div class="sprite-header" onclick="toggleGroup('${group}')">
-        <span class="sprite-name ${groupClass(group)}">${group}</span>
-        <span class="sprite-count${ch === total ? ' done' : ''}">${ch} / ${total}</span>
-        <span class="chevron${isOpen ? ' open' : ''}" id="ch-${group.replace(/ /g, "_")}">&#8964;</span>
-      </div>
-      ${isOpen ? renderItems(group) : ""}
-    </div>`;
+  function tableColumns() { return groupBy === "sprite" ? activeVariants() : activeAllSprites(); }
+  function cellSpriteVariant(row, col) {
+    return groupBy === "sprite" ? { sprite: row, variant: col } : { sprite: col, variant: row };
   }
-
-  function render() {
-    document.getElementById("list").innerHTML = getGroups().map(g => renderGroup(g)).join("");
-    updateProgress(); updateRemaining();
+  function imgPath(sprite, variant) {
+    return "images/" + sprite.toLowerCase().replace(/ /g, "_") + "_" + variant.toLowerCase() + ".webp";
   }
-
-  function cycleState(group, item) {
-    const key = keyFor(group, item);
+  function cycleCell(sprite, variant) {
+    const key = sprite + "||" + variant;
     const next = ((state[key] || 0) + 1) % 3;
     if (next === 0) delete state[key]; else state[key] = next;
     save();
     render();
   }
 
-  function toggleGroup(group) {
-    collapsed[group] = !collapsed[group];
-    const ch = document.getElementById("ch-" + group.replace(/ /g, "_"));
-    const grp = document.getElementById("grp-" + group.replace(/ /g, "_"));
-    if (collapsed[group]) {
-      grp.querySelector(".variants")?.remove();
-      ch.classList.remove("open");
-    } else {
-      ch.classList.add("open");
-      const div = document.createElement("div");
-      div.innerHTML = renderItems(group);
-      grp.appendChild(div.firstChild);
-    }
+  // render() rebuilds every cell's HTML from scratch on each click, including cells
+  // whose image already failed to load once — without this, each of those gets a
+  // brand-new <img> tag every render, and the browser briefly shows the alt text
+  // again before onerror swaps it back out. Remembering known-missing URLs for the
+  // rest of the session means we go straight to the placeholder box on every render
+  // after the first, instead of re-flashing it each time you click anything.
+  const missingImages = new Set();
+  function markImageMissing(src, imgEl) {
+    missingImages.add(src);
+    imgEl.replaceWith(Object.assign(document.createElement("div"), { className: "placeholder" }));
   }
 
-  // Check all / Uncheck all only touch currently visible (included) entries — progress on
-  // anything hidden via the unreleased toggles is left untouched either way. "Check all"
-  // marks everything collected (not mastered) — mastery still has to be earned in-game.
+  // Cell markup shared by both the table and the filtered grid. `caption`, when
+  // provided, renders sprite + variant name beneath the cell (needed in the grid,
+  // where there's no row/column header to imply it).
+  function cellHTML(sprite, variant, caption) {
+    const key = sprite + "||" + variant;
+    const level = state[key] || 0;
+    const stateClass = level === 2 ? " mastered" : level === 1 ? " collected" : "";
+    const badge = level === 2 ? "★" : level === 1 ? "✓" : "";
+    const src = imgPath(sprite, variant);
+    const imageOrPlaceholder = missingImages.has(src)
+      ? `<div class="placeholder"></div>`
+      : `<img src="${src}" alt="" onerror="markImageMissing('${src}', this)">`;
+    const inner = viewMode === "text"
+      ? `<div class="cell text-mode${stateClass}" data-sprite="${sprite}" data-variant="${variant}" onclick="cycleCell('${sprite}','${variant}')">${badge || "–"}</div>`
+      : `<div class="cell${stateClass}" data-sprite="${sprite}" data-variant="${variant}" onclick="cycleCell('${sprite}','${variant}')">
+          ${imageOrPlaceholder}
+          ${badge ? `<span class="badge">${badge}</span>` : ""}
+        </div>`;
+    if (!caption) return inner;
+    return `<div class="filter-tile">${inner}<div class="filter-caption">${sprite} &middot; <span class="${VCLS[variant] || ''}">${variant}</span></div></div>`;
+  }
+
+  function renderCell(row, col) {
+    const { sprite, variant } = cellSpriteVariant(row, col);
+    if (!variantsForSprite(sprite).includes(variant)) {
+      // Valid cells pick up "text-mode" (aspect-ratio 3/2) when viewMode is "text",
+      // via cellHTML()'s own template — this branch was skipping that entirely, so
+      // invalid cells kept the default square (1/1) aspect ratio while their valid
+      // neighbors in the same row went short-and-wide. That mismatch is exactly the
+      // "gap": the row's height ends up dictated by the taller square invalid cells,
+      // leaving visible empty space under the shorter valid ones.
+      const modeClass = viewMode === "text" ? " text-mode" : "";
+      return `<div class="cell invalid${modeClass}" data-sprite="${sprite}" data-variant="${variant}"></div>`;
+    }
+    return cellHTML(sprite, variant);
+  }
+
+  // Row-label column gets a fixed width; every data column shares the rest of the
+  // grid's width evenly via minmax(44px, 1fr) — so the grid genuinely fills however
+  // much room .table-wrap actually has, for however many columns there really are.
+  function renderTable() {
+    const rows = getGroups();
+    const cols = tableColumns();
+    const rowAxisLabel = groupBy === "sprite" ? "Sprite" : "Variant";
+    const gridCols = "120px " + cols.map(() => "minmax(44px, 1fr)").join(" ");
+    let html = `<div class="sprite-grid" style="grid-template-columns: ${gridCols};">`;
+    html += `<div class="g-header row-label-col">${rowAxisLabel}</div>`;
+    cols.forEach(c => { html += `<div class="g-header"><span class="${groupBy === "sprite" ? (VCLS[c] || "") : ""}">${c}</span></div>`; });
+    rows.forEach(row => {
+      html += `<div class="g-row-label"><span class="${groupBy === "variant" ? (VCLS[row] || "") : ""}">${row}</span></div>`;
+      cols.forEach(col => { html += renderCell(row, col); });
+    });
+    html += `</div>`;
+    document.getElementById("list").innerHTML = html;
+  }
+
+  function renderFilteredGrid(predicate) {
+    const items = [];
+    activeAllSprites().forEach(sprite => {
+      activeVariantsForSprite(sprite).forEach(variant => {
+        if (predicate(state[sprite + "||" + variant] || 0)) items.push({ sprite, variant });
+      });
+    });
+    if (items.length === 0) {
+      document.getElementById("list").innerHTML = `<div class="none-left" style="padding:1.5rem; color:var(--opal-2);">Nothing here!</div>`;
+      return;
+    }
+    const html = `<div class="filter-grid">${items.map(({ sprite, variant }) => cellHTML(sprite, variant, true)).join("")}</div>`;
+    document.getElementById("list").innerHTML = html;
+  }
+
+  function render() {
+    const pred = filterPredicate();
+    if (pred) renderFilteredGrid(pred);
+    else renderTable();
+    updateProgress();
+    updateMasteryProgress();
+  }
+
   function checkAll() {
     activeAllSprites().forEach(s => activeVariantsForSprite(s).forEach(v => { state[s + "||" + v] = 1; }));
     save(); render();
   }
-
   function uncheckAll() {
     activeAllSprites().forEach(s => activeVariantsForSprite(s).forEach(v => { delete state[s + "||" + v]; }));
     save(); render();
   }
 
-  function expandAll() { collapsed = {}; render(); }
-
-  function collapseAll() { getGroups().forEach(g => { collapsed[g] = true; }); render(); }
-
-  // lowercase variant key <-> internal capitalized variant name
   const VARIANT_KEY = { Normal: "normal", Gold: "gold", Gummi: "gummi", Galaxy: "galaxy", Holofoil: "holofoil", Gem: "gem", Cube: "cube" };
   const VARIANT_KEY_REVERSE = Object.fromEntries(Object.entries(VARIANT_KEY).map(([k, v]) => [v, k]));
 
@@ -885,7 +655,6 @@
       return { sprite, variants };
     });
   }
-
   function exportState() {
     const full = buildFullExport();
     const blob = new Blob([JSON.stringify(full, null, 2)], { type: "application/json" });
@@ -895,18 +664,13 @@
     a.click();
     URL.revokeObjectURL(a.href);
   }
-
-  // Accepts the current { sprite, variants: { normal: "none"|"collected"|"mastered", ... } }
-  // array format, and falls back to older formats: this tool's earlier boolean-per-variant
-  // exports, and the flat "Sprite||Variant": bool object format from the desktop tracker.
   function parseImport(data) {
     let flat = {};
     if (Array.isArray(data)) {
       data.forEach(entry => {
         if (!entry || typeof entry !== "object" || !entry.sprite || typeof entry.variants !== "object") return;
         Object.keys(entry.variants).forEach(vKey => {
-          const variantName = VARIANT_KEY_REVERSE[vKey.toLowerCase()]
-            || (vKey.charAt(0).toUpperCase() + vKey.slice(1).toLowerCase());
+          const variantName = VARIANT_KEY_REVERSE[vKey.toLowerCase()] || (vKey.charAt(0).toUpperCase() + vKey.slice(1).toLowerCase());
           flat[entry.sprite + "||" + variantName] = valueToLevel(entry.variants[vKey]);
         });
       });
@@ -915,7 +679,6 @@
     }
     return migrateState(flat);
   }
-
   function importState(file) {
     if (!file) return;
     const reader = new FileReader();
@@ -932,6 +695,7 @@
   }
 
   updateGroupButton();
+  updateViewModeButton();
   syncIncludeCheckboxes();
   render();
 </script>
