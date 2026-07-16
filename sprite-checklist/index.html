@@ -143,8 +143,8 @@
     .legend { display: flex; flex-wrap: wrap; gap: 1.2rem; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 1.25rem; }
     .legend-item { display: flex; align-items: center; gap: 0.45rem; }
     .legend-swatch { width: 16px; height: 16px; border-radius: 5px; border: 1px solid var(--border-hi); background: var(--surface); }
-    .legend-swatch.collected { border-color: var(--opal-4); background: rgba(56,189,248,0.12); }
-    .legend-swatch.mastered { border: none; background: linear-gradient(135deg, var(--opal-1), var(--opal-3)); }
+    .legend-swatch.collected { border-color: var(--opal-4); background: rgba(56,189,248,0.34); }
+    .legend-swatch.mastered { border: none; background: linear-gradient(135deg, #f5c842, #e8972a); }
     .legend-swatch.invalid { border-style: dashed; opacity: 0.35; }
 
     .table-wrap { border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); overflow: auto; max-height: calc(100vh - 3rem); padding: 0.5rem; }
@@ -160,32 +160,41 @@
     .g-header.row-label-col { text-align: left; position: sticky; left: 0; z-index: 4; }
     .g-row-label { position: sticky; left: 0; background: var(--surface); font-size: 0.82rem; font-weight: 500; color: var(--text); padding: 0.4rem 0.9rem 0.4rem 0.3rem; text-align: left; white-space: nowrap; z-index: 2; display: flex; align-items: center; }
 
-    .cell { width: 100%; aspect-ratio: 1 / 1; border-radius: 10px; background: var(--surface-hi); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: border-color 0.2s ease, background 0.2s ease; }
+    .cell { width: 100%; aspect-ratio: 1 / 1; border-radius: 10px; background: var(--surface-hi); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease; }
     .cell:hover { border-color: var(--border-hi); }
     /* Was border:var(--border) at opacity:0.3 — that's a ~3.5% alpha dashed line on
        a near-black background, which reads as nothing at all rather than a faint
        placeholder. Burnt Peanut/Batman rows (mostly invalid combos) looked like an
        empty gap in the table because of this, not because of any missing markup. */
     .cell.invalid { background: rgba(255,255,255,0.025); border: 1px dashed var(--border-hi); cursor: default; opacity: 0.6; }
+
+    /* Owned/mastered progress is shown as a translucent color "fog" laid over the
+       art, rather than desaturating the unowned state — unowned sprites now show
+       at full color (there's nothing to hide), collected ones pick up a blue fog,
+       and mastered ones swap that fog to gold. The fog is a ::after overlay (not a
+       filter on the <img>) so it sits cleanly on top of whatever's underneath,
+       including the placeholder box for missing images. */
+    .cell::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1; transition: background 0.25s ease; background: transparent; }
     .cell.collected { border-color: var(--opal-4); }
-    .cell.mastered { border-color: transparent; background: linear-gradient(135deg, rgba(123,111,255,0.35), rgba(167,139,250,0.35)); }
-    .cell img { width: 100%; height: 100%; object-fit: contain; border-radius: 9px; filter: grayscale(1) brightness(0.5); transition: filter 0.2s ease; padding: 4px; }
-    .cell.collected img, .cell.mastered img { filter: none; }
+    .cell.collected::after { background: rgba(56, 189, 248, 0.34); }
+    .cell.mastered { border-color: rgba(245, 200, 66, 0.7); }
+    .cell.mastered::after { background: linear-gradient(135deg, rgba(245, 200, 66, 0.4), rgba(232, 151, 42, 0.4)); }
+    .cell img { width: 100%; height: 100%; object-fit: contain; border-radius: 9px; padding: 4px; }
     .cell .placeholder { width: 70%; height: 70%; border-radius: 8px; border: 1px dashed var(--border-hi); }
-    .cell .badge { position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; background: var(--opal-4); color: var(--bg); }
-    .cell.mastered .badge { background: linear-gradient(135deg, var(--opal-1), var(--opal-3)); color: #fff; }
+    .cell .badge { position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; background: var(--opal-4); color: var(--bg); z-index: 2; }
+    .cell.mastered .badge { background: linear-gradient(135deg, #f5c842, #e8972a); color: #3a2a06; }
 
     .cell.text-mode { aspect-ratio: 3 / 2; font-size: clamp(0.7rem, 1.3vw, 1.05rem); color: var(--text-faint); }
-    .cell.text-mode.collected { color: var(--opal-4); background: rgba(56,189,248,0.08); }
-    .cell.text-mode.mastered { color: #fff; }
+    .cell.text-mode.collected { color: var(--opal-4); background: rgba(56,189,248,0.1); }
+    .cell.text-mode.mastered { color: #fff; background: rgba(245,200,66,0.16); }
 
-    /* Filtered "Unowned" / "Need to Master" grid — replaces the table when a filter
-       is active. Same cell rendering (image or text) as the table, laid out as its
-       own auto-filling grid with a caption per tile since there's no row/column
-       context to imply the sprite/variant name. */
-    .filter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 0.9rem; padding: 0.5rem; }
-    .filter-tile { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
-    .filter-caption { font-size: 0.68rem; color: var(--text-dim); text-align: center; line-height: 1.3; }
+    /* Filtered view: every match, flattened into one continuous grid that fills
+       left-to-right and wraps — like lining up screenshots of the matching cards.
+       Each tile carries its own "Sprite · Variant" caption since there's no row
+       label to supply that context once nothing's grouped by sprite/variant. */
+    .filtered-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; padding: 0.5rem; }
+    .filtered-tile { display: flex; flex-direction: column; gap: 6px; }
+    .filtered-tile-label { font-size: 0.75rem; color: var(--text-dim); text-align: center; line-height: 1.3; }
 
     .v-normal { color: #c8c8d8; }
     .v-gold   { background: linear-gradient(90deg, var(--v-gold-1), var(--v-gold-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
@@ -325,7 +334,7 @@
 
   <footer>
     <p>ravencaller213 &middot; sprite checklist (table prototype, not linked from the site)</p>
-    <p><a href="index.html">back to card view</a></p>
+    <p><a href="index-OG.html">back to card view</a></p>
   </footer>
 
 </div><!-- end .page -->
@@ -505,10 +514,11 @@
     document.getElementById("viewModeBtn").textContent = viewMode === "image" ? "Image View" : "Table View";
   }
 
-  // Filters replace the old Remaining / Collected-Not-Mastered sidebar: instead of a
-  // side list, the main area switches to a flat grid of just the matching cells,
-  // rendered with whichever cell style (image/text) is currently active. Two
-  // independent dropdowns combine into one predicate:
+  // Filters replace the old Remaining / Collected-Not-Mastered sidebar. Rather than
+  // flattening matches into a separate grid (which threw away whatever the X/Y axes
+  // meant), the table keeps its normal row/column layout and non-matching cells just
+  // fade out in place via the "filtered-out" class — see renderCell()/renderTable().
+  // Two independent dropdowns combine into one predicate:
   //   Unowned + anything      -> level 0 only (mastery is moot if you don't own it)
   //   All + All                -> no filter, full table
   //   */Unmastered              -> level 1 only, regardless of Collection
@@ -556,10 +566,9 @@
     imgEl.replaceWith(Object.assign(document.createElement("div"), { className: "placeholder" }));
   }
 
-  // Cell markup shared by both the table and the filtered grid. `caption`, when
-  // provided, renders sprite + variant name beneath the cell (needed in the grid,
-  // where there's no row/column header to imply it).
-  function cellHTML(sprite, variant, caption) {
+  // Shared cell markup — used both by the full table and by each match in a
+  // filtered row group.
+  function cellHTML(sprite, variant) {
     const key = sprite + "||" + variant;
     const level = state[key] || 0;
     const stateClass = level === 2 ? " mastered" : level === 1 ? " collected" : "";
@@ -568,14 +577,12 @@
     const imageOrPlaceholder = missingImages.has(src)
       ? `<div class="placeholder"></div>`
       : `<img src="${src}" alt="" onerror="markImageMissing('${src}', this)">`;
-    const inner = viewMode === "text"
+    return viewMode === "text"
       ? `<div class="cell text-mode${stateClass}" data-sprite="${sprite}" data-variant="${variant}" onclick="cycleCell('${sprite}','${variant}')">${badge || "–"}</div>`
       : `<div class="cell${stateClass}" data-sprite="${sprite}" data-variant="${variant}" onclick="cycleCell('${sprite}','${variant}')">
           ${imageOrPlaceholder}
           ${badge ? `<span class="badge">${badge}</span>` : ""}
         </div>`;
-    if (!caption) return inner;
-    return `<div class="filter-tile">${inner}<div class="filter-caption">${sprite} &middot; <span class="${VCLS[variant] || ''}">${variant}</span></div></div>`;
   }
 
   function renderCell(row, col) {
@@ -612,18 +619,30 @@
     document.getElementById("list").innerHTML = html;
   }
 
+  // Filtered view: every matching sprite/variant, flattened into one continuous
+  // grid — filling left to right, wrapping to the next row once a row's full,
+  // same as lining up screenshots of the matching cards. Always walks sprites in
+  // their natural order (ignoring the axis toggle, which stops meaning anything
+  // once rows aren't grouped by sprite/variant anymore), so variants of the same
+  // sprite land next to each other. Since there's no row label to supply context
+  // here, each tile gets its own "Sprite · Variant" caption underneath.
   function renderFilteredGrid(predicate) {
     const items = [];
     activeAllSprites().forEach(sprite => {
       activeVariantsForSprite(sprite).forEach(variant => {
-        if (predicate(state[sprite + "||" + variant] || 0)) items.push({ sprite, variant });
+        const level = state[sprite + "||" + variant] || 0;
+        if (predicate(level)) items.push({ sprite, variant });
       });
     });
     if (items.length === 0) {
-      document.getElementById("list").innerHTML = `<div class="none-left" style="padding:1.5rem; color:var(--opal-2);">Nothing here!</div>`;
+      document.getElementById("list").innerHTML = `<div style="padding:1.5rem; color:var(--opal-2);">Nothing here!</div>`;
       return;
     }
-    const html = `<div class="filter-grid">${items.map(({ sprite, variant }) => cellHTML(sprite, variant, true)).join("")}</div>`;
+    const html = `<div class="filtered-grid">${items.map(({ sprite, variant }) => `
+      <div class="filtered-tile">
+        ${cellHTML(sprite, variant)}
+        <div class="filtered-tile-label">${sprite} &middot; <span class="${VCLS[variant] || ''}">${variant}</span></div>
+      </div>`).join("")}</div>`;
     document.getElementById("list").innerHTML = html;
   }
 
