@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sprites (table prototype) — ravencaller</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Serif+Display:ital@1&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:          #09090d;
+      --surface:     #0f0f18;
+      --surface-hi:  #15151f;
+      --border:      rgba(180,160,255,0.12);
+      --border-hi:   rgba(180,160,255,0.32);
+      --opal-1: #7b6fff;
+      --opal-2: #4dd9c0;
+      --opal-3: #a78bfa;
+      --opal-4: #38bdf8;
+      --opal-5: #6ee7b7;
+      --text:        #ddd8f0;
+      --text-dim:    #7a7495;
+      --text-faint:  #4f4a63;
+      --radius:      14px;
+      --v-gold-1: #f5c842; --v-gold-2: #e8972a;
+      --v-gummi-1: #e84545; --v-gummi-2: #50c878;
+      --v-galaxy-1: #a855f7; --v-galaxy-2: #22c55e; --v-galaxy-3: #3b82f6;
+      --v-holo-1: #e8e8f8; --v-holo-2: #c8d8f0; --v-holo-3: #d8c8f0;
+      --v-crystal-1: #f9a8d4; --v-crystal-2: #a5f3fc; --v-crystal-3: #c4b5fd; --v-crystal-4: #fbcfe8;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background-color: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
+
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 10%,  rgba(123,111,255,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 35% at 80% 80%,  rgba(77,217,192,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 70% 20%,  rgba(167,139,250,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 30% at 10% 90%,  rgba(56,189,248,0.04) 0%, transparent 70%);
+    }
+
+    .page { position: relative; z-index: 1; max-width: min(96vw, 1900px); margin: 0 auto; padding: 0 2rem 6rem; }
+
+    nav.top { padding: 2rem 0 0; display: flex; justify-content: space-between; align-items: center; }
+    .nav-back { font-size: 0.85rem; color: var(--text-dim); text-decoration: none; letter-spacing: 0.02em; transition: color 0.25s ease; display: inline-flex; align-items: center; gap: 0.4rem; }
+    .nav-back:hover { color: var(--opal-4); }
+    .nav-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; }
+    .nav-tag { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--border-hi); color: var(--text-dim); }
+    .save-timestamp { font-size: 0.68rem; color: var(--text-faint); letter-spacing: 0.02em; white-space: nowrap; }
+
+    header { padding: 2.5rem 0 2rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+    .wordmark {
+      font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(2.2rem, 5vw, 3.4rem); letter-spacing: -0.02em; line-height: 1;
+      background: linear-gradient(105deg, var(--opal-3) 0%, var(--text) 28%, var(--opal-4) 50%, var(--text) 72%, var(--opal-2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200% 100%;
+      animation: shimmer 8s ease-in-out infinite alternate;
+    }
+    @keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+    .tagline { font-size: 0.9rem; color: var(--text-dim); letter-spacing: 0.04em; max-width: 680px; line-height: 1.7; }
+    .proto-badge { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--opal-4); border: 1px solid rgba(56,189,248,0.35); padding: 3px 9px; border-radius: 99px; }
+
+    .divider { width: 100%; height: 1px; margin-bottom: 2rem; background: linear-gradient(90deg, transparent 0%, var(--opal-1) 20%, var(--opal-2) 50%, var(--opal-3) 80%, transparent 100%); opacity: 0.35; }
+
+    /* ── Toolbar: one outer frame, four sections inside ─────────────────────────
+       Instead of four separately-bordered boxes (which never came out matched in
+       size no matter how they were constrained), the whole toolbar is one bordered
+       "main frame" and View/Filters/Save/Completion are just flex columns inside
+       it, divided by a hairline rule. flex:1 on each section splits the available
+       width evenly by construction — no manual sizing needed — and Completion gets
+       a slightly larger share (flex: 1.3) since its progress bars need the room. */
+    .toolbar-frame { display: flex; flex-wrap: wrap; gap: 1.4rem; border: 1px solid var(--border); border-radius: 14px; padding: 1rem 1.3rem; background: var(--surface); margin-bottom: 1.5rem; }
+    .tool-section { display: flex; flex-direction: column; gap: 10px; padding-bottom: 10px; }
+    .tool-section + .tool-section { border-left: 1px solid var(--border); padding-left: 1.4rem; }
+
+    /* Section 1 (View): 140px wide. The label stays pinned to the top of the
+       section; the buttons live in their own flex column beneath it that grows
+       to fill the remaining height and centers the (now slightly larger) 128x88
+       buttons within it. */
+    .tool-section-view { width: 140px; flex: 0 0 140px; }
+    .tool-section-view-buttons { display: flex; flex-direction: column; gap: 10px; flex: 1; justify-content: center; }
+    .tool-section-view .btn { width: 128px; height: 88px; margin: 0 auto; padding: 0; display: flex; align-items: center; justify-content: center; text-align: center; }
+
+    /* Section 2 (Filters): same 140px width as View. Contents unchanged — they
+       already scale to the section's content width. */
+    .tool-section-filters { width: 140px; flex: 0 0 140px; }
+
+    /* Section 3 (Save): 120px wide, buttons centered to 100px — 10px buffer each
+       side. Buttons flex to fill whatever vertical room the row has (Filters is
+       the tallest section, so Save's buttons stretch to match), landing in the
+       ~70-95px range depending on content. Rectangular now (not the pill radius),
+       icon glyph above a small label. */
+    .tool-section-save { width: 120px; flex: 0 0 120px; }
+    .tool-section-save .btn { width: 100px; flex: 1 1 0; min-height: 70px; max-height: 95px; margin: 0 auto; padding: 0; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+    .save-icon { font-size: 1.35rem; line-height: 1; }
+    .save-label { font-size: 0.66rem; letter-spacing: 0.03em; }
+
+    /* Section 4 (Completion): takes whatever width is left in the frame. Label
+       stays pinned top-left like the others; the bars live in their own centered
+       body beneath it. */
+    .tool-section-completion { flex: 1 1 auto; min-width: 260px; }
+    .completion-body { display: flex; flex-direction: column; gap: 14px; flex: 1; justify-content: center; }
+    /* stat-top / stat-bottom share the same 2-column grid (label column + bar
+       column) so the ratio+% text on the row below lands directly under the bar,
+       not under the label. The label column is pushed 30px right of where it used
+       to sit, which is what actually shrinks the bar's available width. */
+    .stat-block { display: grid; grid-template-columns: 108px 1fr; column-gap: 0.9rem; row-gap: 0.4rem; align-items: center; }
+    .stat-top { display: contents; }
+    .stat-bottom { display: contents; }
+    .frame-subgroup { display: flex; flex-direction: column; gap: 0.4rem; }
+    .frame-legend { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); padding: 0 0.2rem; }
+    .frame { border: 1px solid var(--border); border-radius: 12px; padding: 0.8rem; display: flex; flex-direction: column; gap: 0.6rem; background: var(--surface-hi); }
+    .frame-sub { padding: 0.6rem 0.7rem; gap: 0.5rem; }
+
+    .filter-field { display: flex; flex-direction: column; gap: 0.25rem; }
+    .filter-field label { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); font-style: italic; }
+    .filter-select { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: var(--text); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.45rem 0.6rem; cursor: pointer; }
+    .filter-select:hover { border-color: var(--border-hi); }
+
+    .toggle-chip { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--text-dim); cursor: pointer; user-select: none; }
+    .toggle-chip input[type="checkbox"] { accent-color: var(--opal-4); width: 13px; height: 13px; cursor: pointer; flex-shrink: 0; }
+
+    .btn { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.03em; color: var(--text-dim); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 99px; padding: 0.5rem 1.1rem; cursor: pointer; transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease; }
+    .btn:hover { color: var(--text); border-color: var(--border-hi); }
+    .btn.accent { color: var(--opal-4); border-color: rgba(56,189,248,0.35); }
+    .btn.accent:hover { background: rgba(56,189,248,0.08); }
+    .axis-btn { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; line-height: 1.25; }
+    .axis-btn .axis-sub { font-size: 0.6rem; font-style: italic; color: var(--text-dim); font-weight: 400; letter-spacing: 0.02em; }
+
+    /* stat-label sits 30px further right than it used to (via left margin) — the
+       bar (grid col 2) picks up that lost width automatically since the column
+       template is fixed at 108px regardless of where the text sits inside it. */
+    .stat-label { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-left: 30px; }
+    .stat-label-spacer { display: block; }
+    .progress-bar { height: 16px; border-radius: 99px; background: var(--surface-hi); border: 1px solid var(--border); overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--opal-1), var(--opal-4), var(--opal-2)); transition: width 0.3s ease; }
+    .progress-fill.mastery-fill { background: linear-gradient(90deg, #f5c842, #e8972a); }
+    .stat-ratio { font-size: 0.78rem; color: var(--text-dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 1.2rem; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 1.25rem; }
+    .legend-item { display: flex; align-items: center; gap: 0.45rem; }
+    .legend-swatch { width: 16px; height: 16px; border-radius: 5px; border: 1px solid var(--border-hi); background: var(--surface); }
+    .legend-swatch.collected { border-color: var(--opal-4); background: rgba(56,189,248,0.12); }
+    .legend-swatch.mastered { border: none; background: linear-gradient(135deg, var(--opal-1), var(--opal-3)); }
+    .legend-swatch.invalid { border-style: dashed; opacity: 0.35; }
+
+    .table-wrap { border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); overflow: auto; max-height: calc(100vh - 3rem); padding: 0.5rem; }
+
+    /* CSS Grid instead of an HTML table: each data column is minmax(44px, 1fr), so
+       columns split whatever width is actually available evenly among however many
+       there really are (7 vs 19 depending on axis) and only shrink to the 44px floor
+       — at which point the grid overflows and .table-wrap's overflow:auto scrolls it,
+       rather than cells quietly staying small while empty space sits unused elsewhere.
+       grid-template-columns is set inline by JS per render since the column count varies. */
+    .sprite-grid { display: grid; gap: 6px; }
+    .g-header { font-size: 0.68rem; font-weight: 500; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; padding: 0.4rem 0.3rem; text-align: center; position: sticky; top: 0; background: var(--surface); z-index: 3; overflow: hidden; text-overflow: ellipsis; }
+    .g-header.row-label-col { text-align: left; position: sticky; left: 0; z-index: 4; }
+    .g-row-label { position: sticky; left: 0; background: var(--surface); font-size: 0.82rem; font-weight: 500; color: var(--text); padding: 0.4rem 0.9rem 0.4rem 0.3rem; text-align: left; white-space: nowrap; z-index: 2; display: flex; align-items: center; }
+
+    .cell { width: 100%; aspect-ratio: 1 / 1; border-radius: 10px; background: var(--surface-hi); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: border-color 0.2s ease, background 0.2s ease; }
+    .cell:hover { border-color: var(--border-hi); }
+    /* Was border:var(--border) at opacity:0.3 — that's a ~3.5% alpha dashed line on
+       a near-black background, which reads as nothing at all rather than a faint
+       placeholder. Burnt Peanut/Batman rows (mostly invalid combos) looked like an
+       empty gap in the table because of this, not because of any missing markup. */
+    .cell.invalid { background: rgba(255,255,255,0.025); border: 1px dashed var(--border-hi); cursor: default; opacity: 0.6; }
+    .cell.collected { border-color: var(--opal-4); }
+    .cell.mastered { border-color: transparent; background: linear-gradient(135deg, rgba(123,111,255,0.35), rgba(167,139,250,0.35)); }
+    .cell img { width: 100%; height: 100%; object-fit: contain; border-radius: 9px; filter: grayscale(1) brightness(0.5); transition: filter 0.2s ease; padding: 4px; }
+    .cell.collected img, .cell.mastered img { filter: none; }
+    .cell .placeholder { width: 70%; height: 70%; border-radius: 8px; border: 1px dashed var(--border-hi); }
+    .cell .badge { position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; background: var(--opal-4); color: var(--bg); }
+    .cell.mastered .badge { background: linear-gradient(135deg, var(--opal-1), var(--opal-3)); color: #fff; }
+
+    .cell.text-mode { aspect-ratio: 3 / 2; font-size: clamp(0.7rem, 1.3vw, 1.05rem); color: var(--text-faint); }
+    .cell.text-mode.collected { color: var(--opal-4); background: rgba(56,189,248,0.08); }
+    .cell.text-mode.mastered { color: #fff; }
+
+    /* Filtered "Unowned" / "Need to Master" grid — replaces the table when a filter
+       is active. Same cell rendering (image or text) as the table, laid out as its
+       own auto-filling grid with a caption per tile since there's no row/column
+       context to imply the sprite/variant name. */
+    .filter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 0.9rem; padding: 0.5rem; }
+    .filter-tile { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+    .filter-caption { font-size: 0.68rem; color: var(--text-dim); text-align: center; line-height: 1.3; }
+
+    .v-normal { color: #c8c8d8; }
+    .v-gold   { background: linear-gradient(90deg, var(--v-gold-1), var(--v-gold-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    .v-gummi  { background: linear-gradient(90deg, var(--v-gummi-1), var(--v-gummi-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    .v-galaxy { background: linear-gradient(90deg, var(--v-galaxy-1), var(--v-galaxy-2), var(--v-galaxy-3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    /* Swapped: Holofoil now reads as the pastel/iridescent palette (previously
+       Gem's) and Gem takes the pale shimmering palette (previously Holofoil's) —
+       now that Holofoil is actually released, the old assignment read backwards
+       next to it. */
+    .v-holofoil { background: linear-gradient(90deg, var(--v-crystal-1), var(--v-crystal-2), var(--v-crystal-3), var(--v-crystal-4)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    .v-crystal { background: linear-gradient(90deg, var(--v-holo-1), var(--v-holo-2), var(--v-holo-3), var(--v-holo-1)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+
+    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+    footer p { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.05em; }
+    footer a { color: var(--opal-3); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <nav class="top">
+    <a class="nav-back" href="/index.html">&larr; ravencaller</a>
+    <div class="nav-right">
+      <span class="nav-tag">Sprite Checklist</span>
+      <span class="save-timestamp" id="lastSaved"></span>
+    </div>
+  </nav>
+
+  <header>
+    <span class="proto-badge">Prototype — table layout</span>
+    <h1 class="wordmark">Sprites</h1>
+    <p class="tagline">
+      Same data as the main checklist (shares your saved progress). Click any cell to cycle none &rarr; collected &rarr; mastered.
+      Flip the axes, switch between image and text cells, or filter down to what's left.
+    </p>
+  </header>
+
+  <div class="divider"></div>
+
+  <div class="toolbar-frame">
+
+    <div class="tool-section tool-section-view">
+      <div class="frame-legend">View</div>
+      <div class="tool-section-view-buttons">
+        <button class="btn accent" id="viewModeBtn" onclick="toggleViewMode()">Image View</button>
+        <button class="btn accent axis-btn" id="groupToggleBtn" onclick="toggleGrouping()">
+          <span id="axisMain">Sprites</span>
+          <span class="axis-sub">on rows</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="tool-section tool-section-filters">
+      <div class="frame-legend">Filters</div>
+      <div class="filter-field">
+        <label for="collectionFilter">Collection</label>
+        <select class="filter-select" id="collectionFilter" onchange="onFilterChange()">
+          <option value="all">All</option>
+          <option value="owned">Owned</option>
+          <option value="unowned">Unowned</option>
+        </select>
+      </div>
+      <div class="filter-field">
+        <label for="masteryFilter">Mastery</label>
+        <select class="filter-select" id="masteryFilter" onchange="onFilterChange()">
+          <option value="all">All</option>
+          <option value="unmastered">Unmastered</option>
+          <option value="mastered">Mastered</option>
+        </select>
+      </div>
+      <div class="frame-subgroup">
+        <div class="frame-legend">Include?</div>
+        <div class="frame frame-sub">
+          <label class="toggle-chip"><input type="checkbox" id="include-Gem" checked onchange="toggleInclude('Gem', this.checked)"><span class="v-crystal">Gem</span></label>
+          <label class="toggle-chip"><input type="checkbox" id="include-Cube" checked onchange="toggleInclude('Cube', this.checked)">Cube</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-section tool-section-save">
+      <div class="frame-legend">Save</div>
+      <button class="btn accent save-btn" onclick="document.getElementById('importFile').click()">
+        <span class="save-icon">&#8681;</span><span class="save-label">Import</span>
+      </button>
+      <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this.files[0])">
+      <button class="btn accent save-btn" onclick="exportState()">
+        <span class="save-icon">&#8679;</span><span class="save-label">Export</span>
+      </button>
+    </div>
+
+    <div class="tool-section tool-section-completion">
+      <div class="frame-legend">Completion</div>
+      <div class="completion-body">
+        <div class="stat-block">
+          <div class="stat-top">
+            <span class="stat-label">Completion</span>
+            <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+          </div>
+          <div class="stat-bottom">
+            <span class="stat-label-spacer"></span>
+            <span class="stat-ratio" id="prog">0 / 121 &middot; 0%</span>
+          </div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-top">
+            <span class="stat-label">Mastery</span>
+            <div class="progress-bar"><div class="progress-fill mastery-fill" id="masteryFill"></div></div>
+          </div>
+          <div class="stat-bottom">
+            <span class="stat-label-spacer"></span>
+            <span class="stat-ratio" id="masteryProg">0 / 0 &middot; 0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Check all / Uncheck all are dev/testing tools only — not for the published
+       page, so they're commented out here. The checkAll()/uncheckAll() functions
+       are still defined below and callable from the browser console. -->
+  <!--
+  <button class="btn" onclick="checkAll()">Check all</button>
+  <button class="btn" onclick="uncheckAll()">Uncheck all</button>
+  -->
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch"></span> Unowned</div>
+    <div class="legend-item"><span class="legend-swatch collected"></span> Collected</div>
+    <div class="legend-item"><span class="legend-swatch mastered"></span> Mastered</div>
+    <div class="legend-item"><span class="legend-swatch invalid"></span> Not a valid combo</div>
+  </div>
+
+  <div class="table-wrap"><div id="list"></div></div>
+
+  <footer>
+    <p>ravencaller213 &middot; sprite checklist (table prototype, not linked from the site)</p>
+    <p><a href="index.html">back to card view</a></p>
+  </footer>
+
+</div><!-- end .page -->
+
+<script>
+  // ---- Data layer: copied verbatim from index.html so this prototype reads/writes
+  // the exact same localStorage state. Anything you click here shows up there too. ----
+  const SPRITES = ["Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Batman"];
+  const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube"];
+  const BURNT = "Burnt Peanut";
+  const ALL_SPRITES = [...SPRITES.slice(0, SPRITES.indexOf("King") + 1), BURNT, ...SPRITES.slice(SPRITES.indexOf("King") + 1)];
+  const KEY = "fn_sprites_v1";
+  const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Gem: "v-crystal" };
+
+  const SPRITE_VARIANT_OVERRIDES = {
+    [BURNT]: ["Normal"],
+    "Batman": ["Normal", "Holofoil", "Cube"],
+  };
+  function variantsForSprite(sprite) { return SPRITE_VARIANT_OVERRIDES[sprite] || VARIANTS; }
+  function activeVariantsForSprite(sprite) { return variantsForSprite(sprite).filter(v => activeVariants().includes(v)); }
+  function spritesForVariant(variantName) { return activeAllSprites().filter(s => variantsForSprite(s).includes(variantName)); }
+
+  const RENAMES = { "Fish": "Fishy", "Foundation": "Seven" };
+  const VARIANT_RENAMES = { "Crystal": "Gem" };
+
+  const EXCLUDABLE_VARIANTS = ["Gem", "Cube"];
+  const INCLUDE_KEY = "fn_sprites_include_v1";
+
+  let included = { Gem: true, Cube: true };
+  try {
+    const savedInclude = localStorage.getItem(INCLUDE_KEY);
+    if (savedInclude) included = { ...included, ...JSON.parse(savedInclude) };
+  } catch (e) {}
+  if ("Crystal" in included) { included.Gem = included.Crystal; delete included.Crystal; }
+  delete included.Holofoil;
+  delete included.Air;
+  delete included.Foundation;
+
+  function saveInclude() { try { localStorage.setItem(INCLUDE_KEY, JSON.stringify(included)); } catch (e) {} }
+  function activeVariants() { return VARIANTS.filter(v => included[v] !== false); }
+  function activeSprites() { return SPRITES.filter(s => included[s] !== false); }
+  function activeAllSprites() {
+    const as = activeSprites();
+    const idx = as.indexOf("King");
+    return [...as.slice(0, idx + 1), BURNT, ...as.slice(idx + 1)];
+  }
+  function toggleInclude(name, checked) { included[name] = checked; saveInclude(); render(); }
+  function syncIncludeCheckboxes() {
+    Object.keys(included).forEach(name => {
+      const cb = document.getElementById("include-" + name);
+      if (cb) cb.checked = included[name] !== false;
+    });
+  }
+
+  const LEVEL_LABEL = { 0: "none", 1: "collected", 2: "mastered" };
+  const LABEL_LEVEL = { none: 0, collected: 1, mastered: 2 };
+  function valueToLevel(v) {
+    if (typeof v === "string") { const n = LABEL_LEVEL[v.toLowerCase()]; return n === undefined ? 0 : n; }
+    if (v === true) return 1;
+    if (typeof v === "number" && !isNaN(v)) return Math.max(0, Math.min(2, Math.round(v)));
+    return 0;
+  }
+  function normalizeStateLevels(obj) {
+    const result = {};
+    Object.keys(obj || {}).forEach(k => { const lvl = valueToLevel(obj[k]); if (lvl > 0) result[k] = lvl; });
+    return result;
+  }
+  function migrateState(obj) {
+    const result = { ...(obj && typeof obj === "object" ? obj : {}) };
+    Object.keys(RENAMES).forEach(oldName => {
+      const newName = RENAMES[oldName];
+      const prefix = oldName + "||";
+      Object.keys(result).forEach(key => {
+        if (!key.startsWith(prefix)) return;
+        const newKey = newName + "||" + key.slice(prefix.length);
+        if (result[key]) result[newKey] = result[key];
+        delete result[key];
+      });
+    });
+    Object.keys(VARIANT_RENAMES).forEach(oldName => {
+      const newName = VARIANT_RENAMES[oldName];
+      const suffix = "||" + oldName;
+      Object.keys(result).forEach(key => {
+        if (!key.endsWith(suffix)) return;
+        const newKey = key.slice(0, -suffix.length) + "||" + newName;
+        if (result[key]) result[newKey] = result[key];
+        delete result[key];
+      });
+    });
+    return normalizeStateLevels(result);
+  }
+
+  let state = {};
+  try {
+    const saved = localStorage.getItem(KEY);
+    state = migrateState(saved ? JSON.parse(saved) : {});
+  } catch (e) { state = {}; }
+
+  const SAVED_AT_KEY = "fn_sprites_saved_at_v1";
+  function formatSavedAt(ts) {
+    const d = new Date(ts);
+    return "Saved " + d.toLocaleDateString(undefined, { month: "short", day: "numeric" }) + ", " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+  }
+  function updateSavedLabel(ts) {
+    const el = document.getElementById("lastSaved");
+    if (!el) return;
+    el.textContent = ts ? formatSavedAt(ts) : "Not saved yet";
+  }
+  function save() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(state));
+      const now = Date.now();
+      localStorage.setItem(SAVED_AT_KEY, String(now));
+      updateSavedLabel(now);
+    } catch (e) {}
+  }
+  save();
+
+  function getTotal() { let n = 0; activeAllSprites().forEach(s => { n += activeVariantsForSprite(s).length; }); return n; }
+  function getChecked() {
+    let n = 0;
+    activeAllSprites().forEach(s => { activeVariantsForSprite(s).forEach(v => { if (state[s + "||" + v]) n++; }); });
+    return n;
+  }
+  function updateProgress() {
+    const tot = getTotal(), ch = getChecked();
+    const pct = tot > 0 ? Math.round(ch / tot * 100) : 0;
+    document.getElementById("prog").textContent = ch + " / " + tot + " · " + pct + "%";
+    document.getElementById("fill").style.width = pct + "%";
+  }
+
+  // Mastery bar's denominator is what you've actually collected, not the full possible
+  // total — mastering everything you own is "100%" even if plenty is still unowned.
+  function getMasteryStats() {
+    let collected = 0, mastered = 0;
+    activeAllSprites().forEach(s => {
+      activeVariantsForSprite(s).forEach(v => {
+        const lvl = state[s + "||" + v] || 0;
+        if (lvl >= 1) collected++;
+        if (lvl === 2) mastered++;
+      });
+    });
+    return { collected, mastered };
+  }
+  function updateMasteryProgress() {
+    const { collected, mastered } = getMasteryStats();
+    const pct = collected > 0 ? Math.round(mastered / collected * 100) : 0;
+    document.getElementById("masteryProg").textContent = mastered + " / " + collected + " · " + pct + "%";
+    document.getElementById("masteryFill").style.width = pct + "%";
+  }
+
+  // groupBy doubles as "which axis is the row": "sprite" = sprite rows / variant columns,
+  // "variant" = variant rows / sprite columns.
+  let groupBy = "sprite";
+  function getGroups() { return groupBy === "sprite" ? activeAllSprites() : activeVariants(); }
+  function getItemsForGroup(group) {
+    if (groupBy === "sprite") return activeVariantsForSprite(group);
+    return spritesForVariant(group);
+  }
+  function keyFor(group, item) { return groupBy === "sprite" ? (group + "||" + item) : (item + "||" + group); }
+  function toggleGrouping() {
+    groupBy = groupBy === "sprite" ? "variant" : "sprite";
+    render();
+    updateGroupButton();
+  }
+  function updateGroupButton() {
+    document.getElementById("axisMain").textContent = groupBy === "sprite" ? "Sprites" : "Variants";
+  }
+
+  let viewMode = "image"; // "image" | "text"
+  function toggleViewMode() {
+    viewMode = viewMode === "image" ? "text" : "image";
+    render();
+    updateViewModeButton();
+  }
+  function updateViewModeButton() {
+    document.getElementById("viewModeBtn").textContent = viewMode === "image" ? "Image View" : "Table View";
+  }
+
+  // Filters replace the old Remaining / Collected-Not-Mastered sidebar: instead of a
+  // side list, the main area switches to a flat grid of just the matching cells,
+  // rendered with whichever cell style (image/text) is currently active. Two
+  // independent dropdowns combine into one predicate:
+  //   Unowned + anything      -> level 0 only (mastery is moot if you don't own it)
+  //   All + All                -> no filter, full table
+  //   */Unmastered              -> level 1 only, regardless of Collection
+  //   */Mastered                -> level 2 only, regardless of Collection
+  //   Owned + All               -> level 1 or 2 (owned, mastered or not)
+  let collectionFilter = "all"; // "all" | "owned" | "unowned"
+  let masteryFilter = "all";    // "all" | "unmastered" | "mastered"
+  function onFilterChange() {
+    collectionFilter = document.getElementById("collectionFilter").value;
+    masteryFilter = document.getElementById("masteryFilter").value;
+    render();
+  }
+  function filterPredicate() {
+    if (collectionFilter === "unowned") return lvl => lvl === 0;
+    if (masteryFilter === "unmastered") return lvl => lvl === 1;
+    if (masteryFilter === "mastered") return lvl => lvl === 2;
+    if (collectionFilter === "owned") return lvl => lvl > 0;
+    return null; // All + All: no filter
+  }
+
+  function tableColumns() { return groupBy === "sprite" ? activeVariants() : activeAllSprites(); }
+  function cellSpriteVariant(row, col) {
+    return groupBy === "sprite" ? { sprite: row, variant: col } : { sprite: col, variant: row };
+  }
+  function imgPath(sprite, variant) {
+    return "images/" + sprite.toLowerCase().replace(/ /g, "_") + "_" + variant.toLowerCase() + ".webp";
+  }
+  function cycleCell(sprite, variant) {
+    const key = sprite + "||" + variant;
+    const next = ((state[key] || 0) + 1) % 3;
+    if (next === 0) delete state[key]; else state[key] = next;
+    save();
+    render();
+  }
+
+  // render() rebuilds every cell's HTML from scratch on each click, including cells
+  // whose image already failed to load once — without this, each of those gets a
+  // brand-new <img> tag every render, and the browser briefly shows the alt text
+  // again before onerror swaps it back out. Remembering known-missing URLs for the
+  // rest of the session means we go straight to the placeholder box on every render
+  // after the first, instead of re-flashing it each time you click anything.
+  const missingImages = new Set();
+  function markImageMissing(src, imgEl) {
+    missingImages.add(src);
+    imgEl.replaceWith(Object.assign(document.createElement("div"), { className: "placeholder" }));
+  }
+
+  // Cell markup shared by both the table and the filtered grid. `caption`, when
+  // provided, renders sprite + variant name beneath the cell (needed in the grid,
+  // where there's no row/column header to imply it).
+  function cellHTML(sprite, variant, caption) {
+    const key = sprite + "||" + variant;
+    const level = state[key] || 0;
+    const stateClass = level === 2 ? " mastered" : level === 1 ? " collected" : "";
+    const badge = level === 2 ? "★" : level === 1 ? "✓" : "";
+    const src = imgPath(sprite, variant);
+    const imageOrPlaceholder = missingImages.has(src)
+      ? `<div class="placeholder"></div>`
+      : `<img src="${src}" alt="" onerror="markImageMissing('${src}', this)">`;
+    const inner = viewMode === "text"
+      ? `<div class="cell text-mode${stateClass}" data-sprite="${sprite}" data-variant="${variant}" onclick="cycleCell('${sprite}','${variant}')">${badge || "–"}</div>`
+      : `<div class="cell${stateClass}" data-sprite="${sprite}" data-variant="${variant}" onclick="cycleCell('${sprite}','${variant}')">
+          ${imageOrPlaceholder}
+          ${badge ? `<span class="badge">${badge}</span>` : ""}
+        </div>`;
+    if (!caption) return inner;
+    return `<div class="filter-tile">${inner}<div class="filter-caption">${sprite} &middot; <span class="${VCLS[variant] || ''}">${variant}</span></div></div>`;
+  }
+
+  function renderCell(row, col) {
+    const { sprite, variant } = cellSpriteVariant(row, col);
+    if (!variantsForSprite(sprite).includes(variant)) {
+      // Valid cells pick up "text-mode" (aspect-ratio 3/2) when viewMode is "text",
+      // via cellHTML()'s own template — this branch was skipping that entirely, so
+      // invalid cells kept the default square (1/1) aspect ratio while their valid
+      // neighbors in the same row went short-and-wide. That mismatch is exactly the
+      // "gap": the row's height ends up dictated by the taller square invalid cells,
+      // leaving visible empty space under the shorter valid ones.
+      const modeClass = viewMode === "text" ? " text-mode" : "";
+      return `<div class="cell invalid${modeClass}" data-sprite="${sprite}" data-variant="${variant}"></div>`;
+    }
+    return cellHTML(sprite, variant);
+  }
+
+  // Row-label column gets a fixed width; every data column shares the rest of the
+  // grid's width evenly via minmax(44px, 1fr) — so the grid genuinely fills however
+  // much room .table-wrap actually has, for however many columns there really are.
+  function renderTable() {
+    const rows = getGroups();
+    const cols = tableColumns();
+    const rowAxisLabel = groupBy === "sprite" ? "Sprite" : "Variant";
+    const gridCols = "120px " + cols.map(() => "minmax(44px, 1fr)").join(" ");
+    let html = `<div class="sprite-grid" style="grid-template-columns: ${gridCols};">`;
+    html += `<div class="g-header row-label-col">${rowAxisLabel}</div>`;
+    cols.forEach(c => { html += `<div class="g-header"><span class="${groupBy === "sprite" ? (VCLS[c] || "") : ""}">${c}</span></div>`; });
+    rows.forEach(row => {
+      html += `<div class="g-row-label"><span class="${groupBy === "variant" ? (VCLS[row] || "") : ""}">${row}</span></div>`;
+      cols.forEach(col => { html += renderCell(row, col); });
+    });
+    html += `</div>`;
+    document.getElementById("list").innerHTML = html;
+  }
+
+  function renderFilteredGrid(predicate) {
+    const items = [];
+    activeAllSprites().forEach(sprite => {
+      activeVariantsForSprite(sprite).forEach(variant => {
+        if (predicate(state[sprite + "||" + variant] || 0)) items.push({ sprite, variant });
+      });
+    });
+    if (items.length === 0) {
+      document.getElementById("list").innerHTML = `<div class="none-left" style="padding:1.5rem; color:var(--opal-2);">Nothing here!</div>`;
+      return;
+    }
+    const html = `<div class="filter-grid">${items.map(({ sprite, variant }) => cellHTML(sprite, variant, true)).join("")}</div>`;
+    document.getElementById("list").innerHTML = html;
+  }
+
+  function render() {
+    const pred = filterPredicate();
+    if (pred) renderFilteredGrid(pred);
+    else renderTable();
+    updateProgress();
+    updateMasteryProgress();
+  }
+
+  function checkAll() {
+    activeAllSprites().forEach(s => activeVariantsForSprite(s).forEach(v => { state[s + "||" + v] = 1; }));
+    save(); render();
+  }
+  function uncheckAll() {
+    activeAllSprites().forEach(s => activeVariantsForSprite(s).forEach(v => { delete state[s + "||" + v]; }));
+    save(); render();
+  }
+
+  const VARIANT_KEY = { Normal: "normal", Gold: "gold", Gummi: "gummi", Galaxy: "galaxy", Holofoil: "holofoil", Gem: "gem", Cube: "cube" };
+  const VARIANT_KEY_REVERSE = Object.fromEntries(Object.entries(VARIANT_KEY).map(([k, v]) => [v, k]));
+
+  function buildFullExport() {
+    return ALL_SPRITES.map(sprite => {
+      const variantList = variantsForSprite(sprite);
+      const variants = {};
+      variantList.forEach(v => { variants[VARIANT_KEY[v]] = LEVEL_LABEL[state[sprite + "||" + v] || 0]; });
+      return { sprite, variants };
+    });
+  }
+  function exportState() {
+    const full = buildFullExport();
+    const blob = new Blob([JSON.stringify(full, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "fortnite_sprites_save.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+  function parseImport(data) {
+    let flat = {};
+    if (Array.isArray(data)) {
+      data.forEach(entry => {
+        if (!entry || typeof entry !== "object" || !entry.sprite || typeof entry.variants !== "object") return;
+        Object.keys(entry.variants).forEach(vKey => {
+          const variantName = VARIANT_KEY_REVERSE[vKey.toLowerCase()] || (vKey.charAt(0).toUpperCase() + vKey.slice(1).toLowerCase());
+          flat[entry.sprite + "||" + variantName] = valueToLevel(entry.variants[vKey]);
+        });
+      });
+    } else if (data && typeof data === "object") {
+      Object.keys(data).forEach(k => { flat[k] = valueToLevel(data[k]); });
+    }
+    return migrateState(flat);
+  }
+  function importState(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        state = parseImport(data);
+        save(); render();
+      } catch (err) {
+        alert("Couldn't read that file — expected a JSON export from this tool or the desktop tracker.");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  updateGroupButton();
+  updateViewModeButton();
+  syncIncludeCheckboxes();
+  render();
+</script>
+
+</body>
+</html>

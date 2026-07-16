@@ -401,8 +401,12 @@
     .v-gold   { background: linear-gradient(90deg, var(--v-gold-1), var(--v-gold-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
     .v-gummi  { background: linear-gradient(90deg, var(--v-gummi-1), var(--v-gummi-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
     .v-galaxy { background: linear-gradient(90deg, var(--v-galaxy-1), var(--v-galaxy-2), var(--v-galaxy-3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
-    .v-holofoil { background: linear-gradient(90deg, var(--v-holo-1), var(--v-holo-2), var(--v-holo-3), var(--v-holo-1)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
-    .v-crystal { background: linear-gradient(90deg, var(--v-crystal-1), var(--v-crystal-2), var(--v-crystal-3), var(--v-crystal-4)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    /* Swapped: Holofoil now reads as the pastel/iridescent palette (previously
+       Gem's) and Gem takes the pale shimmering palette (previously Holofoil's) —
+       now that Holofoil is actually released, the old assignment read backwards
+       next to it. */
+    .v-holofoil { background: linear-gradient(90deg, var(--v-crystal-1), var(--v-crystal-2), var(--v-crystal-3), var(--v-crystal-4)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    .v-crystal { background: linear-gradient(90deg, var(--v-holo-1), var(--v-holo-2), var(--v-holo-3), var(--v-holo-1)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
 
     /* ─── SIDEBAR ────────────────────────────────────────────── */
     .sidebar {
@@ -508,7 +512,7 @@
   <header>
     <h1 class="wordmark">Sprites</h1>
     <p class="tagline">
-      Fortnite sprite collection tracker — every base skin across Normal, Gold, Gummi, Galaxy, Holofoil, and Crystal variants.
+      Fortnite sprite collection tracker — every base skin across Normal, Gold, Gummi, Galaxy, Holofoil, Gem, and Cube variants.
       Click a variant to cycle none &rarr; collected &rarr; mastered. Progress saves automatically in your browser; export a backup any time.
     </p>
   </header>
@@ -523,7 +527,7 @@
       <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this.files[0])">
       <div class="progress-wrap">
         <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
-        <span class="progress-label" id="prog">0 / 104</span>
+        <span class="progress-label" id="prog">0 / 121</span>
       </div>
     </div>
     <div class="toolbar-row">
@@ -533,7 +537,8 @@
       <button class="btn" onclick="collapseAll()">Collapse all</button>
       <div class="unreleased-toggles">
         <span class="unreleased-label">Unreleased</span>
-        <label class="toggle-chip"><input type="checkbox" id="include-Crystal" checked onchange="toggleInclude('Crystal', this.checked)"><span class="v-crystal">Crystal</span></label>
+        <label class="toggle-chip"><input type="checkbox" id="include-Gem" checked onchange="toggleInclude('Gem', this.checked)"><span class="v-crystal">Gem</span></label>
+        <label class="toggle-chip"><input type="checkbox" id="include-Cube" checked onchange="toggleInclude('Cube', this.checked)">Cube</label>
       </div>
     </div>
   </div>
@@ -558,11 +563,11 @@
 
 <script>
   const SPRITES = ["Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Batman"];
-  const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Crystal"];
+  const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube"];
   const BURNT = "Burnt Peanut";
   const ALL_SPRITES = [...SPRITES.slice(0, SPRITES.indexOf("King") + 1), BURNT, ...SPRITES.slice(SPRITES.indexOf("King") + 1)];
   const KEY = "fn_sprites_v1";
-  const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Crystal: "v-crystal" };
+  const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Gem: "v-crystal" };
 
   // Most sprites offer every variant in VARIANTS. A few are restricted to a specific
   // subset — Burnt Peanut only ever had a Normal release, and Batman is Holofoil-only.
@@ -570,7 +575,7 @@
   // instead of hardcoding a one-off special case per sprite as they come up.
   const SPRITE_VARIANT_OVERRIDES = {
     [BURNT]: ["Normal"],
-    "Batman": ["Holofoil"],
+    "Batman": ["Normal", "Holofoil", "Cube"],
   };
   function variantsForSprite(sprite) { return SPRITE_VARIANT_OVERRIDES[sprite] || VARIANTS; }
   function activeVariantsForSprite(sprite) { return variantsForSprite(sprite).filter(v => activeVariants().includes(v)); }
@@ -580,17 +585,22 @@
   // (from before a rename) working instead of leaving orphaned duplicate entries.
   const RENAMES = { "Fish": "Fishy", "Foundation": "Seven" };
 
+  // Renamed variants: same idea as RENAMES but matched on the "||OldVariant" suffix.
+  const VARIANT_RENAMES = { "Crystal": "Gem" };
+
   // Unreleased content toggles. Unchecking one hides it from the checklist and excludes
   // it from the progress bar / Remaining panel, but never touches its stored checked
   // state — re-checking the box brings any prior progress on it right back.
-  const EXCLUDABLE_VARIANTS = ["Crystal"];
+  const EXCLUDABLE_VARIANTS = ["Gem", "Cube"];
   const INCLUDE_KEY = "fn_sprites_include_v1";
 
-  let included = { Crystal: true };
+  let included = { Gem: true, Cube: true };
   try {
     const savedInclude = localStorage.getItem(INCLUDE_KEY);
     if (savedInclude) included = { ...included, ...JSON.parse(savedInclude) };
   } catch (e) {}
+  // Crystal's toggle preference (if any) carries over to its new name, Gem.
+  if ("Crystal" in included) { included.Gem = included.Crystal; delete included.Crystal; }
   // Holofoil, Air, and Foundation/Seven are no longer excludable — clear any stale
   // false flags left over from before their toggles were removed, so old data can't
   // silently keep them hidden with no UI left to re-enable them.
@@ -653,6 +663,16 @@
       Object.keys(result).forEach(key => {
         if (!key.startsWith(prefix)) return;
         const newKey = newName + "||" + key.slice(prefix.length);
+        if (result[key]) result[newKey] = result[key];
+        delete result[key];
+      });
+    });
+    Object.keys(VARIANT_RENAMES).forEach(oldName => {
+      const newName = VARIANT_RENAMES[oldName];
+      const suffix = "||" + oldName;
+      Object.keys(result).forEach(key => {
+        if (!key.endsWith(suffix)) return;
+        const newKey = key.slice(0, -suffix.length) + "||" + newName;
         if (result[key]) result[newKey] = result[key];
         delete result[key];
       });
@@ -854,7 +874,7 @@
   function collapseAll() { getGroups().forEach(g => { collapsed[g] = true; }); render(); }
 
   // lowercase variant key <-> internal capitalized variant name
-  const VARIANT_KEY = { Normal: "normal", Gold: "gold", Gummi: "gummi", Galaxy: "galaxy", Holofoil: "holofoil", Crystal: "crystal" };
+  const VARIANT_KEY = { Normal: "normal", Gold: "gold", Gummi: "gummi", Galaxy: "galaxy", Holofoil: "holofoil", Gem: "gem", Cube: "cube" };
   const VARIANT_KEY_REVERSE = Object.fromEntries(Object.entries(VARIANT_KEY).map(([k, v]) => [v, k]));
 
   function buildFullExport() {
