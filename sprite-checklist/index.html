@@ -349,9 +349,23 @@
   const KEY = "fn_sprites_v1";
   const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Gem: "v-crystal" };
 
+  // Sprites confirmed to have no Holofoil form (per the actual in-game set, not
+  // just "hasn't dropped yet"). Batman is left alone — his Holofoil is rumored,
+  // not confirmed either way yet.
+  const NO_HOLO = VARIANTS.filter(v => v !== "Holofoil");
   const SPRITE_VARIANT_OVERRIDES = {
     [BURNT]: ["Normal"],
-    "Batman": ["Normal", "Holofoil", "Cube"],
+    "Batman": ["Normal"],
+    "Earth": NO_HOLO,
+    "Duck": NO_HOLO,
+    "Demon": NO_HOLO,
+    "Dream": NO_HOLO,
+    "Punk": NO_HOLO,
+    "Zero Point": NO_HOLO,
+    "Fishy": NO_HOLO,
+    "Aura": NO_HOLO,
+    "Boss": NO_HOLO,
+    "Reaper": NO_HOLO,
   };
   function variantsForSprite(sprite) { return SPRITE_VARIANT_OVERRIDES[sprite] || VARIANTS; }
   function activeVariantsForSprite(sprite) { return variantsForSprite(sprite).filter(v => activeVariants().includes(v)); }
