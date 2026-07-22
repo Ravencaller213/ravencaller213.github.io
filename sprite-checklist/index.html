@@ -342,7 +342,7 @@
 <script>
   // ---- Data layer: copied verbatim from index.html so this prototype reads/writes
   // the exact same localStorage state. Anything you click here shows up there too. ----
-  const SPRITES = ["Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Batman","Vini Jr"];
+  const SPRITES = ["Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Batman","Vini Jr","Pollo"];
   const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube"];
   const BURNT = "Burnt Peanut";
   const ALL_SPRITES = [...SPRITES.slice(0, SPRITES.indexOf("King") + 1), BURNT, ...SPRITES.slice(SPRITES.indexOf("King") + 1)];
@@ -357,6 +357,7 @@
     [BURNT]: ["Normal"],
     "Batman": ["Normal"],
     "Vini Jr": ["Normal"],
+    "Pollo": ["Normal"],
     "Earth": NO_HOLO,
     "Duck": NO_HOLO,
     "Demon": NO_HOLO,
