@@ -343,7 +343,7 @@
   // ---- Data layer: copied verbatim from index.html so this prototype reads/writes
   // the exact same localStorage state. Anything you click here shows up there too. ----
   const SPRITES = ["Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Batman","Vini Jr","Pollo"];
-  const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube"];
+  const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube","Quack"];
   const BURNT = "Burnt Peanut";
   const ALL_SPRITES = [...SPRITES.slice(0, SPRITES.indexOf("King") + 1), BURNT, ...SPRITES.slice(SPRITES.indexOf("King") + 1)];
   const KEY = "fn_sprites_v1";
@@ -371,7 +371,10 @@
     "Boss": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
     "Reaper": ["Normal", "Gold", "Gummi", "Galaxy"],
     "Seven": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
-    "Zero Point": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem"],
+    // Holofoil pulled per user report — what looked like Holofoil in-game is
+    // actually a distinct "Quack" variant, confirmed real and unique to Zero
+    // Point (no other sprite has it).
+    "Zero Point": ["Normal", "Gold", "Gummi", "Galaxy", "Gem", "Quack"],
     "Batman": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
     [BURNT]: ["Normal"],
     "Vini Jr": ["Normal"],
