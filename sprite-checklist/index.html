@@ -349,25 +349,33 @@
   const KEY = "fn_sprites_v1";
   const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Gem: "v-crystal" };
 
-  // Sprites confirmed to have no Holofoil form (per the actual in-game set, not
-  // just "hasn't dropped yet"). Batman is left alone — his Holofoil is rumored,
-  // not confirmed either way yet.
-  const NO_HOLO = VARIANTS.filter(v => v !== "Holofoil");
+  // Every sprite's actual confirmed variant list, taken directly from the sprite
+  // tracking CSV (Y/N per variant). No shortcuts/grouping constants — each entry
+  // here is just that sprite's real list, so confirming or correcting one sprite
+  // never silently changes another's. Any sprite not listed here falls back to
+  // the full VARIANTS set (see variantsForSprite below).
   const SPRITE_VARIANT_OVERRIDES = {
+    "Water": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem"],
+    "Earth": ["Normal", "Gold", "Gummi", "Galaxy", "Gem", "Cube"],
+    "Fire": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Cube"],
+    "Fishy": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
+    "Duck": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem"],
+    "Ghost": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    "Demon": ["Normal", "Gold", "Gummi", "Galaxy", "Gem"],
+    "King": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    "Striker": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    "Aura": ["Normal", "Gold", "Gummi", "Galaxy", "Gem"],
+    "Air": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    "Dream": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
+    "Punk": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
+    "Boss": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
+    "Reaper": ["Normal", "Gold", "Gummi", "Galaxy"],
+    "Seven": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    "Zero Point": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem"],
+    "Batman": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
     [BURNT]: ["Normal"],
-    "Batman": ["Normal", "Gold", "Gummi", "Holofoil"],
     "Vini Jr": ["Normal"],
     "Pollo": ["Normal"],
-    "Earth": NO_HOLO,
-    "Duck": NO_HOLO,
-    "Demon": NO_HOLO,
-    "Dream": NO_HOLO,
-    "Punk": NO_HOLO,
-    "Zero Point": NO_HOLO,
-    "Fishy": NO_HOLO,
-    "Aura": NO_HOLO,
-    "Boss": NO_HOLO,
-    "Reaper": NO_HOLO,
   };
   function variantsForSprite(sprite) { return SPRITE_VARIANT_OVERRIDES[sprite] || VARIANTS; }
   function activeVariantsForSprite(sprite) { return variantsForSprite(sprite).filter(v => activeVariants().includes(v)); }
