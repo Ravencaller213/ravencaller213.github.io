@@ -374,9 +374,13 @@
   const RENAMES = { "Fish": "Fishy", "Foundation": "Seven" };
   const VARIANT_RENAMES = { "Crystal": "Gem" };
 
-  // The old "Include?" panel let you toggle Gem/Cube out of the grid entirely;
-  // removed per request, so these three just return everything now.
-  function activeVariants() { return VARIANTS; }
+  // Gem/Cube are hidden from the grid for now — not deleted, just not shown.
+  // Nothing about them is removed elsewhere (VARIANTS, VCLS, per-sprite
+  // overrides, image lookups all still know about them); this is only a
+  // display filter. To bring them back, empty this array (or reintroduce the
+  // old Include? checkboxes and drive it from there instead).
+  const HIDDEN_VARIANTS = ["Gem", "Cube"];
+  function activeVariants() { return VARIANTS.filter(v => !HIDDEN_VARIANTS.includes(v)); }
   function activeSprites() { return SPRITES; }
   function activeAllSprites() {
     const idx = SPRITES.indexOf("King");
