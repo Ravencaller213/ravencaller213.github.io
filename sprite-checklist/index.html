@@ -110,18 +110,12 @@
     .stat-block { display: grid; grid-template-columns: 108px 1fr; column-gap: 0.9rem; row-gap: 0.4rem; align-items: center; }
     .stat-top { display: contents; }
     .stat-bottom { display: contents; }
-    .frame-subgroup { display: flex; flex-direction: column; gap: 0.4rem; }
     .frame-legend { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); padding: 0 0.2rem; }
-    .frame { border: 1px solid var(--border); border-radius: 12px; padding: 0.8rem; display: flex; flex-direction: column; gap: 0.6rem; background: var(--surface-hi); }
-    .frame-sub { padding: 0.6rem 0.7rem; gap: 0.5rem; }
 
     .filter-field { display: flex; flex-direction: column; gap: 0.25rem; }
     .filter-field label { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); font-style: italic; }
     .filter-select { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: var(--text); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.45rem 0.6rem; cursor: pointer; }
     .filter-select:hover { border-color: var(--border-hi); }
-
-    .toggle-chip { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--text-dim); cursor: pointer; user-select: none; }
-    .toggle-chip input[type="checkbox"] { accent-color: var(--opal-4); width: 13px; height: 13px; cursor: pointer; flex-shrink: 0; }
 
     .btn { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.03em; color: var(--text-dim); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 99px; padding: 0.5rem 1.1rem; cursor: pointer; transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease; }
     .btn:hover { color: var(--text); border-color: var(--border-hi); }
@@ -253,7 +247,7 @@
       <div class="frame-legend">Filters</div>
       <div class="filter-field">
         <label for="collectionFilter">Collection</label>
-        <select class="filter-select" id="collectionFilter" onchange="onFilterChange()">
+        <select class="filter-select" id="collectionFilter" autocomplete="off" onchange="onFilterChange()">
           <option value="all">All</option>
           <option value="owned">Owned</option>
           <option value="unowned">Unowned</option>
@@ -261,18 +255,11 @@
       </div>
       <div class="filter-field">
         <label for="masteryFilter">Mastery</label>
-        <select class="filter-select" id="masteryFilter" onchange="onFilterChange()">
+        <select class="filter-select" id="masteryFilter" autocomplete="off" onchange="onFilterChange()">
           <option value="all">All</option>
           <option value="unmastered">Unmastered</option>
           <option value="mastered">Mastered</option>
         </select>
-      </div>
-      <div class="frame-subgroup">
-        <div class="frame-legend">Include?</div>
-        <div class="frame frame-sub">
-          <label class="toggle-chip"><input type="checkbox" id="include-Gem" checked onchange="toggleInclude('Gem', this.checked)"><span class="v-crystal">Gem</span></label>
-          <label class="toggle-chip"><input type="checkbox" id="include-Cube" checked onchange="toggleInclude('Cube', this.checked)">Cube</label>
-        </div>
       </div>
     </div>
 
@@ -387,33 +374,13 @@
   const RENAMES = { "Fish": "Fishy", "Foundation": "Seven" };
   const VARIANT_RENAMES = { "Crystal": "Gem" };
 
-  const EXCLUDABLE_VARIANTS = ["Gem", "Cube"];
-  const INCLUDE_KEY = "fn_sprites_include_v1";
-
-  let included = { Gem: true, Cube: true };
-  try {
-    const savedInclude = localStorage.getItem(INCLUDE_KEY);
-    if (savedInclude) included = { ...included, ...JSON.parse(savedInclude) };
-  } catch (e) {}
-  if ("Crystal" in included) { included.Gem = included.Crystal; delete included.Crystal; }
-  delete included.Holofoil;
-  delete included.Air;
-  delete included.Foundation;
-
-  function saveInclude() { try { localStorage.setItem(INCLUDE_KEY, JSON.stringify(included)); } catch (e) {} }
-  function activeVariants() { return VARIANTS.filter(v => included[v] !== false); }
-  function activeSprites() { return SPRITES.filter(s => included[s] !== false); }
+  // The old "Include?" panel let you toggle Gem/Cube out of the grid entirely;
+  // removed per request, so these three just return everything now.
+  function activeVariants() { return VARIANTS; }
+  function activeSprites() { return SPRITES; }
   function activeAllSprites() {
-    const as = activeSprites();
-    const idx = as.indexOf("King");
-    return [...as.slice(0, idx + 1), BURNT, ...as.slice(idx + 1)];
-  }
-  function toggleInclude(name, checked) { included[name] = checked; saveInclude(); render(); }
-  function syncIncludeCheckboxes() {
-    Object.keys(included).forEach(name => {
-      const cb = document.getElementById("include-" + name);
-      if (cb) cb.checked = included[name] !== false;
-    });
+    const idx = SPRITES.indexOf("King");
+    return [...SPRITES.slice(0, idx + 1), BURNT, ...SPRITES.slice(idx + 1)];
   }
 
   const LEVEL_LABEL = { 0: "none", 1: "collected", 2: "mastered" };
@@ -740,9 +707,19 @@
     reader.readAsText(file);
   }
 
+  // Some browsers restore <select> values across a page refresh even with fresh
+  // JS state, which made the Collection/Mastery dropdowns visually look "stuck"
+  // on the last filter you picked even though collectionFilter/masteryFilter
+  // above are already freshly initialized to "all" every load. Force both the
+  // JS state and the DOM controls back to "all" explicitly so a refresh always
+  // means a real reset, in both what's shown and what's applied.
+  collectionFilter = "all";
+  masteryFilter = "all";
+  document.getElementById("collectionFilter").value = "all";
+  document.getElementById("masteryFilter").value = "all";
+
   updateGroupButton();
   updateViewModeButton();
-  syncIncludeCheckboxes();
   render();
 </script>
 
