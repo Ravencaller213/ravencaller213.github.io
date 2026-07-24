@@ -379,7 +379,7 @@
   // overrides, image lookups all still know about them); this is only a
   // display filter. To bring them back, empty this array (or reintroduce the
   // old Include? checkboxes and drive it from there instead).
-  const HIDDEN_VARIANTS = ["Gem", "Cube"];
+  const HIDDEN_VARIANTS = ["Gem"];
   function activeVariants() { return VARIANTS.filter(v => !HIDDEN_VARIANTS.includes(v)); }
   function activeSprites() { return SPRITES; }
   function activeAllSprites() {
