@@ -91,15 +91,13 @@
        already scale to the section's content width. */
     .tool-section-filters { width: 140px; flex: 0 0 140px; }
 
-    /* Section 3 (Save): 120px wide, buttons centered to 100px — 10px buffer each
-       side. Buttons flex to fill whatever vertical room the row has (Filters is
-       the tallest section, so Save's buttons stretch to match), landing in the
-       ~70-95px range depending on content. Rectangular now (not the pill radius),
-       icon glyph above a small label. */
-    .tool-section-save { width: 120px; flex: 0 0 120px; }
-    .tool-section-save .btn { width: 100px; flex: 1 1 0; min-height: 70px; max-height: 95px; margin: 0 auto; padding: 0; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
-    .save-icon { font-size: 1.35rem; line-height: 1; }
-    .save-label { font-size: 0.66rem; letter-spacing: 0.03em; }
+    /* Section 3 (Save): 120px wide, buttons centered to 96px. Shrunk to fit a
+       third button (Export Missing) — same idea as the View section, smaller
+       footprint per button so three fit where two used to. */
+    .tool-section-save { width: 120px; flex: 0 0 120px; gap: 6px; }
+    .tool-section-save .btn { width: 96px; flex: 1 1 0; min-height: 48px; max-height: 72px; margin: 0 auto; padding: 0 4px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+    .save-icon { font-size: 1.1rem; line-height: 1; }
+    .save-label { font-size: 0.6rem; letter-spacing: 0.02em; text-align: center; line-height: 1.15; }
 
     /* Section 4 (Completion): takes whatever width is left in the frame. Label
        stays pinned top-left like the others; the bars live in their own centered
@@ -218,6 +216,18 @@
     footer p { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.05em; }
     footer a { color: var(--opal-3); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
+
+    /* Small format-choice modal for Export Missing — native confirm()/alert()
+       can't have custom button labels, so this is a real dialog with the two
+       actual options spelled out instead of OK/Cancel. */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(5,5,10,0.7); display: none; align-items: center; justify-content: center; z-index: 50; padding: 1rem; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: var(--surface); border: 1px solid var(--border-hi); border-radius: 14px; padding: 1.5rem; max-width: 340px; width: 100%; display: flex; flex-direction: column; gap: 1rem; }
+    .modal-box h3 { font-size: 1rem; font-weight: 600; color: var(--text); }
+    .modal-box p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
+    .modal-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .modal-actions .btn { flex: 1 1 auto; padding: 0.6rem 0.8rem; }
+    .modal-actions .btn-cancel { flex: 1 1 100%; color: var(--text-faint); }
   </style>
 </head>
 <body>
@@ -280,11 +290,14 @@
     <div class="tool-section tool-section-save">
       <div class="frame-legend">Save</div>
       <button class="btn accent save-btn" onclick="document.getElementById('importFile').click()">
-        <span class="save-icon">&#8681;</span><span class="save-label">Import</span>
+        <span class="save-icon">&#8681;</span><span class="save-label">Import JSON</span>
       </button>
       <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this.files[0])">
       <button class="btn accent save-btn" onclick="exportState()">
-        <span class="save-icon">&#8679;</span><span class="save-label">Export</span>
+        <span class="save-icon">&#8679;</span><span class="save-label">Export Full JSON</span>
+      </button>
+      <button class="btn accent save-btn" onclick="exportMissing()">
+        <span class="save-icon">&#8679;</span><span class="save-label">Export Missing</span>
       </button>
     </div>
 
@@ -337,6 +350,18 @@
     <p>ravencaller213 &middot; sprite checklist</p>
     <p><a href="compare.html">compare with a friend</a> &middot; <a href="index-OG.html">back to card view</a></p>
   </footer>
+
+  <div class="modal-overlay" id="missingExportModal">
+    <div class="modal-box">
+      <h3>Export missing as&hellip;</h3>
+      <p>Pick a format for the sprites and variants you haven't collected yet.</p>
+      <div class="modal-actions">
+        <button class="btn accent" onclick="confirmExportMissing('json')">JSON</button>
+        <button class="btn accent" onclick="confirmExportMissing('list')">Plain List</button>
+        <button class="btn btn-cancel" onclick="closeMissingExportModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
 
 </div><!-- end .page -->
 
@@ -701,7 +726,7 @@
     save(); render();
   }
 
-  const VARIANT_KEY = { Normal: "normal", Gold: "gold", Gummi: "gummi", Galaxy: "galaxy", Holofoil: "holofoil", Gem: "gem", Cube: "cube" };
+  const VARIANT_KEY = { Normal: "normal", Gold: "gold", Gummi: "gummi", Galaxy: "galaxy", Holofoil: "holofoil", Gem: "gem", Cube: "cube", Quack: "quack" };
   const VARIANT_KEY_REVERSE = Object.fromEntries(Object.entries(VARIANT_KEY).map(([k, v]) => [v, k]));
 
   function buildFullExport() {
@@ -720,6 +745,57 @@
     a.download = "fortnite_sprites_save.json";
     a.click();
     URL.revokeObjectURL(a.href);
+  }
+
+  // Only ever-visible/trackable variants (respects the Gem hide, and whatever
+  // sort order — including By Rarity — is currently active), just like what's
+  // actually on screen right now.
+  function getMissingEntries() {
+    const entries = [];
+    activeAllSprites().forEach(sprite => {
+      activeVariantsForSprite(sprite).forEach(variant => {
+        const lvl = state[sprite + "||" + variant] || 0;
+        if (lvl === 0) entries.push({ sprite, variant });
+      });
+    });
+    return entries;
+  }
+  function buildMissingExportJSON() {
+    const bySprite = {};
+    getMissingEntries().forEach(({ sprite, variant }) => {
+      if (!bySprite[sprite]) bySprite[sprite] = {};
+      bySprite[sprite][VARIANT_KEY[variant]] = "none";
+    });
+    return Object.keys(bySprite).map(sprite => ({ sprite, variants: bySprite[sprite] }));
+  }
+  function downloadBlob(content, type, filename) {
+    const blob = new Blob([content], { type });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+  function exportMissingJSON() {
+    downloadBlob(JSON.stringify(buildMissingExportJSON(), null, 2), "application/json", "fortnite_sprites_missing.json");
+  }
+  function exportMissingPlainList() {
+    const lines = getMissingEntries().map(({ sprite, variant }) => `${sprite} - ${variant}`);
+    downloadBlob(lines.join("\n") + (lines.length ? "\n" : ""), "text/plain", "fortnite_sprites_missing.txt");
+  }
+  function exportMissing() {
+    if (getMissingEntries().length === 0) {
+      alert("Nothing missing — every visible variant is already collected!");
+      return;
+    }
+    document.getElementById("missingExportModal").classList.add("open");
+  }
+  function closeMissingExportModal() {
+    document.getElementById("missingExportModal").classList.remove("open");
+  }
+  function confirmExportMissing(format) {
+    closeMissingExportModal();
+    if (format === "json") exportMissingJSON(); else exportMissingPlainList();
   }
   function parseImport(data) {
     let flat = {};
