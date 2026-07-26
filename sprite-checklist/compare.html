@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compare — ravencaller</title>
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Serif+Display:ital@1&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:          #09090d;
+      --surface:     #0f0f18;
+      --surface-hi:  #15151f;
+      --border:      rgba(180,160,255,0.12);
+      --border-hi:   rgba(180,160,255,0.32);
+      --opal-1: #7b6fff;
+      --opal-2: #4dd9c0;
+      --opal-3: #a78bfa;
+      --opal-4: #38bdf8;
+      --opal-5: #6ee7b7;
+      --text:        #ddd8f0;
+      --text-dim:    #7a7495;
+      --text-faint:  #4f4a63;
+      --radius:      14px;
+      --v-gold-1: #f5c842; --v-gold-2: #e8972a;
+      --v-gummi-1: #e84545; --v-gummi-2: #50c878;
+      --v-galaxy-1: #a855f7; --v-galaxy-2: #22c55e; --v-galaxy-3: #3b82f6;
+      --v-holo-1: #e8e8f8; --v-holo-2: #c8d8f0; --v-holo-3: #d8c8f0;
+      --v-crystal-1: #f9a8d4; --v-crystal-2: #a5f3fc; --v-crystal-3: #c4b5fd; --v-crystal-4: #fbcfe8;
+      --v-cube-1: #0a0510; --v-cube-2: #7b2ff7; --v-cube-outline: #e619c9;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background-color: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
+
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 10%,  rgba(123,111,255,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 35% at 80% 80%,  rgba(77,217,192,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 70% 20%,  rgba(167,139,250,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 30% at 10% 90%,  rgba(56,189,248,0.04) 0%, transparent 70%);
+    }
+
+    .page { position: relative; z-index: 1; max-width: min(96vw, 1900px); margin: 0 auto; padding: 0 2rem 6rem; }
+
+    nav.top { padding: 2rem 0 0; display: flex; justify-content: space-between; align-items: center; }
+    .nav-back { font-size: 0.85rem; color: var(--text-dim); text-decoration: none; letter-spacing: 0.02em; transition: color 0.25s ease; display: inline-flex; align-items: center; gap: 0.4rem; }
+    .nav-back:hover { color: var(--opal-4); }
+    .nav-tag { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--border-hi); color: var(--text-dim); }
+
+    header { padding: 2.5rem 0 2rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+    .wordmark {
+      font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(2.2rem, 5vw, 3.4rem); letter-spacing: -0.02em; line-height: 1;
+      background: linear-gradient(105deg, var(--opal-3) 0%, var(--text) 28%, var(--opal-4) 50%, var(--text) 72%, var(--opal-2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200% 100%;
+      animation: shimmer 8s ease-in-out infinite alternate;
+    }
+    @keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+    .tagline { font-size: 0.9rem; color: var(--text-dim); letter-spacing: 0.04em; max-width: 680px; line-height: 1.7; }
+
+    .divider { width: 100%; height: 1px; margin-bottom: 2rem; background: linear-gradient(90deg, transparent 0%, var(--opal-1) 20%, var(--opal-2) 50%, var(--opal-3) 80%, transparent 100%); opacity: 0.35; }
+
+    .frame-legend { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); padding: 0 0.2rem; }
+
+    .btn { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.03em; color: var(--text-dim); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 99px; padding: 0.5rem 1.1rem; cursor: pointer; transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease; }
+    .btn:hover { color: var(--text); border-color: var(--border-hi); }
+    .btn.accent { color: var(--opal-4); border-color: rgba(56,189,248,0.35); }
+    .btn.accent:hover { background: rgba(56,189,248,0.08); }
+    .btn.small { padding: 0.4rem 0.85rem; font-size: 0.72rem; }
+
+    /* Two source panels side by side — one per person. Each has a toggle between
+       "use my saved progress" (only meaningful for Person A, who's presumably
+       using this browser) and "upload an export file" (the only option for
+       Person B, since there's no shared localStorage between two people). */
+    .compare-sources { display: flex; gap: 1.4rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .source-panel { flex: 1 1 320px; min-width: 280px; border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1.3rem; background: var(--surface); display: flex; flex-direction: column; gap: 0.75rem; }
+    .source-panel h2 { font-size: 0.95rem; font-weight: 500; color: var(--text); }
+    .source-toggle { display: flex; gap: 0.5rem; }
+    .source-toggle button.active { color: var(--opal-4); border-color: rgba(56,189,248,0.35); background: rgba(56,189,248,0.08); }
+    .name-input { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--text); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 0.7rem; }
+    .name-input::placeholder { color: var(--text-faint); }
+    .source-status { font-size: 0.75rem; color: var(--text-dim); min-height: 1.1em; }
+    .source-status.ready { color: var(--opal-5); }
+    .source-status.error { color: #f28b82; }
+
+    /* Results: two columns, each just a plain flat grid of the sprite/variant
+       tiles unique to that person — reuses the same tile markup/styling as the
+       filtered views on the main tracker page. */
+    .compare-results { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 860px) { .compare-results { grid-template-columns: 1fr; } }
+    .compare-col { border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); padding: 1rem; overflow: auto; max-height: calc(100vh - 3rem); }
+    .compare-col h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.9rem; }
+    .compare-col.col-a h3 { color: var(--opal-4); }
+    .compare-col.col-b h3 { color: var(--opal-3); }
+    .compare-count { font-size: 0.75rem; color: var(--text-dim); font-weight: 400; margin-left: 0.4rem; }
+    .compare-empty { padding: 1.5rem; color: var(--text-dim); font-size: 0.85rem; }
+
+    .cell { width: 100%; aspect-ratio: 1 / 1; border-radius: 10px; background: var(--surface-hi); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; position: relative; }
+    .cell::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1; background: transparent; }
+    .cell.collected { border-color: var(--opal-4); }
+    .cell.collected::after { background: rgba(56, 189, 248, 0.34); }
+    .cell.mastered { border-color: rgba(245, 200, 66, 0.7); }
+    .cell.mastered::after { background: linear-gradient(135deg, rgba(245, 200, 66, 0.4), rgba(232, 151, 42, 0.4)); }
+    .cell img { width: 100%; height: 100%; object-fit: contain; border-radius: 9px; padding: 4px; }
+    .cell .placeholder { width: 70%; height: 70%; border-radius: 8px; border: 1px dashed var(--border-hi); }
+    .cell .badge { position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; background: var(--opal-4); color: var(--bg); z-index: 2; }
+    .cell.mastered .badge { background: linear-gradient(135deg, #f5c842, #e8972a); color: #3a2a06; }
+    /* At the 48px thumbnail size used in the compare rows, the badge scales
+       down too so it doesn't dominate the tiny square. */
+    .filtered-tile .cell .badge { width: 13px; height: 13px; font-size: 7px; top: -4px; right: -4px; }
+
+    /* Rows instead of square tiles: small fixed-size thumbnail on the left,
+       larger name text to its right — easier to scan a long "unique to" list
+       than a wall of squares, since the sprite/variant name is the part that
+       actually matters here. */
+    .filtered-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; padding: 0.4rem; }
+    .filtered-tile { display: flex; flex-direction: row; align-items: center; gap: 12px; }
+    .filtered-tile .cell { width: 48px; flex: 0 0 48px; }
+    .filtered-tile-label { font-size: 1.05rem; font-weight: 500; color: var(--text); text-align: left; line-height: 1.3; }
+
+    .v-normal { color: #c8c8d8; }
+    .v-gold   { background: linear-gradient(90deg, var(--v-gold-1), var(--v-gold-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    .v-gummi  { background: linear-gradient(90deg, var(--v-gummi-1), var(--v-gummi-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    .v-galaxy { background: linear-gradient(90deg, var(--v-galaxy-1), var(--v-galaxy-2), var(--v-galaxy-3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    .v-holofoil { background: linear-gradient(90deg, var(--v-crystal-1), var(--v-crystal-2), var(--v-crystal-3), var(--v-crystal-4)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    .v-crystal { background: linear-gradient(90deg, var(--v-holo-1), var(--v-holo-2), var(--v-holo-3), var(--v-holo-1)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    .v-cube { background: linear-gradient(135deg, var(--v-cube-1), var(--v-cube-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
+
+    .rarity-rare { color: #00fffb; }
+    .rarity-epic { color: #d825ee; }
+    .rarity-legendary { color: #fbc363; }
+    .rarity-mythic { color: #fff0a6; }
+
+    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+    footer p { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.05em; }
+    footer a { color: var(--opal-3); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <nav class="top">
+    <a class="nav-back" href="index.html">&larr; sprite checklist</a>
+    <span class="nav-tag">Compare</span>
+  </nav>
+
+  <header>
+    <h1 class="wordmark">Compare</h1>
+    <p class="tagline">
+      See what's unique to each collection. Person A defaults to your saved progress on this browser
+      (or upload an export instead); Person B always needs an uploaded export.
+    </p>
+  </header>
+
+  <div class="divider"></div>
+
+  <div class="compare-sources">
+
+    <div class="source-panel">
+      <h2>Person A</h2>
+      <input class="name-input" id="nameA" type="text" placeholder="Person A" oninput="onNameChange()" />
+      <div class="source-toggle">
+        <button class="btn small accent active" id="modeA-saved" onclick="setSourceModeA('saved')">Use saved progress</button>
+        <button class="btn small" id="modeA-upload" onclick="setSourceModeA('upload')">Upload export</button>
+      </div>
+      <button class="btn small accent" id="uploadBtnA" style="display:none" onclick="document.getElementById('fileA').click()">Choose file&hellip;</button>
+      <input type="file" id="fileA" accept="application/json" style="display:none" onchange="handleUpload('A', this.files[0])" />
+      <div class="source-status" id="statusA"></div>
+    </div>
+
+    <div class="source-panel">
+      <h2>Person B</h2>
+      <input class="name-input" id="nameB" type="text" placeholder="Person B" oninput="onNameChange()" />
+      <button class="btn small accent" onclick="document.getElementById('fileB').click()">Choose file&hellip;</button>
+      <input type="file" id="fileB" accept="application/json" style="display:none" onchange="handleUpload('B', this.files[0])" />
+      <div class="source-status" id="statusB">Upload an export to compare.</div>
+    </div>
+
+  </div>
+
+  <div class="compare-results" id="results">
+    <div class="compare-col col-a">
+      <h3 id="headerA">Unique to Person A</h3>
+      <div id="listA"></div>
+    </div>
+    <div class="compare-col col-b">
+      <h3 id="headerB">Unique to Person B</h3>
+      <div id="listB"></div>
+    </div>
+  </div>
+
+  <footer>
+    <p>ravencaller213 &middot; sprite collection compare</p>
+    <p><a href="index.html">back to sprite checklist</a></p>
+  </footer>
+
+</div><!-- end .page -->
+
+<script>
+  // ---- Data layer, copied from sprite-checklist/index.html so this page knows
+  // the same sprites/variants/valid-combo rules. Kept in sync by hand whenever
+  // the main tracker's roster or overrides change. ----
+  const SPRITES = ["Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Batman","Vini Jr","Pollo"];
+  const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube","Quack"];
+  const BURNT = "Burnt Peanut";
+  const ALL_SPRITES = [...SPRITES.slice(0, SPRITES.indexOf("King") + 1), BURNT, ...SPRITES.slice(SPRITES.indexOf("King") + 1)];
+  const KEY = "fn_sprites_v1";
+  const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Gem: "v-crystal", Cube: "v-cube" };
+
+  const SPRITE_RARITY = {
+    "Water": "Rare", "Earth": "Rare", "Fire": "Rare", "Fishy": "Rare", "Air": "Rare",
+    "Duck": "Epic", "Ghost": "Epic", "Demon": "Epic", "King": "Epic", "Striker": "Epic", "Aura": "Epic",
+    "Dream": "Legendary", "Punk": "Legendary", "Boss": "Legendary", "Reaper": "Legendary", "Seven": "Legendary",
+    "Zero Point": "Mythic", "Batman": "Mythic", [BURNT]: "Mythic", "Vini Jr": "Mythic", "Pollo": "Mythic",
+  };
+  const RARITY_CLS = { Rare: "rarity-rare", Epic: "rarity-epic", Legendary: "rarity-legendary", Mythic: "rarity-mythic" };
+  function spriteRarityClass(sprite) { return RARITY_CLS[SPRITE_RARITY[sprite]] || ""; }
+
+  const SPRITE_VARIANT_OVERRIDES = {
+    "Water": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem"],
+    "Earth": ["Normal", "Gold", "Gummi", "Galaxy", "Gem", "Cube"],
+    "Fire": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Cube"],
+    "Fishy": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
+    "Duck": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem"],
+    "Ghost": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    "Demon": ["Normal", "Gold", "Gummi", "Galaxy", "Gem"],
+    "King": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    "Striker": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    "Aura": ["Normal", "Gold", "Gummi", "Galaxy", "Gem"],
+    "Air": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    "Dream": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
+    "Punk": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
+    "Boss": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
+    "Reaper": ["Normal", "Gold", "Gummi", "Galaxy"],
+    "Seven": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    "Zero Point": ["Normal", "Gold", "Gummi", "Galaxy", "Gem", "Quack"],
+    "Batman": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    [BURNT]: ["Normal"],
+    "Vini Jr": ["Normal"],
+    "Pollo": ["Normal"],
+  };
+  function variantsForSprite(sprite) { return SPRITE_VARIANT_OVERRIDES[sprite] || VARIANTS; }
+
+  const RENAMES = { "Fish": "Fishy", "Foundation": "Seven" };
+  const VARIANT_RENAMES = { "Crystal": "Gem" };
+
+  // Same Gem hide as the main tracker, kept in sync so "unique to" results don't
+  // surface a variant that's currently hidden from the live grid.
+  const HIDDEN_VARIANTS = ["Gem"];
+  function activeVariantsForSprite(sprite) { return variantsForSprite(sprite).filter(v => !HIDDEN_VARIANTS.includes(v)); }
+  function activeAllSprites() { return ALL_SPRITES; }
+
+  const LABEL_LEVEL = { none: 0, collected: 1, mastered: 2 };
+  function valueToLevel(v) {
+    if (typeof v === "string") { const n = LABEL_LEVEL[v.toLowerCase()]; return n === undefined ? 0 : n; }
+    if (v === true) return 1;
+    if (typeof v === "number" && !isNaN(v)) return Math.max(0, Math.min(2, Math.round(v)));
+    return 0;
+  }
+  function normalizeStateLevels(obj) {
+    const result = {};
+    Object.keys(obj || {}).forEach(k => { const lvl = valueToLevel(obj[k]); if (lvl > 0) result[k] = lvl; });
+    return result;
+  }
+  function migrateState(obj) {
+    const result = { ...(obj && typeof obj === "object" ? obj : {}) };
+    Object.keys(RENAMES).forEach(oldName => {
+      const newName = RENAMES[oldName];
+      const prefix = oldName + "||";
+      Object.keys(result).forEach(key => {
+        if (!key.startsWith(prefix)) return;
+        const newKey = newName + "||" + key.slice(prefix.length);
+        if (result[key]) result[newKey] = result[key];
+        delete result[key];
+      });
+    });
+    Object.keys(VARIANT_RENAMES).forEach(oldName => {
+      const newName = VARIANT_RENAMES[oldName];
+      const suffix = "||" + oldName;
+      Object.keys(result).forEach(key => {
+        if (!key.endsWith(suffix)) return;
+        const newKey = key.slice(0, -suffix.length) + "||" + newName;
+        if (result[key]) result[newKey] = result[key];
+        delete result[key];
+      });
+    });
+    return normalizeStateLevels(result);
+  }
+  const VARIANT_KEY = { Normal: "normal", Gold: "gold", Gummi: "gummi", Galaxy: "galaxy", Holofoil: "holofoil", Gem: "gem", Cube: "cube", Quack: "quack" };
+  const VARIANT_KEY_REVERSE = Object.fromEntries(Object.entries(VARIANT_KEY).map(([k, v]) => [v, k]));
+  function parseImport(data) {
+    let flat = {};
+    if (Array.isArray(data)) {
+      data.forEach(entry => {
+        if (!entry || typeof entry !== "object" || !entry.sprite || typeof entry.variants !== "object") return;
+        Object.keys(entry.variants).forEach(vKey => {
+          const variantName = VARIANT_KEY_REVERSE[vKey.toLowerCase()] || (vKey.charAt(0).toUpperCase() + vKey.slice(1).toLowerCase());
+          flat[entry.sprite + "||" + variantName] = valueToLevel(entry.variants[vKey]);
+        });
+      });
+    } else if (data && typeof data === "object") {
+      Object.keys(data).forEach(k => { flat[k] = valueToLevel(data[k]); });
+    }
+    return migrateState(flat);
+  }
+  function imgPath(sprite, variant) {
+    return "images/" + sprite.toLowerCase().replace(/ /g, "_") + "_" + variant.toLowerCase() + ".webp";
+  }
+
+  const missingImages = new Set();
+  function markImageMissing(src, imgEl) {
+    missingImages.add(src);
+    imgEl.replaceWith(Object.assign(document.createElement("div"), { className: "placeholder" }));
+  }
+
+  // Read-only tile — no click-to-cycle here, this page only displays two other
+  // states side by side. Still shows the collected/mastered badge for context.
+  function tileHTML(sprite, variant, level) {
+    const stateClass = level === 2 ? " mastered" : level === 1 ? " collected" : "";
+    const badge = level === 2 ? "★" : level === 1 ? "✓" : "";
+    const src = imgPath(sprite, variant);
+    const imageOrPlaceholder = missingImages.has(src)
+      ? `<div class="placeholder"></div>`
+      : `<img src="${src}" alt="" onerror="markImageMissing('${src}', this)">`;
+    return `<div class="filtered-tile">
+        <div class="cell${stateClass}">
+          ${imageOrPlaceholder}
+          ${badge ? `<span class="badge">${badge}</span>` : ""}
+        </div>
+        <div class="filtered-tile-label"><span class="${spriteRarityClass(sprite)}">${sprite}</span> &middot; <span class="${VCLS[variant] || ''}">${variant}</span></div>
+      </div>`;
+  }
+
+  // ---- Compare-page-specific state ----
+  let stateA = null, stateB = null;
+  let sourceModeA = "saved"; // "saved" | "upload"
+
+  function setSourceModeA(mode) {
+    sourceModeA = mode;
+    document.getElementById("modeA-saved").classList.toggle("active", mode === "saved");
+    document.getElementById("modeA-upload").classList.toggle("active", mode === "upload");
+    document.getElementById("uploadBtnA").style.display = mode === "upload" ? "" : "none";
+    if (mode === "saved") loadSavedA();
+  }
+
+  function loadSavedA() {
+    try {
+      const saved = localStorage.getItem(KEY);
+      stateA = migrateState(saved ? JSON.parse(saved) : {});
+      const count = Object.keys(stateA).length;
+      setStatus("statusA", count > 0 ? `Loaded ${count} saved entr${count === 1 ? "y" : "ies"} from this browser.` : "No saved progress found on this browser yet.", count > 0 ? "ready" : "");
+    } catch (e) {
+      stateA = {};
+      setStatus("statusA", "Couldn't read saved progress from this browser.", "error");
+    }
+    recompute();
+  }
+
+  function handleUpload(who, file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        const parsed = parseImport(data);
+        const count = Object.keys(parsed).length;
+        if (who === "A") { stateA = parsed; setStatus("statusA", `Loaded ${count} entr${count === 1 ? "y" : "ies"} from ${file.name}.`, "ready"); }
+        else { stateB = parsed; setStatus("statusB", `Loaded ${count} entr${count === 1 ? "y" : "ies"} from ${file.name}.`, "ready"); }
+        recompute();
+      } catch (err) {
+        setStatus(who === "A" ? "statusA" : "statusB", "Couldn't read that file — expected a JSON export from this tracker.", "error");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function setStatus(id, text, cls) {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = "source-status" + (cls ? " " + cls : "");
+  }
+
+  // Single source of truth for both header labels, so editing a name field and
+  // recomputing the diff can never clobber each other's part of the text —
+  // each just updates its own piece of state and re-renders from both.
+  let lastCounts = { a: 0, b: 0 };
+  function renderHeaders() {
+    const nameA = document.getElementById("nameA").value.trim() || "Person A";
+    const nameB = document.getElementById("nameB").value.trim() || "Person B";
+    document.getElementById("headerA").textContent = `Unique to ${nameA} (${lastCounts.a})`;
+    document.getElementById("headerB").textContent = `Unique to ${nameB} (${lastCounts.b})`;
+  }
+  function onNameChange() { renderHeaders(); }
+
+  // Only ownership matters here (level >= 1), not mastery — dying with a
+  // mastered vs. freshly-collected sprite on you doesn't change who "has" it.
+  function computeDiff() {
+    const uniqueA = [], uniqueB = [];
+    activeAllSprites().forEach(sprite => {
+      activeVariantsForSprite(sprite).forEach(variant => {
+        const key = sprite + "||" + variant;
+        const lvlA = (stateA && stateA[key]) || 0;
+        const lvlB = (stateB && stateB[key]) || 0;
+        const ownedA = lvlA >= 1, ownedB = lvlB >= 1;
+        if (ownedA && !ownedB) uniqueA.push({ sprite, variant, level: lvlA });
+        else if (ownedB && !ownedA) uniqueB.push({ sprite, variant, level: lvlB });
+      });
+    });
+    return { uniqueA, uniqueB };
+  }
+
+  function renderColumn(elId, items) {
+    const el = document.getElementById(elId);
+    if (items.length === 0) {
+      el.innerHTML = `<div class="compare-empty">Nothing unique here.</div>`;
+      return;
+    }
+    el.innerHTML = `<div class="filtered-grid">${items.map(i => tileHTML(i.sprite, i.variant, i.level)).join("")}</div>`;
+  }
+
+  function recompute() {
+    if (!stateA || !stateB) {
+      document.getElementById("listA").innerHTML = "";
+      document.getElementById("listB").innerHTML = `<div class="compare-empty">Waiting on both sources&hellip;</div>`;
+      lastCounts = { a: 0, b: 0 };
+      renderHeaders();
+      return;
+    }
+    const { uniqueA, uniqueB } = computeDiff();
+    renderColumn("listA", uniqueA);
+    renderColumn("listB", uniqueB);
+    lastCounts = { a: uniqueA.length, b: uniqueB.length };
+    renderHeaders();
+  }
+
+  // Default: Person A pulls from this browser's saved progress immediately;
+  // Person B waits on an upload since there's no shared storage for two people.
+  loadSavedA();
+</script>
+
+</body>
+</html>

@@ -30,6 +30,7 @@
       --v-galaxy-1: #a855f7; --v-galaxy-2: #22c55e; --v-galaxy-3: #3b82f6;
       --v-holo-1: #e8e8f8; --v-holo-2: #c8d8f0; --v-holo-3: #d8c8f0;
       --v-crystal-1: #f9a8d4; --v-crystal-2: #a5f3fc; --v-crystal-3: #c4b5fd; --v-crystal-4: #fbcfe8;
+      --v-cube-1: #0a0510; --v-cube-2: #7b2ff7; --v-cube-outline: #e619c9;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -78,11 +79,13 @@
 
     /* Section 1 (View): 140px wide. The label stays pinned to the top of the
        section; the buttons live in their own flex column beneath it that grows
-       to fill the remaining height and centers the (now slightly larger) 128x88
-       buttons within it. */
+       to fill the remaining height and centers the buttons within it. Shrunk
+       from 128x88 down to fit a third button (By Rarity) in roughly the same
+       vertical footprint the original two used to take up. */
     .tool-section-view { width: 140px; flex: 0 0 140px; }
-    .tool-section-view-buttons { display: flex; flex-direction: column; gap: 10px; flex: 1; justify-content: center; }
-    .tool-section-view .btn { width: 128px; height: 88px; margin: 0 auto; padding: 0; display: flex; align-items: center; justify-content: center; text-align: center; }
+    .tool-section-view-buttons { display: flex; flex-direction: column; gap: 8px; flex: 1; justify-content: center; }
+    .tool-section-view .btn { width: 120px; height: 52px; margin: 0 auto; padding: 0 6px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 0.72rem; line-height: 1.2; }
+    .tool-section-view .btn.active { background: rgba(56,189,248,0.16); border-color: rgba(56,189,248,0.55); color: var(--text); }
 
     /* Section 2 (Filters): same 140px width as View. Contents unchanged — they
        already scale to the section's content width. */
@@ -200,6 +203,16 @@
        next to it. */
     .v-holofoil { background: linear-gradient(90deg, var(--v-crystal-1), var(--v-crystal-2), var(--v-crystal-3), var(--v-crystal-4)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
     .v-crystal { background: linear-gradient(90deg, var(--v-holo-1), var(--v-holo-2), var(--v-holo-3), var(--v-holo-1)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    .v-cube { background: linear-gradient(135deg, var(--v-cube-1), var(--v-cube-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
+
+    /* Sprite names colored by rarity tier, independent of the variant coloring
+       above (variant names use v-*; sprite names use rarity-*). Applied wherever
+       a sprite's name renders as text: row/column labels in the table and the
+       sprite half of "Sprite · Variant" captions in filtered views. */
+    .rarity-rare { color: #00fffb; }
+    .rarity-epic { color: #d825ee; }
+    .rarity-legendary { color: #fbc363; }
+    .rarity-mythic { color: #fff0a6; }
 
     footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
     footer p { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.05em; }
@@ -239,6 +252,7 @@
           <span id="axisMain">Sprites</span>
           <span class="axis-sub">on rows</span>
         </button>
+        <button class="btn accent" id="raritySortBtn" onclick="toggleRaritySort()">By Rarity</button>
       </div>
     </div>
 
@@ -260,6 +274,7 @@
           <option value="mastered">Mastered</option>
         </select>
       </div>
+      <a class="btn accent" style="text-align:center; text-decoration:none;" href="compare.html">Compare</a>
     </div>
 
     <div class="tool-section tool-section-save">
@@ -320,7 +335,7 @@
 
   <footer>
     <p>ravencaller213 &middot; sprite checklist</p>
-    <p><a href="index-OG.html">back to card view</a></p>
+    <p><a href="compare.html">compare with a friend</a> &middot; <a href="index-OG.html">back to card view</a></p>
   </footer>
 
 </div><!-- end .page -->
@@ -333,7 +348,20 @@
   const BURNT = "Burnt Peanut";
   const ALL_SPRITES = [...SPRITES.slice(0, SPRITES.indexOf("King") + 1), BURNT, ...SPRITES.slice(SPRITES.indexOf("King") + 1)];
   const KEY = "fn_sprites_v1";
-  const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Gem: "v-crystal" };
+  const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Gem: "v-crystal", Cube: "v-cube" };
+
+  // Sprite name -> rarity tier, taken from the sprite tracking CSV's Rarity
+  // column, used to color sprite names independent of variant coloring.
+  const SPRITE_RARITY = {
+    "Water": "Rare", "Earth": "Rare", "Fire": "Rare", "Fishy": "Rare", "Air": "Rare",
+    "Duck": "Epic", "Ghost": "Epic", "Demon": "Epic", "King": "Epic", "Striker": "Epic", "Aura": "Epic",
+    "Dream": "Legendary", "Punk": "Legendary", "Boss": "Legendary", "Reaper": "Legendary", "Seven": "Legendary",
+    "Zero Point": "Mythic", "Batman": "Mythic", [BURNT]: "Mythic", "Vini Jr": "Mythic", "Pollo": "Mythic",
+  };
+  const RARITY_CLS = { Rare: "rarity-rare", Epic: "rarity-epic", Legendary: "rarity-legendary", Mythic: "rarity-mythic" };
+  function spriteRarityClass(sprite) { return RARITY_CLS[SPRITE_RARITY[sprite]] || ""; }
+  const RARITY_RANK = { Rare: 1, Epic: 2, Legendary: 3, Mythic: 4 };
+  function spriteRarityRank(sprite) { return RARITY_RANK[SPRITE_RARITY[sprite]] || 99; }
 
   // Every sprite's actual confirmed variant list, taken directly from the sprite
   // tracking CSV (Y/N per variant). No shortcuts/grouping constants — each entry
@@ -381,9 +409,22 @@
   const HIDDEN_VARIANTS = ["Gem"];
   function activeVariants() { return VARIANTS.filter(v => !HIDDEN_VARIANTS.includes(v)); }
   function activeSprites() { return SPRITES; }
+  // By Rarity is a plain on/off toggle (no dropdown), so its own button just
+  // reflects the current state visually via the "active" class rather than
+  // changing its label text the way View Mode/axis do.
+  let sortByRarity = false;
+  function toggleRaritySort() {
+    sortByRarity = !sortByRarity;
+    document.getElementById("raritySortBtn").classList.toggle("active", sortByRarity);
+    render();
+  }
   function activeAllSprites() {
     const idx = SPRITES.indexOf("King");
-    return [...SPRITES.slice(0, idx + 1), BURNT, ...SPRITES.slice(idx + 1)];
+    const base = [...SPRITES.slice(0, idx + 1), BURNT, ...SPRITES.slice(idx + 1)];
+    // Array.prototype.sort is stable (guaranteed since ES2019), so sprites
+    // within the same rarity tier keep their original relative order rather
+    // than getting shuffled every time this toggles.
+    return sortByRarity ? [...base].sort((a, b) => spriteRarityRank(a) - spriteRarityRank(b)) : base;
   }
 
   const LEVEL_LABEL = { 0: "none", 1: "collected", 2: "mastered" };
@@ -607,9 +648,9 @@
     const gridCols = "120px " + cols.map(() => "minmax(44px, 1fr)").join(" ");
     let html = `<div class="sprite-grid" style="grid-template-columns: ${gridCols};">`;
     html += `<div class="g-header row-label-col">${rowAxisLabel}</div>`;
-    cols.forEach(c => { html += `<div class="g-header"><span class="${groupBy === "sprite" ? (VCLS[c] || "") : ""}">${c}</span></div>`; });
+    cols.forEach(c => { html += `<div class="g-header"><span class="${groupBy === "sprite" ? (VCLS[c] || "") : spriteRarityClass(c)}">${c}</span></div>`; });
     rows.forEach(row => {
-      html += `<div class="g-row-label"><span class="${groupBy === "variant" ? (VCLS[row] || "") : ""}">${row}</span></div>`;
+      html += `<div class="g-row-label"><span class="${groupBy === "variant" ? (VCLS[row] || "") : spriteRarityClass(row)}">${row}</span></div>`;
       cols.forEach(col => { html += renderCell(row, col); });
     });
     html += `</div>`;
@@ -638,7 +679,7 @@
     const html = `<div class="filtered-grid">${items.map(({ sprite, variant }) => `
       <div class="filtered-tile">
         ${cellHTML(sprite, variant)}
-        <div class="filtered-tile-label">${sprite} &middot; <span class="${VCLS[variant] || ''}">${variant}</span></div>
+        <div class="filtered-tile-label"><span class="${spriteRarityClass(sprite)}">${sprite}</span> &middot; <span class="${VCLS[variant] || ''}">${variant}</span></div>
       </div>`).join("")}</div>`;
     document.getElementById("list").innerHTML = html;
   }
