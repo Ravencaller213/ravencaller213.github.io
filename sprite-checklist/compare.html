@@ -206,10 +206,11 @@
   // ---- Data layer, copied from sprite-checklist/index.html so this page knows
   // the same sprites/variants/valid-combo rules. Kept in sync by hand whenever
   // the main tracker's roster or overrides change. ----
-  const SPRITES = ["Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Batman","Vini Jr","Pollo"];
+  // Kept in sync by hand with the main tracker's SPRITES order.
+  const SPRITES = ["Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Pollo"];
   const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube","Quack"];
   const BURNT = "Burnt Peanut";
-  const ALL_SPRITES = [...SPRITES.slice(0, SPRITES.indexOf("King") + 1), BURNT, ...SPRITES.slice(SPRITES.indexOf("King") + 1)];
+  const ALL_SPRITES = SPRITES;
   const KEY = "fn_sprites_v1";
   const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Gem: "v-crystal", Cube: "v-cube" };
 

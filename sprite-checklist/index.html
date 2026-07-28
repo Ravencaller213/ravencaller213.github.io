@@ -368,10 +368,13 @@
 <script>
   // ---- Data layer. Uses the same localStorage key as index-OG.html (the old
   // card-view backup), so progress saved on either page shows up on both. ----
-  const SPRITES = ["Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Batman","Vini Jr","Pollo"];
+  // Default order matches the in-game Sprites menu exactly (per user, confirmed
+  // against Google for Reaper's placement) — no more special-casing Burnt
+  // Peanut's position, it's just wherever it actually sits in this list.
+  const SPRITES = ["Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Pollo"];
   const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube","Quack"];
   const BURNT = "Burnt Peanut";
-  const ALL_SPRITES = [...SPRITES.slice(0, SPRITES.indexOf("King") + 1), BURNT, ...SPRITES.slice(SPRITES.indexOf("King") + 1)];
+  const ALL_SPRITES = SPRITES;
   const KEY = "fn_sprites_v1";
   const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Gem: "v-crystal", Cube: "v-cube" };
 
@@ -444,12 +447,10 @@
     render();
   }
   function activeAllSprites() {
-    const idx = SPRITES.indexOf("King");
-    const base = [...SPRITES.slice(0, idx + 1), BURNT, ...SPRITES.slice(idx + 1)];
     // Array.prototype.sort is stable (guaranteed since ES2019), so sprites
     // within the same rarity tier keep their original relative order rather
     // than getting shuffled every time this toggles.
-    return sortByRarity ? [...base].sort((a, b) => spriteRarityRank(a) - spriteRarityRank(b)) : base;
+    return sortByRarity ? [...SPRITES].sort((a, b) => spriteRarityRank(a) - spriteRarityRank(b)) : SPRITES;
   }
 
   const LEVEL_LABEL = { 0: "none", 1: "collected", 2: "mastered" };
