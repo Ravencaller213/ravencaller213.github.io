@@ -371,7 +371,11 @@
   // Default order matches the in-game Sprites menu exactly (per user, confirmed
   // against Google for Reaper's placement) — no more special-casing Burnt
   // Peanut's position, it's just wherever it actually sits in this list.
-  const SPRITES = ["Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Pollo","Peely","Llama"];
+  const SPRITES = ["Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Pollo"];
+  // Peely and Llama are prepped (see SPRITE_VARIANT_OVERRIDES below) but not
+  // live — dropping in ~2 days as of 2026-07-28. Append ,"Peely","Llama" to
+  // the array above once they've actually released; their override entries
+  // are harmless sitting unused until then.
   const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube","Quack"];
   const BURNT = "Burnt Peanut";
   const ALL_SPRITES = SPRITES;
