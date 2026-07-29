@@ -207,7 +207,7 @@
   // the same sprites/variants/valid-combo rules. Kept in sync by hand whenever
   // the main tracker's roster or overrides change. ----
   // Kept in sync by hand with the main tracker's SPRITES order.
-  const SPRITES = ["Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Pollo"];
+  const SPRITES = ["Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Pollo","Peely","Llama"];
   const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube","Quack"];
   const BURNT = "Burnt Peanut";
   const ALL_SPRITES = SPRITES;
@@ -228,7 +228,7 @@
     "Earth": ["Normal", "Gold", "Gummi", "Galaxy", "Gem", "Cube"],
     "Fire": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Cube"],
     "Fishy": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
-    "Duck": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem"],
+    "Duck": ["Normal", "Gold", "Gummi", "Galaxy", "Gem"],
     "Ghost": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
     "Demon": ["Normal", "Gold", "Gummi", "Galaxy", "Gem"],
     "King": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
@@ -245,6 +245,8 @@
     [BURNT]: ["Normal"],
     "Vini Jr": ["Normal"],
     "Pollo": ["Normal"],
+    "Peely": ["Normal", "Gold", "Gummi", "Galaxy"],
+    "Llama": ["Normal", "Gold", "Gummi", "Galaxy"],
   };
   function variantsForSprite(sprite) { return SPRITE_VARIANT_OVERRIDES[sprite] || VARIANTS; }
 
