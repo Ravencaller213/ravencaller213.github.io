@@ -207,8 +207,7 @@
   // the same sprites/variants/valid-combo rules. Kept in sync by hand whenever
   // the main tracker's roster or overrides change. ----
   // Kept in sync by hand with the main tracker's SPRITES order.
-  const SPRITES = ["Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Pollo"];
-  // Peely and Llama prepped but not live yet — see index.html for the note.
+  const SPRITES = ["Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Grim","Air","Seven","Pollo","Peely","Llama","John Wick"];
   const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube","Quack"];
   const BURNT = "Burnt Peanut";
   const ALL_SPRITES = SPRITES;
@@ -218,16 +217,17 @@
   const SPRITE_RARITY = {
     "Water": "Rare", "Earth": "Rare", "Fire": "Rare", "Fishy": "Rare", "Air": "Rare",
     "Duck": "Epic", "Ghost": "Epic", "Demon": "Epic", "King": "Epic", "Striker": "Epic", "Aura": "Epic",
-    "Dream": "Legendary", "Punk": "Legendary", "Boss": "Legendary", "Reaper": "Legendary", "Seven": "Legendary",
-    "Zero Point": "Mythic", "Batman": "Mythic", [BURNT]: "Mythic", "Vini Jr": "Mythic", "Pollo": "Mythic",
+    "Dream": "Legendary", "Punk": "Legendary", "Boss": "Legendary", "Grim": "Legendary", "Seven": "Legendary",
+    "Llama": "Legendary", "Peely": "Legendary",
+    "Zero Point": "Mythic", "Batman": "Mythic", [BURNT]: "Mythic", "Vini Jr": "Mythic", "Pollo": "Mythic", "John Wick": "Mythic",
   };
   const RARITY_CLS = { Rare: "rarity-rare", Epic: "rarity-epic", Legendary: "rarity-legendary", Mythic: "rarity-mythic" };
   function spriteRarityClass(sprite) { return RARITY_CLS[SPRITE_RARITY[sprite]] || ""; }
 
   const SPRITE_VARIANT_OVERRIDES = {
-    "Water": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem"],
-    "Earth": ["Normal", "Gold", "Gummi", "Galaxy", "Gem", "Cube"],
-    "Fire": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Cube"],
+    "Water": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem", "Quack"],
+    "Earth": ["Normal", "Gold", "Gummi", "Galaxy", "Gem", "Cube", "Quack"],
+    "Fire": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Cube", "Quack"],
     "Fishy": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
     "Duck": ["Normal", "Gold", "Gummi", "Galaxy", "Gem"],
     "Ghost": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
@@ -239,19 +239,20 @@
     "Dream": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
     "Punk": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
     "Boss": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
-    "Reaper": ["Normal", "Gold", "Gummi", "Galaxy"],
+    "Grim": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
     "Seven": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
-    "Zero Point": ["Normal", "Gold", "Gummi", "Galaxy", "Gem", "Quack"],
+    "Zero Point": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem", "Cube", "Quack"],
     "Batman": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Cube"],
     [BURNT]: ["Normal"],
     "Vini Jr": ["Normal"],
     "Pollo": ["Normal"],
-    "Peely": ["Normal", "Gold", "Gummi", "Galaxy"],
+    "Peely": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
     "Llama": ["Normal", "Gold", "Gummi", "Galaxy"],
+    "John Wick": ["Normal"],
   };
   function variantsForSprite(sprite) { return SPRITE_VARIANT_OVERRIDES[sprite] || VARIANTS; }
 
-  const RENAMES = { "Fish": "Fishy", "Foundation": "Seven" };
+  const RENAMES = { "Fish": "Fishy", "Foundation": "Seven", "Reaper": "Grim" };
   const VARIANT_RENAMES = { "Crystal": "Gem" };
 
   // Same Gem hide as the main tracker, kept in sync so "unique to" results don't

@@ -371,11 +371,11 @@
   // Default order matches the in-game Sprites menu exactly (per user, confirmed
   // against Google for Reaper's placement) — no more special-casing Burnt
   // Peanut's position, it's just wherever it actually sits in this list.
-  const SPRITES = ["Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Reaper","Air","Seven","Pollo"];
-  // Peely and Llama are prepped (see SPRITE_VARIANT_OVERRIDES below) but not
-  // live — dropping in ~2 days as of 2026-07-28. Append ,"Peely","Llama" to
-  // the array above once they've actually released; their override entries
-  // are harmless sitting unused until then.
+  // Peely and Llama confirmed live as of 2026-07-30 (fortnite.gg usage stats),
+  // so they're back in the active list. John Wick is also new this update.
+  // Order for these three (and any future new drops) is provisional — appended
+  // at the end until an actual in-game menu position is confirmed.
+  const SPRITES = ["Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Grim","Air","Seven","Pollo","Peely","Llama","John Wick"];
   const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube","Quack"];
   const BURNT = "Burnt Peanut";
   const ALL_SPRITES = SPRITES;
@@ -387,8 +387,9 @@
   const SPRITE_RARITY = {
     "Water": "Rare", "Earth": "Rare", "Fire": "Rare", "Fishy": "Rare", "Air": "Rare",
     "Duck": "Epic", "Ghost": "Epic", "Demon": "Epic", "King": "Epic", "Striker": "Epic", "Aura": "Epic",
-    "Dream": "Legendary", "Punk": "Legendary", "Boss": "Legendary", "Reaper": "Legendary", "Seven": "Legendary",
-    "Zero Point": "Mythic", "Batman": "Mythic", [BURNT]: "Mythic", "Vini Jr": "Mythic", "Pollo": "Mythic",
+    "Dream": "Legendary", "Punk": "Legendary", "Boss": "Legendary", "Grim": "Legendary", "Seven": "Legendary",
+    "Llama": "Legendary", "Peely": "Legendary",
+    "Zero Point": "Mythic", "Batman": "Mythic", [BURNT]: "Mythic", "Vini Jr": "Mythic", "Pollo": "Mythic", "John Wick": "Mythic",
   };
   const RARITY_CLS = { Rare: "rarity-rare", Epic: "rarity-epic", Legendary: "rarity-legendary", Mythic: "rarity-mythic" };
   function spriteRarityClass(sprite) { return RARITY_CLS[SPRITE_RARITY[sprite]] || ""; }
@@ -401,9 +402,9 @@
   // never silently changes another's. Any sprite not listed here falls back to
   // the full VARIANTS set (see variantsForSprite below).
   const SPRITE_VARIANT_OVERRIDES = {
-    "Water": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem"],
-    "Earth": ["Normal", "Gold", "Gummi", "Galaxy", "Gem", "Cube"],
-    "Fire": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Cube"],
+    "Water": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem", "Quack"],
+    "Earth": ["Normal", "Gold", "Gummi", "Galaxy", "Gem", "Cube", "Quack"],
+    "Fire": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Cube", "Quack"],
     "Fishy": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
     "Duck": ["Normal", "Gold", "Gummi", "Galaxy", "Gem"],
     "Ghost": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
@@ -415,29 +416,28 @@
     "Dream": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
     "Punk": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
     "Boss": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
-    "Reaper": ["Normal", "Gold", "Gummi", "Galaxy"],
+    "Grim": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
     "Seven": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
-    // Holofoil pulled per user report — what looked like Holofoil in-game is
-    // actually a distinct "Quack" variant, confirmed real and unique to Zero
-    // Point (no other sprite has it).
-    "Zero Point": ["Normal", "Gold", "Gummi", "Galaxy", "Gem", "Quack"],
+    // Correction: Quack turned out to be a distinct variant ALONGSIDE Holofoil,
+    // not a replacement for it — confirmed via fortnite.gg listing both
+    // "Holofoil Zero Point" and "Quack Zero Point" as separate entries. Cube
+    // is also confirmed now (fortnite.gg lists "Cube Zero Point" too). Quack
+    // itself is no longer unique to Zero Point either — see Water/Earth/Fire.
+    "Zero Point": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem", "Cube", "Quack"],
     "Batman": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Cube"],
     [BURNT]: ["Normal"],
     "Vini Jr": ["Normal"],
     "Pollo": ["Normal"],
-    // Dropping in ~2 days. Only Gold/Gummi/Galaxy confirmed so far alongside
-    // the assumed base Normal form — Cube and/or Holofoil are possible but
-    // not confirmed, so left out until known. Rarity unknown too (see
-    // SPRITE_RARITY above — no entry for these two yet, so their names render
-    // uncolored until that's confirmed).
-    "Peely": ["Normal", "Gold", "Gummi", "Galaxy"],
+    "Peely": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
     "Llama": ["Normal", "Gold", "Gummi", "Galaxy"],
+    // New this update — only Normal confirmed so far.
+    "John Wick": ["Normal"],
   };
   function variantsForSprite(sprite) { return SPRITE_VARIANT_OVERRIDES[sprite] || VARIANTS; }
   function activeVariantsForSprite(sprite) { return variantsForSprite(sprite).filter(v => activeVariants().includes(v)); }
   function spritesForVariant(variantName) { return activeAllSprites().filter(s => variantsForSprite(s).includes(variantName)); }
 
-  const RENAMES = { "Fish": "Fishy", "Foundation": "Seven" };
+  const RENAMES = { "Fish": "Fishy", "Foundation": "Seven", "Reaper": "Grim" };
   const VARIANT_RENAMES = { "Crystal": "Gem" };
 
   // Gem/Cube are hidden from the grid for now — not deleted, just not shown.
