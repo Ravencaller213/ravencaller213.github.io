@@ -5,27 +5,84 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tartarus Pro v2 Keymap Editor</title>
   <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Serif+Display:ital@1&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg-primary:   #181818;
-      --bg-secondary: #222222;
-      --bg-tertiary:  #2c2c2c;
-      --border-sec:   #363636;
-      --border-ter:   #484848;
-      --text-pri:     #e4e4e4;
-      --text-sec:     #a0a0a0;
-      --text-ter:     #686868;
-      --accent:       #4a9eff;
-      --bg-info:      #152d4a;
-      --border-info:  #1e4878;
-      --font: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      /* Neutral chrome — reskinned to match the ravencaller home page's
+         dark-opal palette. These control backgrounds/borders/dimmed text
+         only; the key-map's category color-coding (the C palette + legend
+         swatches in the JS/HTML below) is untouched hex and independent of
+         these variables. */
+      --bg-primary:   #0c0c12;
+      --bg-secondary: #14141e;
+      --bg-tertiary:  #191926;
+      --border-sec:   rgba(180,160,255,0.14);
+      --border-ter:   rgba(180,160,255,0.30);
+      --text-pri:     #ddd8f0;
+      --text-sec:     #a79fc4;
+      --text-ter:     #7a7495;
+      --accent:       #7b6fff;
+      --bg-info:      rgba(123,111,255,0.14);
+      --border-info:  rgba(123,111,255,0.4);
+      --font: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+      /* opal accent band, shared with the home page */
+      --opal-1: #7b6fff;
+      --opal-2: #4dd9c0;
+      --opal-3: #a78bfa;
+      --opal-4: #38bdf8;
+      --opal-5: #6ee7b7;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg-primary); color: var(--text-pri); font-family: var(--font); min-height: 100vh; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-primary); color: var(--text-pri);
+      font-family: var(--font); font-weight: 300; min-height: 100vh;
+      overflow-x: hidden; position: relative;
+    }
+
+    /* ── Background iridescence (matches home page) ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 40% at 15% 5%,  rgba(123,111,255,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 35% at 85% 85%,  rgba(77,217,192,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 75% 15%,  rgba(167,139,250,0.05) 0%, transparent 60%);
+    }
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+    }
+    .page { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+
+    /* ── Breadcrumb back-link ── */
+    .crumb {
+      display: flex; align-items: baseline; gap: 8px;
+      padding: 22px 24px 0; font-size: 13px;
+    }
+    .crumb-link {
+      font-family: 'DM Serif Display', serif; font-style: italic;
+      font-size: 15px; color: var(--text-sec); text-decoration: none;
+      transition: color 0.15s;
+    }
+    .crumb-link:hover { color: var(--opal-3); }
+    .crumb-sep { color: var(--text-ter); opacity: 0.5; }
+    .crumb-current { color: var(--text-ter); letter-spacing: 0.02em; }
+    .crumb-divider {
+      height: 1px; margin: 14px 24px 0;
+      background: linear-gradient(90deg, var(--opal-1) 0%, var(--opal-2) 45%, transparent 85%);
+      opacity: 0.3;
+    }
 
     /* ── Header ── */
-    header { padding: 20px 24px 0; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-    h1 { font-size: 17px; font-weight: 600; }
+    header { padding: 14px 24px 0; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+    h1 { font-size: 17px; font-weight: 500; letter-spacing: 0.01em; }
     .profile-name {
       font-size: 13px; color: var(--text-ter); cursor: text;
       border-bottom: 1px dashed transparent; padding: 1px 4px;
@@ -73,7 +130,7 @@
       background: var(--bg-secondary); font-size: 12px; cursor: pointer;
       color: var(--text-sec); transition: all 0.12s; font-family: var(--font);
     }
-    .btn:hover { border-color: var(--border-ter); color: var(--text-pri); }
+    .btn:hover { border-color: var(--border-ter); color: var(--text-pri); box-shadow: 0 0 0 1px var(--border-ter) inset; }
     .btn.danger { border-color: #4a2020; color: #c06060; }
     .btn.danger:hover { background: #2e1515; }
     .btn.accent { border-color: var(--border-info); color: var(--accent); }
@@ -125,7 +182,7 @@
       background: var(--accent); color: #fff; font-size: 13px; font-weight: 500;
       cursor: pointer; font-family: var(--font);
     }
-    .btn-save:hover { background: #3a8eef; }
+    .btn-save:hover { background: #6a5eef; }
 
     /* ── Combos section ── */
     .combos-section { padding: 0 24px 28px; }
@@ -181,6 +238,15 @@
 </head>
 <body>
 
+<div class="page">
+
+<div class="crumb">
+  <a href="/index.html" class="crumb-link">ravencaller</a>
+  <span class="crumb-sep">/</span>
+  <span class="crumb-current">tartarus keys</span>
+</div>
+<div class="crumb-divider"></div>
+
 <header>
   <h1>Tartarus Pro v2</h1>
   <span
@@ -207,8 +273,8 @@
   <svg id="kp-svg" width="100%" viewBox="0 0 680 400" role="img" aria-label="Tartarus Pro v2 keymap">
     <defs>
       <linearGradient id="card-grad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%"   stop-color="#272727"/>
-        <stop offset="100%" stop-color="#1e1e1e"/>
+        <stop offset="0%"   stop-color="#1c1c2a"/>
+        <stop offset="100%" stop-color="#14141e"/>
       </linearGradient>
     </defs>
   </svg>
@@ -664,7 +730,7 @@ function toggleDpad() {
 
 // ── SVG helpers ───────────────────────────────────────────────────────────────
 const NS   = 'http://www.w3.org/2000/svg';
-const FONT = "system-ui, -apple-system, 'Segoe UI', sans-serif";
+const FONT = "'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif";
 
 function svgEl(tag, attrs) {
   const e = document.createElementNS(NS, tag);
@@ -1462,5 +1528,8 @@ renderTabs();
 render();
 renderCombos();
 </script>
+
+</div><!-- end .page -->
+
 </body>
 </html>
