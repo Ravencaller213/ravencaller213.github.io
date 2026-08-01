@@ -48,10 +48,28 @@
       z-index: 1;
     }
 
+    .site-crumb {
+      position: relative;
+      z-index: 2;
+      padding: 1.75rem 6rem 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .site-crumb a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .site-crumb a:hover { color: var(--accent); }
+
     header {
       position: relative;
       z-index: 2;
-      padding: 4rem 6rem 2rem;
+      padding: 1.25rem 6rem 2rem;
       display: flex;
       align-items: flex-end;
       gap: 2rem;
@@ -289,7 +307,7 @@
     .gate-grid .card { min-height: 220px; }
 
     @media (max-width: 700px) {
-      header, .hero, .section, footer {
+      .site-crumb, header, .hero, .section, footer {
         padding-left: 5rem;
         padding-right: 1.5rem;
       }
@@ -300,6 +318,10 @@
 <body>
 
   <div class="vert-rule"></div>
+
+  <div class="site-crumb">
+    <a href="/index.html">← ravencaller</a>
+  </div>
 
   <header>
     <div class="logo-hangul">까치</div>
