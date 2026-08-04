@@ -375,7 +375,7 @@
   // so they're back in the active list. John Wick is also new this update.
   // Order for these three (and any future new drops) is provisional — appended
   // at the end until an actual in-game menu position is confirmed.
-  const SPRITES = ["Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Grim","Air","Seven","Pollo","Peely","Llama","John Wick"];
+  const SPRITES = ["John Wick","Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Grim","Air","Seven","Pollo","Peely","Llama"];
   const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube","Quack"];
   const BURNT = "Burnt Peanut";
   const ALL_SPRITES = SPRITES;
@@ -440,12 +440,9 @@
   const RENAMES = { "Fish": "Fishy", "Foundation": "Seven", "Reaper": "Grim" };
   const VARIANT_RENAMES = { "Crystal": "Gem" };
 
-  // Gem/Cube are hidden from the grid for now — not deleted, just not shown.
-  // Nothing about them is removed elsewhere (VARIANTS, VCLS, per-sprite
-  // overrides, image lookups all still know about them); this is only a
-  // display filter. To bring them back, empty this array (or reintroduce the
-  // old Include? checkboxes and drive it from there instead).
-  const HIDDEN_VARIANTS = ["Gem"];
+  // Gem is now live too (Cube went live earlier) — nothing left hidden, but
+  // keeping this mechanism in place in case a future variant needs it again.
+  const HIDDEN_VARIANTS = [];
   function activeVariants() { return VARIANTS.filter(v => !HIDDEN_VARIANTS.includes(v)); }
   function activeSprites() { return SPRITES; }
   // By Rarity is a plain on/off toggle (no dropdown), so its own button just

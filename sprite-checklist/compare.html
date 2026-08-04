@@ -207,7 +207,7 @@
   // the same sprites/variants/valid-combo rules. Kept in sync by hand whenever
   // the main tracker's roster or overrides change. ----
   // Kept in sync by hand with the main tracker's SPRITES order.
-  const SPRITES = ["Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Grim","Air","Seven","Pollo","Peely","Llama","John Wick"];
+  const SPRITES = ["John Wick","Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Grim","Air","Seven","Pollo","Peely","Llama"];
   const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube","Quack"];
   const BURNT = "Burnt Peanut";
   const ALL_SPRITES = SPRITES;
@@ -255,9 +255,8 @@
   const RENAMES = { "Fish": "Fishy", "Foundation": "Seven", "Reaper": "Grim" };
   const VARIANT_RENAMES = { "Crystal": "Gem" };
 
-  // Same Gem hide as the main tracker, kept in sync so "unique to" results don't
-  // surface a variant that's currently hidden from the live grid.
-  const HIDDEN_VARIANTS = ["Gem"];
+  // Gem is live now too — kept in sync with the main tracker's HIDDEN_VARIANTS.
+  const HIDDEN_VARIANTS = [];
   function activeVariantsForSprite(sprite) { return variantsForSprite(sprite).filter(v => !HIDDEN_VARIANTS.includes(v)); }
   function activeAllSprites() { return ALL_SPRITES; }
 
