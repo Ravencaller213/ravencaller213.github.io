@@ -110,6 +110,10 @@
     .source-status { font-size: 0.95rem; color: var(--text-dim); min-height: 1.4em; font-weight: 500; }
     .source-status.ready { color: var(--opal-5); font-weight: 700; }
     .source-status.error { color: #f28b82; font-weight: 700; }
+    /* My Stuff's status is the "did my saved progress actually load" signal
+       people will glance at most, so it gets bumped bigger than Their
+       Stuff's — that one's just a generic upload/paste confirmation. */
+    #statusA { font-size: 1.25rem; }
 
     /* Results: two columns, each just a plain flat grid of the sprite/variant
        tiles unique to that person — reuses the same tile markup/styling as the
