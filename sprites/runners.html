@@ -54,6 +54,20 @@
     .nav-tag { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--border-hi); color: var(--text-dim); }
     .save-timestamp { font-size: 0.68rem; color: var(--text-faint); letter-spacing: 0.02em; white-space: nowrap; }
 
+    .nav-top-row { display: flex; align-items: center; gap: 0.8rem; }
+
+    /* Small live countdown badge to Override, sitting right beside the page
+       links — just enough to notice something's coming without competing
+       with the actual page content for attention. */
+    .override-countdown {
+      display: flex; align-items: center; gap: 0.35rem; text-decoration: none;
+      font-size: 0.68rem; color: var(--text-dim); padding: 3px 9px 3px 5px;
+      border: 1px solid var(--border-hi); border-radius: 99px; white-space: nowrap;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .override-countdown:hover { color: var(--opal-4); border-color: rgba(56,189,248,0.5); }
+    .override-countdown-logo { height: 16px; width: auto; border-radius: 3px; }
+
     /* Cross-page nav links (Hub / Runners / Override / Compare) — shared across
        all sprites pages so nobody's stuck navigating back through the
        hub every time. Self-link on each page gets .current for a subtle marker. */
@@ -299,11 +313,17 @@
   <nav class="top">
     <a class="nav-back" href="/index.html">&larr; ravencaller</a>
     <div class="nav-right">
-      <div class="page-links">
-        <a href="index.html">Hub</a>
-        <a href="runners.html" class="current">Runners</a>
-        <a href="override.html">Override</a>
-        <a href="compare.html">Compare</a>
+      <div class="nav-top-row">
+        <a class="override-countdown" href="override.html" title="Override launches August 20, 2026, 9:00 AM EST">
+          <img class="override-countdown-logo" src="logos/ch7s4_override_logo.png" alt="" />
+          <span id="overrideCountdownText">Override in &hellip;</span>
+        </a>
+        <div class="page-links">
+          <a href="index.html">Hub</a>
+          <a href="runners.html" class="current">Runners</a>
+          <a href="override.html">Override</a>
+          <a href="compare.html">Compare</a>
+        </div>
       </div>
       <span class="nav-tag">Sprite Checklist &middot; Runners</span>
       <span class="save-timestamp" id="lastSaved"></span>
@@ -1147,6 +1167,27 @@
   updateGroupButton();
   updateViewModeButton();
   render();
+
+  // ---- Small live countdown badge to Override, up in the nav. Same target
+  // timestamp as override.html's own countdown page (EST fixed at UTC-5, per
+  // the same reasoning noted there — the user specified EST literally rather
+  // than DST-adjusted EDT). Kept compact: days plus an HH:MM:SS ticker rather
+  // than the full "Xd Xh Xm Xs" spelled-out format override.html uses.
+  const OVERRIDE_TARGET = new Date("2026-08-20T09:00:00-05:00").getTime();
+  function padNum(n) { return String(n).padStart(2, "0"); }
+  function tickOverrideCountdown() {
+    const el = document.getElementById("overrideCountdownText");
+    if (!el) return;
+    const diff = OVERRIDE_TARGET - Date.now();
+    if (diff <= 0) { el.textContent = "Override is live!"; return; }
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+    el.textContent = `Override in ${days}d ${padNum(hours)}:${padNum(minutes)}:${padNum(seconds)}`;
+  }
+  tickOverrideCountdown();
+  setInterval(tickOverrideCountdown, 1000);
 </script>
 
 </body>
