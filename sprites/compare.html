@@ -82,22 +82,34 @@
     .btn.accent:hover { background: rgba(56,189,248,0.08); }
     .btn.small { padding: 0.4rem 0.85rem; font-size: 0.72rem; }
 
-    /* Two source panels side by side — one per person. Each has a toggle between
-       "use my saved progress" (only meaningful for Person A, who's presumably
-       using this browser) and "upload an export file" (the only option for
-       Person B, since there's no shared localStorage between two people). */
+    /* Two source panels, side by side: "My Stuff" (this browser's saved
+       progress, loaded automatically, with a code-paste override) and
+       "Their Stuff" (always needs either a pasted code or an uploaded
+       export, since there's no shared localStorage between two people).
+       No per-person naming here on purpose — this only ever needs to work
+       for two specific people, so a name field is one more step for no
+       real benefit. Everything relevant is visible at once rather than
+       gated behind a mode toggle — that toggle was the main source of
+       "how do I even use this" confusion. */
     .compare-sources { display: flex; gap: 1.4rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
     .source-panel { flex: 1 1 320px; min-width: 280px; border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1.3rem; background: var(--surface); display: flex; flex-direction: column; gap: 0.75rem; }
-    .source-panel h2 { font-size: 0.95rem; font-weight: 500; color: var(--text); }
-    .source-toggle { display: flex; gap: 0.5rem; }
-    .source-toggle button.active { color: var(--opal-4); border-color: rgba(56,189,248,0.35); background: rgba(56,189,248,0.08); }
-    .name-input { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--text); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 0.7rem; }
-    .name-input::placeholder { color: var(--text-faint); }
+    .source-panel h2 { font-size: 1.4rem; font-weight: 600; color: var(--text); text-align: center; font-family: 'DM Serif Display', serif; font-style: italic; }
     .code-input-row { display: flex; gap: 0.5rem; }
-    .code-input { flex: 1 1 auto; font-family: monospace; font-size: 0.78rem; }
-    .source-status { font-size: 0.75rem; color: var(--text-dim); min-height: 1.1em; }
-    .source-status.ready { color: var(--opal-5); }
-    .source-status.error { color: #f28b82; }
+    .code-input {
+      flex: 1 1 auto; font-family: monospace; font-size: 0.78rem;
+      color: var(--text); background: var(--surface-hi); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.5rem 0.7rem;
+    }
+    .code-input::placeholder { color: var(--text-faint); }
+    .code-input:hover { border-color: var(--border-hi); }
+    .code-input:focus { outline: none; border-color: rgba(56,189,248,0.55); }
+    /* Bumped way up from the original 0.75rem — the "Loaded N entries"
+       confirmation was easy to miss entirely at that size, which was the
+       point being flagged: it needs to actually read as a status, not a
+       footnote. */
+    .source-status { font-size: 0.95rem; color: var(--text-dim); min-height: 1.4em; font-weight: 500; }
+    .source-status.ready { color: var(--opal-5); font-weight: 700; }
+    .source-status.error { color: #f28b82; font-weight: 700; }
 
     /* Results: two columns, each just a plain flat grid of the sprite/variant
        tiles unique to that person — reuses the same tile markup/styling as the
@@ -176,8 +188,9 @@
       <h1 class="wordmark">Compare</h1>
     </div>
     <p class="tagline">
-      See what's unique to each collection. Person A defaults to your saved progress on this browser;
-      either side can also upload an export or paste a share code from runners.html instead.
+      See what's unique to each collection. My Stuff loads your saved progress on this browser
+      automatically; paste a share code from runners.html to override it. Their Stuff needs
+      either a pasted code or an uploaded export.
     </p>
   </header>
 
@@ -186,47 +199,41 @@
   <div class="compare-sources">
 
     <div class="source-panel">
-      <h2>Person A</h2>
-      <input class="name-input" id="nameA" type="text" placeholder="Person A" oninput="onNameChange()" />
-      <div class="source-toggle">
-        <button class="btn small accent active" id="modeA-saved" onclick="setSourceModeA('saved')">Use saved progress</button>
-        <button class="btn small" id="modeA-upload" onclick="setSourceModeA('upload')">Upload export</button>
-        <button class="btn small" id="modeA-code" onclick="setSourceModeA('code')">Paste code</button>
-      </div>
-      <button class="btn small accent" id="uploadBtnA" style="display:none" onclick="document.getElementById('fileA').click()">Choose file&hellip;</button>
-      <input type="file" id="fileA" accept="application/json" style="display:none" onchange="handleUpload('A', this.files[0])" />
-      <div class="code-input-row" id="codeRowA" style="display:none">
-        <input type="text" class="filter-select code-input" id="codeA" placeholder="Paste share code&hellip;" autocomplete="off" />
+      <h2>My Stuff</h2>
+      <div class="code-input-row">
+        <input type="text" class="filter-select code-input" id="codeA" placeholder="Paste code" autocomplete="off" />
         <button class="btn small accent" onclick="handleCode('A')">Load</button>
       </div>
       <div class="source-status" id="statusA"></div>
+      <!-- Upload export commented out for My Stuff — redundant once you've got
+           live saved progress plus the code-paste override right above. Left
+           in place (not deleted) in case that stops being true later. -->
+      <!--
+      <button class="btn small accent" id="uploadBtnA" onclick="document.getElementById('fileA').click()">Choose file&hellip;</button>
+      <input type="file" id="fileA" accept="application/json" style="display:none" onchange="handleUpload('A', this.files[0])" />
+      -->
     </div>
 
     <div class="source-panel">
-      <h2>Person B</h2>
-      <input class="name-input" id="nameB" type="text" placeholder="Person B" oninput="onNameChange()" />
-      <div class="source-toggle">
-        <button class="btn small accent active" id="modeB-upload" onclick="setSourceModeB('upload')">Upload export</button>
-        <button class="btn small" id="modeB-code" onclick="setSourceModeB('code')">Paste code</button>
+      <h2>Their Stuff</h2>
+      <div class="code-input-row">
+        <input type="text" class="filter-select code-input" id="codeB" placeholder="Paste code" autocomplete="off" />
+        <button class="btn small accent" onclick="handleCode('B')">Load</button>
       </div>
       <button class="btn small accent" id="uploadBtnB" onclick="document.getElementById('fileB').click()">Choose file&hellip;</button>
       <input type="file" id="fileB" accept="application/json" style="display:none" onchange="handleUpload('B', this.files[0])" />
-      <div class="code-input-row" id="codeRowB" style="display:none">
-        <input type="text" class="filter-select code-input" id="codeB" placeholder="Paste share code&hellip;" autocomplete="off" />
-        <button class="btn small accent" onclick="handleCode('B')">Load</button>
-      </div>
-      <div class="source-status" id="statusB">Upload an export to compare.</div>
+      <div class="source-status" id="statusB">Paste a code or upload an export to compare.</div>
     </div>
 
   </div>
 
   <div class="compare-results" id="results">
     <div class="compare-col col-a">
-      <h3 id="headerA">Unique to Person A</h3>
+      <h3 id="headerA">Unique to My Stuff</h3>
       <div id="listA"></div>
     </div>
     <div class="compare-col col-b">
-      <h3 id="headerB">Unique to Person B</h3>
+      <h3 id="headerB">Unique to Their Stuff</h3>
       <div id="listB"></div>
     </div>
   </div>
@@ -416,31 +423,12 @@
   }
 
   // ---- Compare-page-specific state ----
+  // No mode toggle anymore — My Stuff's saved progress loads automatically
+  // and its code-paste field is just always there as an override; Their
+  // Stuff's code-paste and upload are both always visible too. Whichever
+  // one you actually use last just wins, which is the whole point: nothing
+  // to figure out first.
   let stateA = null, stateB = null;
-  let sourceModeA = "saved"; // "saved" | "upload" | "code"
-  let sourceModeB = "upload"; // "upload" | "code"
-
-  function setSourceModeA(mode) {
-    sourceModeA = mode;
-    document.getElementById("modeA-saved").classList.toggle("active", mode === "saved");
-    document.getElementById("modeA-upload").classList.toggle("active", mode === "upload");
-    document.getElementById("modeA-code").classList.toggle("active", mode === "code");
-    document.getElementById("uploadBtnA").style.display = mode === "upload" ? "" : "none";
-    document.getElementById("codeRowA").style.display = mode === "code" ? "" : "none";
-    if (mode === "saved") loadSavedA();
-    else if (mode === "upload") setStatus("statusA", "Choose a file to upload.", "");
-    else setStatus("statusA", "Paste a share code from runners.html and hit Load.", "");
-  }
-
-  function setSourceModeB(mode) {
-    sourceModeB = mode;
-    document.getElementById("modeB-upload").classList.toggle("active", mode === "upload");
-    document.getElementById("modeB-code").classList.toggle("active", mode === "code");
-    document.getElementById("uploadBtnB").style.display = mode === "upload" ? "" : "none";
-    document.getElementById("codeRowB").style.display = mode === "code" ? "" : "none";
-    if (mode === "upload") setStatus("statusB", "Upload an export to compare.", "");
-    else setStatus("statusB", "Paste a share code from runners.html and hit Load.", "");
-  }
 
   function handleCode(who) {
     const input = document.getElementById(who === "A" ? "codeA" : "codeB");
@@ -494,17 +482,13 @@
     el.className = "source-status" + (cls ? " " + cls : "");
   }
 
-  // Single source of truth for both header labels, so editing a name field and
-  // recomputing the diff can never clobber each other's part of the text —
-  // each just updates its own piece of state and re-renders from both.
+  // Static labels now that per-person naming is gone — just My Stuff / Their
+  // Stuff with a live count appended.
   let lastCounts = { a: 0, b: 0 };
   function renderHeaders() {
-    const nameA = document.getElementById("nameA").value.trim() || "Person A";
-    const nameB = document.getElementById("nameB").value.trim() || "Person B";
-    document.getElementById("headerA").textContent = `Unique to ${nameA} (${lastCounts.a})`;
-    document.getElementById("headerB").textContent = `Unique to ${nameB} (${lastCounts.b})`;
+    document.getElementById("headerA").textContent = `Unique to My Stuff (${lastCounts.a})`;
+    document.getElementById("headerB").textContent = `Unique to Their Stuff (${lastCounts.b})`;
   }
-  function onNameChange() { renderHeaders(); }
 
   // Only ownership matters here (level >= 1), not mastery — dying with a
   // mastered vs. freshly-collected sprite on you doesn't change who "has" it.

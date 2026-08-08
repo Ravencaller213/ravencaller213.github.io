@@ -97,9 +97,11 @@
     .tool-section-view .btn { width: 120px; height: 52px; margin: 0 auto; padding: 0 6px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 0.72rem; line-height: 1.2; }
     .tool-section-view .btn.active { background: rgba(56,189,248,0.16); border-color: rgba(56,189,248,0.55); color: var(--text); }
 
-    /* Section 2 (Filters): same 140px width as View. Contents unchanged — they
-       already scale to the section's content width. */
-    .tool-section-filters { width: 140px; flex: 0 0 140px; }
+    /* Section 2 (Filters): widened from the original 140px to fit the two new
+       multiselect dropdowns (Sprite / Variant) alongside the existing
+       Collection/Mastery selects and the Compare button. */
+    .tool-section-filters { width: 220px; flex: 0 0 220px; }
+    .filter-multi { min-height: 92px; }
 
     /* Section 3 (Save): 120px wide, buttons centered to 96px. Shrunk to fit a
        third button (Export Missing) — same idea as the View section, smaller
@@ -301,6 +303,14 @@
           <option value="unmastered">Unmastered</option>
           <option value="mastered">Mastered</option>
         </select>
+      </div>
+      <div class="filter-field">
+        <label for="spriteFilter">Sprite (multi)</label>
+        <select class="filter-select filter-multi" id="spriteFilter" multiple size="5" autocomplete="off" onchange="onSpriteVariantFilterChange()"></select>
+      </div>
+      <div class="filter-field">
+        <label for="variantFilter">Variant (multi)</label>
+        <select class="filter-select filter-multi" id="variantFilter" multiple size="5" autocomplete="off" onchange="onSpriteVariantFilterChange()"></select>
       </div>
       <a class="btn accent" style="text-align:center; text-decoration:none;" href="compare.html">Compare</a>
     </div>
@@ -597,7 +607,9 @@
   // groupBy doubles as "which axis is the row": "sprite" = sprite rows / variant columns,
   // "variant" = variant rows / sprite columns.
   let groupBy = "sprite";
-  function getGroups() { return groupBy === "sprite" ? activeAllSprites() : activeVariants(); }
+  function getGroups() {
+    return groupBy === "sprite" ? activeAllSprites().filter(spriteVisible) : activeVariants().filter(variantVisible);
+  }
   function getItemsForGroup(group) {
     if (groupBy === "sprite") return activeVariantsForSprite(group);
     return spritesForVariant(group);
@@ -647,7 +659,34 @@
     return null; // All + All: no filter
   }
 
-  function tableColumns() { return groupBy === "sprite" ? activeVariants() : activeAllSprites(); }
+  // Sprite/Variant multiselects narrow which rows/columns show up at all —
+  // independent of (and combinable with) the Collection/Mastery level
+  // filters above. Empty selection means "no restriction," same convention
+  // as HIDDEN_VARIANTS elsewhere. Only affects what's rendered in the grid,
+  // same as Collection/Mastery — completion stats and exports intentionally
+  // still cover the whole collection regardless of what's currently shown.
+  let selectedSprites = [];
+  let selectedVariants = [];
+  function spriteVisible(sprite) { return selectedSprites.length === 0 || selectedSprites.includes(sprite); }
+  function variantVisible(variant) { return selectedVariants.length === 0 || selectedVariants.includes(variant); }
+  function getSelectedOptions(id) {
+    return Array.from(document.getElementById(id).selectedOptions).map(o => o.value);
+  }
+  function onSpriteVariantFilterChange() {
+    selectedSprites = getSelectedOptions("spriteFilter");
+    selectedVariants = getSelectedOptions("variantFilter");
+    render();
+  }
+  function populateSpriteVariantFilterOptions() {
+    const spriteSel = document.getElementById("spriteFilter");
+    spriteSel.innerHTML = SPRITES.map(s => `<option value="${s}">${s}</option>`).join("");
+    const variantSel = document.getElementById("variantFilter");
+    variantSel.innerHTML = activeVariants().map(v => `<option value="${v}">${v}</option>`).join("");
+  }
+
+  function tableColumns() {
+    return groupBy === "sprite" ? activeVariants().filter(variantVisible) : activeAllSprites().filter(spriteVisible);
+  }
   function cellSpriteVariant(row, col) {
     return groupBy === "sprite" ? { sprite: row, variant: col } : { sprite: col, variant: row };
   }
@@ -736,8 +775,8 @@
   // here, each tile gets its own "Sprite · Variant" caption underneath.
   function renderFilteredGrid(predicate) {
     const items = [];
-    activeAllSprites().forEach(sprite => {
-      activeVariantsForSprite(sprite).forEach(variant => {
+    activeAllSprites().filter(spriteVisible).forEach(sprite => {
+      activeVariantsForSprite(sprite).filter(variantVisible).forEach(variant => {
         const level = state[sprite + "||" + variant] || 0;
         if (predicate(level)) items.push({ sprite, variant });
       });
@@ -939,6 +978,17 @@
   masteryFilter = "all";
   document.getElementById("collectionFilter").value = "all";
   document.getElementById("masteryFilter").value = "all";
+
+  // Sprite/Variant multiselects: populate their option lists, and make sure
+  // a refresh always starts with nothing selected (same reasoning as the
+  // Collection/Mastery reset above — some browsers restore <select> state
+  // across a refresh even though selectedSprites/selectedVariants above are
+  // already freshly initialized to []).
+  populateSpriteVariantFilterOptions();
+  selectedSprites = [];
+  selectedVariants = [];
+  Array.from(document.getElementById("spriteFilter").options).forEach(o => { o.selected = false; });
+  Array.from(document.getElementById("variantFilter").options).forEach(o => { o.selected = false; });
 
   updateGroupButton();
   updateViewModeButton();
