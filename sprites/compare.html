@@ -57,7 +57,7 @@
     .page-links a:hover { color: var(--opal-4); }
     .page-links a.current { color: var(--opal-3); pointer-events: none; }
 
-    header { padding: 2.5rem 0 2rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+    header { padding: 2.5rem 0 1rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
     .title-row { display: flex; align-items: center; gap: 0.6rem; }
     .title-icon {
       font-family: 'DM Serif Display', serif; font-style: italic; font-size: 2.6rem; color: var(--opal-4);
@@ -72,7 +72,14 @@
     @keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
     .tagline { font-size: 0.9rem; color: var(--text-dim); letter-spacing: 0.04em; max-width: 680px; line-height: 1.7; }
 
-    .divider { width: 100%; height: 1px; margin-bottom: 2rem; background: linear-gradient(90deg, transparent 0%, var(--opal-1) 20%, var(--opal-2) 50%, var(--opal-3) 80%, transparent 100%); opacity: 0.35; }
+    .divider { width: 100%; height: 1px; margin-bottom: 1rem; background: linear-gradient(90deg, transparent 0%, var(--opal-1) 20%, var(--opal-2) 50%, var(--opal-3) 80%, transparent 100%); opacity: 0.35; }
+
+    /* Prominent button nav bar above the main content — distinct from the
+       small text-link nav up top, which is more of a breadcrumb. This one's
+       meant to be a fast, obvious way to jump between the four sprite pages
+       without hunting for a link. */
+    .page-navbar { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-bottom: 1.5rem; }
+    .page-navbar .btn { text-decoration: none; flex: 1 1 0; text-align: center; }
 
     .frame-legend { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); padding: 0 0.2rem; }
 
@@ -199,6 +206,13 @@
   </header>
 
   <div class="divider"></div>
+
+  <div class="page-navbar">
+    <a class="btn accent" href="/index.html">Home</a>
+    <a class="btn accent" href="index.html">Sprites</a>
+    <a class="btn accent" href="runners.html">Runners</a>
+    <a class="btn accent" href="override.html">Override</a>
+  </div>
 
   <div class="compare-sources">
 

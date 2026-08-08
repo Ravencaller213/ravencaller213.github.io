@@ -62,7 +62,7 @@
     .page-links a:hover { color: var(--opal-4); }
     .page-links a.current { color: var(--opal-3); pointer-events: none; }
 
-    header { padding: 2.5rem 0 2rem; display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
+    header { padding: 2.5rem 0 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
     .header-row { display: flex; flex-direction: column; align-items: center; gap: 0.7rem; }
     .page-logo { height: 140px; width: auto; border-radius: 10px; }
     .wordmark {
@@ -74,7 +74,14 @@
     @keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
     .tagline { font-size: 0.8rem; color: var(--text-dim); letter-spacing: 0.04em; max-width: 680px; line-height: 1.7; text-align: center; }
 
-    .divider { width: 100%; height: 1px; margin-bottom: 2rem; background: linear-gradient(90deg, transparent 0%, var(--opal-1) 20%, var(--opal-2) 50%, var(--opal-3) 80%, transparent 100%); opacity: 0.35; }
+    .divider { width: 100%; height: 1px; margin-bottom: 1rem; background: linear-gradient(90deg, transparent 0%, var(--opal-1) 20%, var(--opal-2) 50%, var(--opal-3) 80%, transparent 100%); opacity: 0.35; }
+
+    /* Prominent button nav bar above the main panels — distinct from the
+       small text-link nav up top, which is more of a breadcrumb. This one's
+       meant to be a fast, obvious way to jump between the four sprite pages
+       without hunting for a link. */
+    .page-navbar { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-bottom: 1.5rem; }
+    .page-navbar .btn { text-decoration: none; flex: 1 1 0; text-align: center; }
 
     /* ── Toolbar: one outer frame, four sections inside ─────────────────────────
        Instead of four separately-bordered boxes (which never came out matched in
@@ -97,24 +104,67 @@
     .tool-section-view .btn { width: 120px; height: 52px; margin: 0 auto; padding: 0 6px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 0.72rem; line-height: 1.2; }
     .tool-section-view .btn.active { background: rgba(56,189,248,0.16); border-color: rgba(56,189,248,0.55); color: var(--text); }
 
-    /* Section 2 (Filters): widened from the original 140px to fit the two new
-       multiselect dropdowns (Sprite / Variant) alongside the existing
-       Collection/Mastery selects and the Compare button. */
-    .tool-section-filters { width: 220px; flex: 0 0 220px; }
-    .filter-multi { min-height: 92px; }
+    /* Sections 2+3+4 (Completion + Filters + Save): stacked into a single
+       column — Completion on top, Filters in the middle, Save on the
+       bottom — instead of each taking its own full-height slot beside View.
+       This column grows to fill whatever's left beside View (same role
+       Completion used to play alone), which is what actually makes a true
+       single-row layout possible below — a fixed narrow width was forcing
+       Filters' four fields and Save's four buttons to wrap into a 2x2 grid
+       with a dangling empty cell. Every subsection lays its controls out in
+       one row (flex-wrap: nowrap, each item shrinking to fit) instead of a
+       vertical stack or a wrapped grid. */
+    .tool-section-filters-save { flex: 1 1 480px; min-width: 480px; gap: 10px; }
+    .tool-subsection { display: flex; flex-direction: column; gap: 8px; }
+    .tool-subsection + .tool-subsection { border-top: 1px solid var(--border); padding-top: 10px; }
+    .filters-row { display: flex; flex-wrap: nowrap; gap: 10px; align-items: flex-end; }
+    .filters-row .filter-field { flex: 1 1 0; min-width: 0; }
 
-    /* Section 3 (Save): 120px wide, buttons centered to 96px. Shrunk to fit a
-       third button (Export Missing) — same idea as the View section, smaller
-       footprint per button so three fit where two used to. */
-    .tool-section-save { width: 120px; flex: 0 0 120px; gap: 6px; }
-    .tool-section-save .btn { width: 96px; flex: 1 1 0; min-height: 48px; max-height: 72px; margin: 0 auto; padding: 0 4px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
-    .save-icon { font-size: 1.1rem; line-height: 1; }
-    .save-label { font-size: 0.6rem; letter-spacing: 0.02em; text-align: center; line-height: 1.15; }
+    /* Sprite/Variant multiselect: a normal-looking dropdown button that opens
+       a checkbox list, instead of a native <select multiple> — the native
+       version renders as a permanently-open scroll box with no visual
+       affordance for "these are checked," which read as broken rather than
+       as a filter. */
+    .ms-dropdown { position: relative; }
+    .ms-toggle {
+      width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: var(--text);
+      background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.45rem 0.6rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 0.4rem;
+    }
+    .ms-toggle:hover { border-color: var(--border-hi); }
+    .ms-toggle.has-selection { color: var(--opal-4); border-color: rgba(56,189,248,0.35); }
+    .ms-toggle-caret { font-size: 0.6rem; color: var(--text-faint); transition: transform 0.2s ease; }
+    .ms-dropdown.open .ms-toggle-caret { transform: rotate(180deg); }
+    .ms-panel {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 20;
+      background: var(--surface-hi); border: 1px solid var(--border-hi); border-radius: 8px;
+      max-height: 220px; overflow-y: auto; padding: 0.35rem; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .ms-dropdown.open .ms-panel { display: block; }
+    .ms-option { display: flex; align-items: center; gap: 0.5rem; padding: 0.32rem 0.4rem; border-radius: 6px; cursor: pointer; font-size: 0.78rem; color: var(--text); }
+    .ms-option:hover { background: rgba(255,255,255,0.06); }
+    .ms-option input[type="checkbox"] { accent-color: var(--opal-4); cursor: pointer; }
+    /* All/None frozen at the top of the scrollable panel via sticky — same
+       background as the panel itself so scrolled-past options disappear
+       behind it cleanly instead of showing through. */
+    .ms-panel-actions {
+      display: flex; gap: 0.4rem; padding: 0.3rem 0.4rem 0.5rem; border-bottom: 1px solid var(--border);
+      margin-bottom: 0.3rem; position: sticky; top: 0; background: var(--surface-hi); z-index: 1;
+    }
+    .ms-panel-actions button { flex: 1 1 0; font-size: 0.68rem; padding: 0.3rem 0.4rem; border-radius: 6px; background: transparent; border: 1px solid var(--border); color: var(--text-dim); cursor: pointer; }
+    .ms-panel-actions button:hover { color: var(--text); border-color: var(--border-hi); }
 
-    /* Section 4 (Completion): takes whatever width is left in the frame. Label
-       stays pinned top-left like the others; the bars live in their own centered
-       body beneath it. */
-    .tool-section-completion { flex: 1 1 auto; min-width: 260px; }
+    /* Save buttons: thinner horizontal pills (icon + label side by side), all
+       four in one row (not a wrapping 2x2 grid) — instead of the old
+       single-file column of tall boxy buttons. */
+    .save-row { display: flex; flex-wrap: nowrap; gap: 8px; }
+    .save-btn {
+      flex: 1 1 0; min-width: 0; padding: 0.4rem 0.5rem; border-radius: 8px;
+      display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px;
+    }
+    .save-icon { font-size: 0.9rem; line-height: 1; flex: 0 0 auto; }
+    .save-label { font-size: 0.63rem; letter-spacing: 0.01em; text-align: center; line-height: 1.15; }
+
     .completion-body { display: flex; flex-direction: column; gap: 14px; flex: 1; justify-content: center; }
     /* stat-top / stat-bottom share the same 2-column grid (label column + bar
        column) so the ratio+% text on the row below lands directly under the bar,
@@ -264,13 +314,17 @@
     <div class="header-row">
       <img class="page-logo" src="logos/ch7s3_runners_logo.png" alt="Runners" />
     </div>
-    <p class="tagline">
-      Click any cell to cycle none &rarr; collected &rarr; mastered.
-      Flip the axes, switch between image and text cells, or filter down to what's left.
-    </p>
+    <p class="tagline">Click any cell to cycle none &rarr; collected &rarr; mastered.</p>
   </header>
 
   <div class="divider"></div>
+
+  <div class="page-navbar">
+    <a class="btn accent" href="/index.html">Home</a>
+    <a class="btn accent" href="index.html">Sprites</a>
+    <a class="btn accent" href="override.html">Override</a>
+    <a class="btn accent" href="compare.html">Compare</a>
+  </div>
 
   <div class="toolbar-frame">
 
@@ -286,76 +340,93 @@
       </div>
     </div>
 
-    <div class="tool-section tool-section-filters">
-      <div class="frame-legend">Filters</div>
-      <div class="filter-field">
-        <label for="collectionFilter">Collection</label>
-        <select class="filter-select" id="collectionFilter" autocomplete="off" onchange="onFilterChange()">
-          <option value="all">All</option>
-          <option value="owned">Owned</option>
-          <option value="unowned">Unowned</option>
-        </select>
-      </div>
-      <div class="filter-field">
-        <label for="masteryFilter">Mastery</label>
-        <select class="filter-select" id="masteryFilter" autocomplete="off" onchange="onFilterChange()">
-          <option value="all">All</option>
-          <option value="unmastered">Unmastered</option>
-          <option value="mastered">Mastered</option>
-        </select>
-      </div>
-      <div class="filter-field">
-        <label for="spriteFilter">Sprite (multi)</label>
-        <select class="filter-select filter-multi" id="spriteFilter" multiple size="5" autocomplete="off" onchange="onSpriteVariantFilterChange()"></select>
-      </div>
-      <div class="filter-field">
-        <label for="variantFilter">Variant (multi)</label>
-        <select class="filter-select filter-multi" id="variantFilter" multiple size="5" autocomplete="off" onchange="onSpriteVariantFilterChange()"></select>
-      </div>
-      <a class="btn accent" style="text-align:center; text-decoration:none;" href="compare.html">Compare</a>
-    </div>
+    <div class="tool-section tool-section-filters-save">
 
-    <div class="tool-section tool-section-save">
-      <div class="frame-legend">Save</div>
-      <button class="btn accent save-btn" onclick="document.getElementById('importFile').click()">
-        <span class="save-icon">&#8681;</span><span class="save-label">Import JSON</span>
-      </button>
-      <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this.files[0])">
-      <button class="btn accent save-btn" onclick="exportState()">
-        <span class="save-icon">&#8679;</span><span class="save-label">Export Full JSON</span>
-      </button>
-      <button class="btn accent save-btn" onclick="exportMissing()">
-        <span class="save-icon">&#8679;</span><span class="save-label">Export Missing</span>
-      </button>
-      <button class="btn accent save-btn" onclick="openShareCodeModal()">
-        <span class="save-icon">&#128273;</span><span class="save-label">Share Code</span>
-      </button>
-    </div>
-
-    <div class="tool-section tool-section-completion">
-      <div class="frame-legend">Completion</div>
-      <div class="completion-body">
-        <div class="stat-block">
-          <div class="stat-top">
-            <span class="stat-label">Completion</span>
-            <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+      <div class="tool-subsection tool-subsection-completion">
+        <div class="frame-legend">Completion</div>
+        <div class="completion-body">
+          <div class="stat-block">
+            <div class="stat-top">
+              <span class="stat-label">Completion</span>
+              <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+            </div>
+            <div class="stat-bottom">
+              <span class="stat-label-spacer"></span>
+              <span class="stat-ratio" id="prog">0 / 121 &middot; 0%</span>
+            </div>
           </div>
-          <div class="stat-bottom">
-            <span class="stat-label-spacer"></span>
-            <span class="stat-ratio" id="prog">0 / 121 &middot; 0%</span>
-          </div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-top">
-            <span class="stat-label">Mastery</span>
-            <div class="progress-bar"><div class="progress-fill mastery-fill" id="masteryFill"></div></div>
-          </div>
-          <div class="stat-bottom">
-            <span class="stat-label-spacer"></span>
-            <span class="stat-ratio" id="masteryProg">0 / 0 &middot; 0%</span>
+          <div class="stat-block">
+            <div class="stat-top">
+              <span class="stat-label">Mastery</span>
+              <div class="progress-bar"><div class="progress-fill mastery-fill" id="masteryFill"></div></div>
+            </div>
+            <div class="stat-bottom">
+              <span class="stat-label-spacer"></span>
+              <span class="stat-ratio" id="masteryProg">0 / 0 &middot; 0%</span>
+            </div>
           </div>
         </div>
       </div>
+
+      <div class="tool-subsection tool-subsection-filters">
+        <div class="frame-legend">Filters</div>
+        <div class="filters-row">
+          <div class="filter-field">
+            <label for="collectionFilter">Collection</label>
+            <select class="filter-select" id="collectionFilter" autocomplete="off" onchange="onFilterChange()">
+              <option value="all">All</option>
+              <option value="owned">Owned</option>
+              <option value="unowned">Unowned</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label for="masteryFilter">Mastery</label>
+            <select class="filter-select" id="masteryFilter" autocomplete="off" onchange="onFilterChange()">
+              <option value="all">All</option>
+              <option value="unmastered">Unmastered</option>
+              <option value="mastered">Mastered</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label>Sprite</label>
+            <div class="ms-dropdown" id="spriteFilterDropdown">
+              <button type="button" class="ms-toggle" id="spriteFilterToggle" onclick="toggleMsDropdown('sprite')">
+                <span id="spriteFilterToggleLabel">All sprites</span><span class="ms-toggle-caret">&#9662;</span>
+              </button>
+              <div class="ms-panel" id="spriteFilterPanel"></div>
+            </div>
+          </div>
+          <div class="filter-field">
+            <label>Variant</label>
+            <div class="ms-dropdown" id="variantFilterDropdown">
+              <button type="button" class="ms-toggle" id="variantFilterToggle" onclick="toggleMsDropdown('variant')">
+                <span id="variantFilterToggleLabel">All variants</span><span class="ms-toggle-caret">&#9662;</span>
+              </button>
+              <div class="ms-panel" id="variantFilterPanel"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-subsection tool-subsection-save">
+        <div class="frame-legend">Save</div>
+        <div class="save-row">
+          <button class="btn accent save-btn" onclick="document.getElementById('importFile').click()">
+            <span class="save-icon">&#8681;</span><span class="save-label">Import JSON</span>
+          </button>
+          <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this.files[0])">
+          <button class="btn accent save-btn" onclick="exportState()">
+            <span class="save-icon">&#8679;</span><span class="save-label">Export Full JSON</span>
+          </button>
+          <button class="btn accent save-btn" onclick="exportMissing()">
+            <span class="save-icon">&#8679;</span><span class="save-label">Export Missing</span>
+          </button>
+          <button class="btn accent save-btn" onclick="openShareCodeModal()">
+            <span class="save-icon">&#128273;</span><span class="save-label">Share Code</span>
+          </button>
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -659,29 +730,112 @@
     return null; // All + All: no filter
   }
 
-  // Sprite/Variant multiselects narrow which rows/columns show up at all —
+  // Sprite/Variant filters narrow which rows/columns show up at all —
   // independent of (and combinable with) the Collection/Mastery level
   // filters above. Empty selection means "no restriction," same convention
   // as HIDDEN_VARIANTS elsewhere. Only affects what's rendered in the grid,
   // same as Collection/Mastery — completion stats and exports intentionally
   // still cover the whole collection regardless of what's currently shown.
+  //
+  // UI-wise these are checkbox-list dropdowns rather than native
+  // <select multiple> — the native control renders as an always-open
+  // scrollbox with no clear "selected" affordance, which read as broken
+  // rather than as a filter. openMsDropdown tracks which one (if any) is
+  // currently open so a click anywhere else closes it.
   let selectedSprites = [];
   let selectedVariants = [];
+  let openMsDropdown = null; // "sprite" | "variant" | null
   function spriteVisible(sprite) { return selectedSprites.length === 0 || selectedSprites.includes(sprite); }
   function variantVisible(variant) { return selectedVariants.length === 0 || selectedVariants.includes(variant); }
-  function getSelectedOptions(id) {
-    return Array.from(document.getElementById(id).selectedOptions).map(o => o.value);
+
+  function msConfig(type) {
+    return type === "sprite"
+      ? { options: SPRITES, get: () => selectedSprites, set: v => { selectedSprites = v; }, noun: "sprite" }
+      : { options: activeVariants(), get: () => selectedVariants, set: v => { selectedVariants = v; }, noun: "variant" };
   }
-  function onSpriteVariantFilterChange() {
-    selectedSprites = getSelectedOptions("spriteFilter");
-    selectedVariants = getSelectedOptions("variantFilter");
+
+  function updateMsToggleLabel(type) {
+    const { get, noun, options } = msConfig(type);
+    const sel = get();
+    const label = document.getElementById(type + "FilterToggleLabel");
+    const toggle = document.getElementById(type + "FilterToggle");
+    if (sel.length === 0) label.textContent = `All ${noun}s`;
+    else if (sel.length === 1 && sel[0] === "__none__") label.textContent = `No ${noun}s`;
+    else if (sel.length === options.length) label.textContent = `All ${noun}s`;
+    else if (sel.length === 1) label.textContent = sel[0];
+    else label.textContent = `${sel.length} ${noun}s selected`;
+    toggle.classList.toggle("has-selection", sel.length > 0);
+  }
+
+  function renderMsPanel(type) {
+    const { options, get } = msConfig(type);
+    const sel = get();
+    const panel = document.getElementById(type + "FilterPanel");
+    // All/None first in the markup (not appended after the option list) so
+    // the sticky positioning actually has something at the top of the
+    // scroll container to stick to.
+    panel.innerHTML = `
+      <div class="ms-panel-actions">
+        <button type="button" onclick="msSelectAll('${type}')">All</button>
+        <button type="button" onclick="msSelectNone('${type}')">None</button>
+      </div>` + options.map(opt => `
+      <label class="ms-option">
+        <input type="checkbox" value="${opt}" ${sel.includes(opt) ? "checked" : ""} onchange="onMsOptionChange('${type}', this)">
+        <span>${opt}</span>
+      </label>`).join("");
+  }
+
+  function onMsOptionChange(type, checkbox) {
+    const { get, set } = msConfig(type);
+    const sel = get();
+    if (checkbox.checked) { if (!sel.includes(checkbox.value)) sel.push(checkbox.value); }
+    else { set(sel.filter(v => v !== checkbox.value)); }
+    updateMsToggleLabel(type);
     render();
   }
-  function populateSpriteVariantFilterOptions() {
-    const spriteSel = document.getElementById("spriteFilter");
-    spriteSel.innerHTML = SPRITES.map(s => `<option value="${s}">${s}</option>`).join("");
-    const variantSel = document.getElementById("variantFilter");
-    variantSel.innerHTML = activeVariants().map(v => `<option value="${v}">${v}</option>`).join("");
+
+  function msSelectAll(type) {
+    const { set } = msConfig(type);
+    set([]); // empty selection == everything visible, same as picking every option
+    renderMsPanel(type);
+    updateMsToggleLabel(type);
+    render();
+  }
+  function msSelectNone(type) {
+    // An empty array means "show everything" everywhere else in this filter
+    // (spriteVisible/variantVisible), so an explicit "deselect all" needs a
+    // sentinel value that can never match a real sprite/variant name instead,
+    // otherwise clicking None would silently flip back to showing everything.
+    const { set } = msConfig(type);
+    set(["__none__"]);
+    renderMsPanel(type);
+    updateMsToggleLabel(type);
+    render();
+  }
+
+  function toggleMsDropdown(type) {
+    if (openMsDropdown === type) { closeMsDropdown(); return; }
+    renderMsPanel(type);
+    document.getElementById(type + "FilterDropdown").classList.add("open");
+    if (openMsDropdown && openMsDropdown !== type) {
+      document.getElementById(openMsDropdown + "FilterDropdown").classList.remove("open");
+    }
+    openMsDropdown = type;
+  }
+  function closeMsDropdown() {
+    if (!openMsDropdown) return;
+    document.getElementById(openMsDropdown + "FilterDropdown").classList.remove("open");
+    openMsDropdown = null;
+  }
+  document.addEventListener("click", e => {
+    if (!openMsDropdown) return;
+    const dropdown = document.getElementById(openMsDropdown + "FilterDropdown");
+    if (dropdown && !dropdown.contains(e.target)) closeMsDropdown();
+  });
+
+  function initMsDropdowns() {
+    updateMsToggleLabel("sprite");
+    updateMsToggleLabel("variant");
   }
 
   function tableColumns() {
@@ -754,7 +908,12 @@
     const rows = getGroups();
     const cols = tableColumns();
     const rowAxisLabel = groupBy === "sprite" ? "Sprite" : "Variant";
-    const gridCols = "120px " + cols.map(() => "minmax(44px, 1fr)").join(" ");
+    // Capped at 120px per column (not 1fr) so a heavily-filtered view with
+    // only one or two columns doesn't stretch each cell to fill the entire
+    // table width — cells stay a consistent, sane size no matter how few
+    // columns the current filter leaves visible. Still floors at 44px and
+    // lets table-wrap scroll horizontally when there are many columns.
+    const gridCols = "120px " + cols.map(() => "minmax(44px, 120px)").join(" ");
     let html = `<div class="sprite-grid" style="grid-template-columns: ${gridCols};">`;
     html += `<div class="g-header row-label-col">${rowAxisLabel}</div>`;
     cols.forEach(c => { html += `<div class="g-header"><span class="${groupBy === "sprite" ? (VCLS[c] || "") : spriteRarityClass(c)}">${c}</span></div>`; });
@@ -979,16 +1138,11 @@
   document.getElementById("collectionFilter").value = "all";
   document.getElementById("masteryFilter").value = "all";
 
-  // Sprite/Variant multiselects: populate their option lists, and make sure
-  // a refresh always starts with nothing selected (same reasoning as the
-  // Collection/Mastery reset above — some browsers restore <select> state
-  // across a refresh even though selectedSprites/selectedVariants above are
-  // already freshly initialized to []).
-  populateSpriteVariantFilterOptions();
+  // Sprite/Variant dropdowns: start every load with nothing selected (i.e.
+  // "show everything"), and set their toggle labels to match.
   selectedSprites = [];
   selectedVariants = [];
-  Array.from(document.getElementById("spriteFilter").options).forEach(o => { o.selected = false; });
-  Array.from(document.getElementById("variantFilter").options).forEach(o => { o.selected = false; });
+  initMsDropdowns();
 
   updateGroupButton();
   updateViewModeButton();
