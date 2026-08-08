@@ -50,9 +50,19 @@
     nav.top { padding: 2rem 0 0; display: flex; justify-content: space-between; align-items: center; }
     .nav-back { font-size: 0.85rem; color: var(--text-dim); text-decoration: none; letter-spacing: 0.02em; transition: color 0.25s ease; display: inline-flex; align-items: center; gap: 0.4rem; }
     .nav-back:hover { color: var(--opal-4); }
+    .nav-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; }
     .nav-tag { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--border-hi); color: var(--text-dim); }
+    .page-links { display: flex; gap: 0.9rem; font-size: 0.72rem; letter-spacing: 0.03em; }
+    .page-links a { color: var(--text-dim); text-decoration: none; transition: color 0.2s ease; }
+    .page-links a:hover { color: var(--opal-4); }
+    .page-links a.current { color: var(--opal-3); pointer-events: none; }
 
     header { padding: 2.5rem 0 2rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+    .title-row { display: flex; align-items: center; gap: 0.6rem; }
+    .title-icon {
+      font-family: 'DM Serif Display', serif; font-style: italic; font-size: 2.6rem; color: var(--opal-4);
+      line-height: 1;
+    }
     .wordmark {
       font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(2.2rem, 5vw, 3.4rem); letter-spacing: -0.02em; line-height: 1;
       background: linear-gradient(105deg, var(--opal-3) 0%, var(--text) 28%, var(--opal-4) 50%, var(--text) 72%, var(--opal-2) 100%);
@@ -83,6 +93,8 @@
     .source-toggle button.active { color: var(--opal-4); border-color: rgba(56,189,248,0.35); background: rgba(56,189,248,0.08); }
     .name-input { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--text); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 0.7rem; }
     .name-input::placeholder { color: var(--text-faint); }
+    .code-input-row { display: flex; gap: 0.5rem; }
+    .code-input { flex: 1 1 auto; font-family: monospace; font-size: 0.78rem; }
     .source-status { font-size: 0.75rem; color: var(--text-dim); min-height: 1.1em; }
     .source-status.ready { color: var(--opal-5); }
     .source-status.error { color: #f28b82; }
@@ -146,15 +158,26 @@
 <div class="page">
 
   <nav class="top">
-    <a class="nav-back" href="index.html">&larr; sprite checklist</a>
-    <span class="nav-tag">Compare</span>
+    <a class="nav-back" href="/index.html">&larr; ravencaller</a>
+    <div class="nav-right">
+      <div class="page-links">
+        <a href="index.html">Hub</a>
+        <a href="runners.html">Runners</a>
+        <a href="override.html">Override</a>
+        <a href="compare.html" class="current">Compare</a>
+      </div>
+      <span class="nav-tag">Sprite Checklist &middot; Compare</span>
+    </div>
   </nav>
 
   <header>
-    <h1 class="wordmark">Compare</h1>
+    <div class="title-row">
+      <span class="title-icon">&#8644;</span>
+      <h1 class="wordmark">Compare</h1>
+    </div>
     <p class="tagline">
-      See what's unique to each collection. Person A defaults to your saved progress on this browser
-      (or upload an export instead); Person B always needs an uploaded export.
+      See what's unique to each collection. Person A defaults to your saved progress on this browser;
+      either side can also upload an export or paste a share code from runners.html instead.
     </p>
   </header>
 
@@ -168,17 +191,30 @@
       <div class="source-toggle">
         <button class="btn small accent active" id="modeA-saved" onclick="setSourceModeA('saved')">Use saved progress</button>
         <button class="btn small" id="modeA-upload" onclick="setSourceModeA('upload')">Upload export</button>
+        <button class="btn small" id="modeA-code" onclick="setSourceModeA('code')">Paste code</button>
       </div>
       <button class="btn small accent" id="uploadBtnA" style="display:none" onclick="document.getElementById('fileA').click()">Choose file&hellip;</button>
       <input type="file" id="fileA" accept="application/json" style="display:none" onchange="handleUpload('A', this.files[0])" />
+      <div class="code-input-row" id="codeRowA" style="display:none">
+        <input type="text" class="filter-select code-input" id="codeA" placeholder="Paste share code&hellip;" autocomplete="off" />
+        <button class="btn small accent" onclick="handleCode('A')">Load</button>
+      </div>
       <div class="source-status" id="statusA"></div>
     </div>
 
     <div class="source-panel">
       <h2>Person B</h2>
       <input class="name-input" id="nameB" type="text" placeholder="Person B" oninput="onNameChange()" />
-      <button class="btn small accent" onclick="document.getElementById('fileB').click()">Choose file&hellip;</button>
+      <div class="source-toggle">
+        <button class="btn small accent active" id="modeB-upload" onclick="setSourceModeB('upload')">Upload export</button>
+        <button class="btn small" id="modeB-code" onclick="setSourceModeB('code')">Paste code</button>
+      </div>
+      <button class="btn small accent" id="uploadBtnB" onclick="document.getElementById('fileB').click()">Choose file&hellip;</button>
       <input type="file" id="fileB" accept="application/json" style="display:none" onchange="handleUpload('B', this.files[0])" />
+      <div class="code-input-row" id="codeRowB" style="display:none">
+        <input type="text" class="filter-select code-input" id="codeB" placeholder="Paste share code&hellip;" autocomplete="off" />
+        <button class="btn small accent" onclick="handleCode('B')">Load</button>
+      </div>
       <div class="source-status" id="statusB">Upload an export to compare.</div>
     </div>
 
@@ -197,17 +233,17 @@
 
   <footer>
     <p>ravencaller213 &middot; sprite collection compare</p>
-    <p><a href="index.html">back to sprite checklist</a></p>
+    <p><a href="index.html">hub</a> &middot; <a href="runners.html">runners tracker</a> &middot; <a href="override.html">override</a></p>
   </footer>
 
 </div><!-- end .page -->
 
 <script>
-  // ---- Data layer, copied from sprite-checklist/index.html so this page knows
+  // ---- Data layer, copied from sprites/index.html so this page knows
   // the same sprites/variants/valid-combo rules. Kept in sync by hand whenever
   // the main tracker's roster or overrides change. ----
   // Kept in sync by hand with the main tracker's SPRITES order.
-  const SPRITES = ["John Wick","Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Grim","Air","Seven","Pollo","Peely","Llama","Ironmouse"];
+  const SPRITES = ["John Wick","Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Grim","Air","Seven","Ironmouse","Pollo","Peely","Llama"];
   const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube","Quack"];
   const BURNT = "Burnt Peanut";
   const ALL_SPRITES = SPRITES;
@@ -318,6 +354,43 @@
     return "images/" + sprite.toLowerCase().replace(/ /g, "_") + "_" + variant.toLowerCase() + ".webp";
   }
 
+  // ---- Share code decoding — the paired half of runners.html's encoder.
+  // Every sprite||variant combo's level is one base-3 digit of a single
+  // BigInt, in SPRITES/variantsForSprite order (identical here and in
+  // runners.html, kept in sync by hand). Decoding walks that BigInt back out
+  // one base-3 digit at a time for exactly pairs.length iterations, which is
+  // what makes leading (most-significant) zero-state entries come back
+  // correctly with no separate padding scheme.
+  function buildCanonicalPairs() {
+    const pairs = [];
+    SPRITES.forEach(sprite => { variantsForSprite(sprite).forEach(variant => pairs.push([sprite, variant])); });
+    return pairs;
+  }
+  function base64UrlToBytes(str) {
+    let b64 = str.replace(/-/g, "+").replace(/_/g, "/");
+    while (b64.length % 4) b64 += "=";
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return bytes;
+  }
+  function decodeCodeToState(code) {
+    const bytes = base64UrlToBytes(code.trim());
+    if (bytes.length === 0) return {};
+    let hex = "";
+    bytes.forEach(b => { hex += b.toString(16).padStart(2, "0"); });
+    let big = BigInt("0x" + hex);
+    const pairs = buildCanonicalPairs();
+    const digits = new Array(pairs.length);
+    for (let i = pairs.length - 1; i >= 0; i--) {
+      digits[i] = Number(big % 3n);
+      big /= 3n;
+    }
+    const state = {};
+    pairs.forEach(([sprite, variant], i) => { if (digits[i] > 0) state[sprite + "||" + variant] = digits[i]; });
+    return state;
+  }
+
   const missingImages = new Set();
   function markImageMissing(src, imgEl) {
     missingImages.add(src);
@@ -344,14 +417,44 @@
 
   // ---- Compare-page-specific state ----
   let stateA = null, stateB = null;
-  let sourceModeA = "saved"; // "saved" | "upload"
+  let sourceModeA = "saved"; // "saved" | "upload" | "code"
+  let sourceModeB = "upload"; // "upload" | "code"
 
   function setSourceModeA(mode) {
     sourceModeA = mode;
     document.getElementById("modeA-saved").classList.toggle("active", mode === "saved");
     document.getElementById("modeA-upload").classList.toggle("active", mode === "upload");
+    document.getElementById("modeA-code").classList.toggle("active", mode === "code");
     document.getElementById("uploadBtnA").style.display = mode === "upload" ? "" : "none";
+    document.getElementById("codeRowA").style.display = mode === "code" ? "" : "none";
     if (mode === "saved") loadSavedA();
+    else if (mode === "upload") setStatus("statusA", "Choose a file to upload.", "");
+    else setStatus("statusA", "Paste a share code from runners.html and hit Load.", "");
+  }
+
+  function setSourceModeB(mode) {
+    sourceModeB = mode;
+    document.getElementById("modeB-upload").classList.toggle("active", mode === "upload");
+    document.getElementById("modeB-code").classList.toggle("active", mode === "code");
+    document.getElementById("uploadBtnB").style.display = mode === "upload" ? "" : "none";
+    document.getElementById("codeRowB").style.display = mode === "code" ? "" : "none";
+    if (mode === "upload") setStatus("statusB", "Upload an export to compare.", "");
+    else setStatus("statusB", "Paste a share code from runners.html and hit Load.", "");
+  }
+
+  function handleCode(who) {
+    const input = document.getElementById(who === "A" ? "codeA" : "codeB");
+    const code = input.value.trim();
+    if (!code) { setStatus(who === "A" ? "statusA" : "statusB", "Paste a code first.", "error"); return; }
+    try {
+      const parsed = decodeCodeToState(code);
+      const count = Object.keys(parsed).length;
+      if (who === "A") { stateA = parsed; setStatus("statusA", `Loaded ${count} entr${count === 1 ? "y" : "ies"} from code.`, "ready"); }
+      else { stateB = parsed; setStatus("statusB", `Loaded ${count} entr${count === 1 ? "y" : "ies"} from code.`, "ready"); }
+      recompute();
+    } catch (e) {
+      setStatus(who === "A" ? "statusA" : "statusB", "Couldn't read that code — check for typos or a missing character.", "error");
+    }
   }
 
   function loadSavedA() {

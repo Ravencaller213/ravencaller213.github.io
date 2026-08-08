@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sprites — ravencaller</title>
+  <title>Sprites — Runners — ravencaller</title>
   <link rel="icon" type="image/png" href="/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -54,7 +54,17 @@
     .nav-tag { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--border-hi); color: var(--text-dim); }
     .save-timestamp { font-size: 0.68rem; color: var(--text-faint); letter-spacing: 0.02em; white-space: nowrap; }
 
-    header { padding: 2.5rem 0 2rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+    /* Cross-page nav links (Hub / Runners / Override / Compare) — shared across
+       all sprites pages so nobody's stuck navigating back through the
+       hub every time. Self-link on each page gets .current for a subtle marker. */
+    .page-links { display: flex; gap: 0.9rem; font-size: 0.72rem; letter-spacing: 0.03em; }
+    .page-links a { color: var(--text-dim); text-decoration: none; transition: color 0.2s ease; }
+    .page-links a:hover { color: var(--opal-4); }
+    .page-links a.current { color: var(--opal-3); pointer-events: none; }
+
+    header { padding: 2.5rem 0 2rem; display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
+    .header-row { display: flex; flex-direction: column; align-items: center; gap: 0.7rem; }
+    .page-logo { height: 140px; width: auto; border-radius: 10px; }
     .wordmark {
       font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(2.2rem, 5vw, 3.4rem); letter-spacing: -0.02em; line-height: 1;
       background: linear-gradient(105deg, var(--opal-3) 0%, var(--text) 28%, var(--opal-4) 50%, var(--text) 72%, var(--opal-2) 100%);
@@ -62,7 +72,7 @@
       animation: shimmer 8s ease-in-out infinite alternate;
     }
     @keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
-    .tagline { font-size: 0.9rem; color: var(--text-dim); letter-spacing: 0.04em; max-width: 680px; line-height: 1.7; }
+    .tagline { font-size: 0.8rem; color: var(--text-dim); letter-spacing: 0.04em; max-width: 680px; line-height: 1.7; text-align: center; }
 
     .divider { width: 100%; height: 1px; margin-bottom: 2rem; background: linear-gradient(90deg, transparent 0%, var(--opal-1) 20%, var(--opal-2) 50%, var(--opal-3) 80%, transparent 100%); opacity: 0.35; }
 
@@ -237,13 +247,21 @@
   <nav class="top">
     <a class="nav-back" href="/index.html">&larr; ravencaller</a>
     <div class="nav-right">
-      <span class="nav-tag">Sprite Checklist</span>
+      <div class="page-links">
+        <a href="index.html">Hub</a>
+        <a href="runners.html" class="current">Runners</a>
+        <a href="override.html">Override</a>
+        <a href="compare.html">Compare</a>
+      </div>
+      <span class="nav-tag">Sprite Checklist &middot; Runners</span>
       <span class="save-timestamp" id="lastSaved"></span>
     </div>
   </nav>
 
   <header>
-    <h1 class="wordmark">Sprites</h1>
+    <div class="header-row">
+      <img class="page-logo" src="logos/ch7s3_runners_logo.png" alt="Runners" />
+    </div>
     <p class="tagline">
       Click any cell to cycle none &rarr; collected &rarr; mastered.
       Flip the axes, switch between image and text cells, or filter down to what's left.
@@ -299,6 +317,9 @@
       <button class="btn accent save-btn" onclick="exportMissing()">
         <span class="save-icon">&#8679;</span><span class="save-label">Export Missing</span>
       </button>
+      <button class="btn accent save-btn" onclick="openShareCodeModal()">
+        <span class="save-icon">&#128273;</span><span class="save-label">Share Code</span>
+      </button>
     </div>
 
     <div class="tool-section tool-section-completion">
@@ -347,8 +368,8 @@
   <div class="table-wrap"><div id="list"></div></div>
 
   <footer>
-    <p>ravencaller213 &middot; sprite checklist</p>
-    <p><a href="compare.html">compare with a friend</a> &middot; <a href="index-OG.html">back to card view</a></p>
+    <p>ravencaller213 &middot; sprite checklist &middot; runners</p>
+    <p><a href="index.html">hub</a> &middot; <a href="override.html">override</a> &middot; <a href="compare.html">compare with a friend</a></p>
   </footer>
 
   <div class="modal-overlay" id="missingExportModal">
@@ -363,11 +384,24 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="shareCodeModal">
+    <div class="modal-box">
+      <h3>Your share code</h3>
+      <p>Copy this and send it however you like (Discord, text, etc). Paste it into Compare on the other end — no file needed.</p>
+      <input type="text" id="shareCodeText" class="filter-select" readonly onclick="this.select()" style="font-family: monospace; letter-spacing: 0.02em;" />
+      <div class="modal-actions">
+        <button class="btn accent" id="shareCodeCopyBtn" onclick="copyShareCode()">Copy</button>
+        <button class="btn btn-cancel" onclick="closeShareCodeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
 </div><!-- end .page -->
 
 <script>
-  // ---- Data layer. Uses the same localStorage key as index-OG.html (the old
-  // card-view backup), so progress saved on either page shows up on both. ----
+  // ---- Data layer. Shares localStorage key across all sprites pages
+  // (runners/override/compare), so progress saved on any of them shows up on
+  // all of them. (Formerly shared with index-OG.html, archived 2026-08-07.) ----
   // Default order matches the in-game Sprites menu exactly (per user, confirmed
   // against Google for Reaper's placement) — no more special-casing Burnt
   // Peanut's position, it's just wherever it actually sits in this list.
@@ -375,7 +409,7 @@
   // so they're back in the active list. John Wick is also new this update.
   // Order for these three (and any future new drops) is provisional — appended
   // at the end until an actual in-game menu position is confirmed.
-  const SPRITES = ["John Wick","Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Grim","Air","Seven","Pollo","Peely","Llama","Ironmouse"];
+  const SPRITES = ["John Wick","Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Grim","Air","Seven","Ironmouse","Pollo","Peely","Llama"];
   const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube","Quack"];
   const BURNT = "Burnt Peanut";
   const ALL_SPRITES = SPRITES;
@@ -756,6 +790,63 @@
     a.download = "fortnite_sprites_save.json";
     a.click();
     URL.revokeObjectURL(a.href);
+  }
+
+  // ---- Share code: compact base64url encoding of the whole collection state,
+  // for pasting into Compare instead of exporting/uploading a JSON file.
+  //
+  // Every sprite||variant combo's level (0/1/2) is one base-3 digit. Since
+  // both this page and compare.html already hardcode the same SPRITES /
+  // SPRITE_VARIANT_OVERRIDES (kept in sync by hand), the *order* of those
+  // digits never needs to be transmitted — position alone tells you which
+  // combo a digit belongs to, same as it already does for the on-screen grid.
+  // All ~116 digits are packed into a single BigInt (big = big*3 + digit),
+  // then serialized as bytes and base64url-encoded. Decoding just walks that
+  // BigInt back out one base-3 digit at a time for exactly pairs.length
+  // iterations — because that count is fixed and known up front, leading
+  // (most-significant) zero digits come back correctly with no separate
+  // padding scheme, unlike a naive fixed-width-string approach would need.
+  function buildCanonicalPairs() {
+    const pairs = [];
+    SPRITES.forEach(sprite => { variantsForSprite(sprite).forEach(variant => pairs.push([sprite, variant])); });
+    return pairs;
+  }
+  function bytesToBase64Url(bytes) {
+    let binary = "";
+    bytes.forEach(b => { binary += String.fromCharCode(b); });
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function encodeStateToCode(st) {
+    const pairs = buildCanonicalPairs();
+    let big = 0n;
+    pairs.forEach(([sprite, variant]) => {
+      const lvl = BigInt(st[sprite + "||" + variant] || 0);
+      big = big * 3n + lvl;
+    });
+    let hex = big.toString(16);
+    if (hex.length % 2) hex = "0" + hex;
+    const bytes = new Uint8Array(hex.length / 2);
+    for (let i = 0; i < bytes.length; i++) bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+    return bytesToBase64Url(bytes);
+  }
+  function openShareCodeModal() {
+    document.getElementById("shareCodeText").value = encodeStateToCode(state);
+    document.getElementById("shareCodeCopyBtn").textContent = "Copy";
+    document.getElementById("shareCodeModal").classList.add("open");
+  }
+  function closeShareCodeModal() {
+    document.getElementById("shareCodeModal").classList.remove("open");
+  }
+  function copyShareCode() {
+    const input = document.getElementById("shareCodeText");
+    input.select();
+    const finish = () => { document.getElementById("shareCodeCopyBtn").textContent = "Copied!"; };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(input.value).then(finish).catch(() => { document.execCommand("copy"); finish(); });
+    } else {
+      document.execCommand("copy");
+      finish();
+    }
   }
 
   // Only ever-visible/trackable variants (respects the Gem hide, and whatever

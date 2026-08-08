@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sprites — ravencaller</title>
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Serif+Display:ital@1&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:          #09090d;
+      --surface:     #0f0f18;
+      --surface-hi:  #15151f;
+      --border:      rgba(180,160,255,0.12);
+      --border-hi:   rgba(180,160,255,0.32);
+      --opal-1: #7b6fff;
+      --opal-2: #4dd9c0;
+      --opal-3: #a78bfa;
+      --opal-4: #38bdf8;
+      --opal-5: #6ee7b7;
+      --text:        #ddd8f0;
+      --text-dim:    #7a7495;
+      --text-faint:  #4f4a63;
+      --radius:      14px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background-color: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
+
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 10%,  rgba(123,111,255,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 35% at 80% 80%,  rgba(77,217,192,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 70% 20%,  rgba(167,139,250,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 30% at 10% 90%,  rgba(56,189,248,0.04) 0%, transparent 70%);
+    }
+
+    .page { position: relative; z-index: 1; max-width: min(96vw, 1900px); margin: 0 auto; padding: 0 2rem 6rem; }
+
+    nav.top { padding: 2rem 0 0; display: flex; justify-content: space-between; align-items: center; }
+    .nav-back { font-size: 0.85rem; color: var(--text-dim); text-decoration: none; letter-spacing: 0.02em; transition: color 0.25s ease; display: inline-flex; align-items: center; gap: 0.4rem; }
+    .nav-back:hover { color: var(--opal-4); }
+    .nav-tag { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--border-hi); color: var(--text-dim); }
+
+    header { padding: 2.5rem 0 2rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+    .wordmark {
+      font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(2.2rem, 5vw, 3.4rem); letter-spacing: -0.02em; line-height: 1;
+      background: linear-gradient(105deg, var(--opal-3) 0%, var(--text) 28%, var(--opal-4) 50%, var(--text) 72%, var(--opal-2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200% 100%;
+      animation: shimmer 8s ease-in-out infinite alternate;
+    }
+    @keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+    .tagline { font-size: 0.9rem; color: var(--text-dim); letter-spacing: 0.04em; max-width: 680px; line-height: 1.7; }
+
+    .divider { width: 100%; height: 1px; margin-bottom: 2rem; background: linear-gradient(90deg, transparent 0%, var(--opal-1) 20%, var(--opal-2) 50%, var(--opal-3) 80%, transparent 100%); opacity: 0.35; }
+
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 2rem 1.75rem 1.75rem; text-decoration: none; color: inherit; position: relative;
+      overflow: hidden; transition: border-color 0.3s ease, transform 0.3s ease; display: flex;
+      flex-direction: column; gap: 1rem; min-height: 240px;
+    }
+    .card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(123,111,255,0.06) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    .card:hover { border-color: var(--border-hi); transform: translateY(-3px); }
+    .card:hover::before { opacity: 1; }
+
+    .card-logo { height: 64px; width: auto; border-radius: 10px; align-self: center; }
+    .card-logo.card-logo-lg { height: 88px; }
+    .card-icon {
+      font-family: 'DM Serif Display', serif; font-style: italic; font-size: 3.6rem; color: var(--opal-4);
+      align-self: center; line-height: 1;
+    }
+
+    .card-title { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 1.5rem; color: var(--text); text-align: center; text-transform: uppercase; letter-spacing: 0.04em; }
+    .card-desc { font-size: 0.8rem; font-weight: 300; color: var(--text-dim); line-height: 1.7; flex: 1; text-align: center; }
+    .card-status { font-size: 0.62rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--opal-2); text-align: center; }
+    .card-status.pending { color: var(--text-faint); }
+    .card-arrow { position: absolute; bottom: 1.5rem; right: 1.75rem; font-size: 1.1rem; color: var(--text-faint); transition: color 0.3s ease, transform 0.3s ease; }
+    .card:hover .card-arrow { color: var(--opal-4); transform: translate(3px, -3px); }
+
+    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+    footer p { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.05em; }
+    footer a { color: var(--opal-3); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <nav class="top">
+    <a class="nav-back" href="/index.html">&larr; ravencaller</a>
+    <span class="nav-tag">Sprite Checklist</span>
+  </nav>
+
+  <header>
+    <h1 class="wordmark">Sprites</h1>
+    <p class="tagline">
+      Fortnite sprite collection tracking, by season. Ch7 S3: Runners is
+      vaulted but still browsable; Ch7 S4: Override picks up when it drops.
+    </p>
+  </header>
+
+  <div class="divider"></div>
+
+  <div class="card-grid">
+
+    <a class="card" href="runners.html">
+      <img class="card-logo" src="logos/ch7s3_runners_logo.png" alt="" />
+      <div class="card-title">Runners</div>
+      <p class="card-desc">
+        Ch7 S3 sprite tracker &mdash; collection and mastery status for every
+        sprite and variant from the Runners season.
+      </p>
+      <div class="card-status">Vaulted &middot; still trackable</div>
+      <span class="card-arrow">&#8599;</span>
+    </a>
+
+    <a class="card" href="override.html">
+      <img class="card-logo card-logo-lg" src="logos/ch7s4_override_logo.png" alt="" />
+      <div class="card-title">Override</div>
+      <p class="card-desc">
+        Ch7 S4 sprite tracker. Blank until the season drops &mdash; for now,
+        just a countdown to launch.
+      </p>
+      <div class="card-status pending">Coming Aug 20, 2026</div>
+      <span class="card-arrow">&#8599;</span>
+    </a>
+
+    <a class="card" href="compare.html">
+      <span class="card-icon">&#8644;</span>
+      <div class="card-title">Compare</div>
+      <p class="card-desc">
+        See what's unique to each collection &mdash; pull your own saved
+        progress and upload a friend's export to diff the two.
+      </p>
+      <div class="card-status">Any season</div>
+      <span class="card-arrow">&#8599;</span>
+    </a>
+
+  </div>
+
+  <footer>
+    <p>ravencaller213 &middot; sprite checklist</p>
+    <p><a href="runners.html">runners</a> &middot; <a href="override.html">override</a> &middot; <a href="compare.html">compare</a></p>
+  </footer>
+
+</div><!-- end .page -->
+
+</body>
+</html>
