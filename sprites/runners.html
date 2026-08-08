@@ -56,17 +56,19 @@
 
     .nav-top-row { display: flex; align-items: center; gap: 0.8rem; }
 
-    /* Small live countdown badge to Override, sitting right beside the page
-       links — just enough to notice something's coming without competing
-       with the actual page content for attention. */
+    /* Live countdown badge to Override, sitting right beside the page links.
+       Bumped up from an initial 0.68rem/16px pass that read as illegible —
+       this needs to actually be readable at a glance, not just technically
+       present. */
     .override-countdown {
-      display: flex; align-items: center; gap: 0.35rem; text-decoration: none;
-      font-size: 0.68rem; color: var(--text-dim); padding: 3px 9px 3px 5px;
+      display: flex; align-items: center; gap: 0.5rem; text-decoration: none;
+      font-size: 0.9rem; font-weight: 500; font-variant-numeric: tabular-nums;
+      color: var(--text); padding: 5px 14px 5px 7px;
       border: 1px solid var(--border-hi); border-radius: 99px; white-space: nowrap;
       transition: color 0.2s ease, border-color 0.2s ease;
     }
     .override-countdown:hover { color: var(--opal-4); border-color: rgba(56,189,248,0.5); }
-    .override-countdown-logo { height: 16px; width: auto; border-radius: 3px; }
+    .override-countdown-logo { height: 26px; width: auto; border-radius: 4px; }
 
     /* Cross-page nav links (Hub / Runners / Override / Compare) — shared across
        all sprites pages so nobody's stuck navigating back through the
