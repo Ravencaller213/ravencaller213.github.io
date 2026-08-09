@@ -106,19 +106,20 @@
        it, divided by a hairline rule. flex:1 on each section splits the available
        width evenly by construction — no manual sizing needed — and Completion gets
        a slightly larger share (flex: 1.3) since its progress bars need the room. */
-    .toolbar-frame { display: flex; flex-wrap: wrap; gap: 1.4rem; border: 1px solid var(--border); border-radius: 14px; padding: 1rem 1.3rem; background: var(--surface); margin-bottom: 1.5rem; }
-    .tool-section { display: flex; flex-direction: column; gap: 10px; padding-bottom: 10px; }
+    .toolbar-frame { display: flex; flex-wrap: wrap; gap: 1.4rem; border: 1px solid var(--border); border-radius: 14px; padding: 0.75rem 1.1rem; background: var(--surface); margin-bottom: 1.5rem; }
+    .tool-section { display: flex; flex-direction: column; gap: 8px; padding-bottom: 8px; }
     .tool-section + .tool-section { border-left: 1px solid var(--border); padding-left: 1.4rem; }
 
     /* Section 1 (View): 140px wide. The label stays pinned to the top of the
        section; the buttons live in their own flex column beneath it that grows
        to fill the remaining height and centers the buttons within it. Shrunk
-       from 128x88 down to fit a third button (By Rarity) in roughly the same
-       vertical footprint the original two used to take up. */
-    .tool-section-view { width: 140px; flex: 0 0 140px; }
-    .tool-section-view-buttons { display: flex; flex-direction: column; gap: 8px; flex: 1; justify-content: center; }
-    .tool-section-view .btn { width: 120px; height: 52px; margin: 0 auto; padding: 0 6px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 0.72rem; line-height: 1.2; }
+       from 128x88, then again from 120x52 to 120x40, to keep the whole panel
+       more compact as more buttons (Import/Export) got added underneath. */
+    .tool-section-view { width: 150px; flex: 0 0 150px; flex-direction: row; align-items: stretch; gap: 8px; }
+    .tool-section-view-buttons { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; justify-content: space-evenly; }
+    .tool-section-view .btn { width: 100%; height: 40px; padding: 0 6px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 0.7rem; line-height: 1.15; }
     .tool-section-view .btn.active { background: rgba(56,189,248,0.16); border-color: rgba(56,189,248,0.55); color: var(--text); }
+    .view-panel-divider { width: 100%; height: 1px; background: var(--border); margin: 1px 0; }
 
     /* Sections 2+3+4 (Completion + Filters + Save): stacked into a single
        column — Completion on top, Filters in the middle, Save on the
@@ -130,11 +131,12 @@
        with a dangling empty cell. Every subsection lays its controls out in
        one row (flex-wrap: nowrap, each item shrinking to fit) instead of a
        vertical stack or a wrapped grid. */
-    .tool-section-filters-save { flex: 1 1 480px; min-width: 480px; gap: 10px; }
-    .tool-subsection { display: flex; flex-direction: column; gap: 8px; }
-    .tool-subsection + .tool-subsection { border-top: 1px solid var(--border); padding-top: 10px; }
-    .filters-row { display: flex; flex-wrap: nowrap; gap: 10px; align-items: flex-end; }
+    .tool-section-filters-save { flex: 1 1 480px; min-width: 480px; gap: 8px; }
+    .tool-subsection { display: flex; flex-direction: row; align-items: center; gap: 10px; }
+    .tool-subsection + .tool-subsection { border-top: 1px solid var(--border); padding-top: 8px; }
+    .filters-row { display: flex; flex-wrap: nowrap; gap: 8px; align-items: flex-end; flex: 1; min-width: 0; }
     .filters-row .filter-field { flex: 1 1 0; min-width: 0; }
+    .save-content { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
 
     /* Sprite/Variant multiselect: a normal-looking dropdown button that opens
        a checkbox list, instead of a native <select multiple> — the native
@@ -143,8 +145,8 @@
        as a filter. */
     .ms-dropdown { position: relative; }
     .ms-toggle {
-      width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: var(--text);
-      background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.45rem 0.6rem;
+      width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--text);
+      background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.36rem 0.55rem;
       cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 0.4rem;
     }
     .ms-toggle:hover { border-color: var(--border-hi); }
@@ -173,28 +175,42 @@
     /* Save buttons: thinner horizontal pills (icon + label side by side), all
        four in one row (not a wrapping 2x2 grid) — instead of the old
        single-file column of tall boxy buttons. */
-    .save-row { display: flex; flex-wrap: nowrap; gap: 8px; }
+    .save-row { display: flex; flex-wrap: nowrap; gap: 6px; }
     .save-btn {
-      flex: 1 1 0; min-width: 0; padding: 0.4rem 0.5rem; border-radius: 8px;
+      flex: 1 1 0; min-width: 0; padding: 0.32rem 0.45rem; border-radius: 8px;
       display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px;
     }
-    .save-icon { font-size: 0.9rem; line-height: 1; flex: 0 0 auto; }
-    .save-label { font-size: 0.63rem; letter-spacing: 0.01em; text-align: center; line-height: 1.15; }
+    .save-icon { font-size: 0.85rem; line-height: 1; flex: 0 0 auto; }
+    .save-label { font-size: 0.61rem; letter-spacing: 0.01em; text-align: center; line-height: 1.1; }
 
-    .completion-body { display: flex; flex-direction: column; gap: 14px; flex: 1; justify-content: center; }
-    /* stat-top / stat-bottom share the same 2-column grid (label column + bar
-       column) so the ratio+% text on the row below lands directly under the bar,
-       not under the label. The label column is pushed 30px right of where it used
-       to sit, which is what actually shrinks the bar's available width. */
-    .stat-block { display: grid; grid-template-columns: 108px 1fr; column-gap: 0.9rem; row-gap: 0.4rem; align-items: center; }
-    .stat-top { display: contents; }
-    .stat-bottom { display: contents; }
-    .frame-legend { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); padding: 0 0.2rem; }
+    .completion-body { display: flex; flex-direction: column; gap: 10px; flex: 1; min-width: 0; justify-content: center; }
+    /* Each stat is a single row: label, then a shortened/left-shifted bar, then
+       the ratio+% text inline at the bar's end — no separate row underneath. */
+    .stat-block { display: flex; align-items: center; gap: 0.6rem; }
+    .frame-legend {
+      display: none;
+      font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim);
+      writing-mode: vertical-rl; text-orientation: upright; flex: 0 0 auto; white-space: nowrap;
+      align-items: center; justify-content: center; padding: 0.2rem 0;
+    }
 
-    .filter-field { display: flex; flex-direction: column; gap: 0.25rem; }
+    .filter-field { display: flex; flex-direction: column; gap: 0.2rem; }
     .filter-field label { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); font-style: italic; }
-    .filter-select { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: var(--text); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.45rem 0.6rem; cursor: pointer; }
+    .filter-select { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--text); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.36rem 0.55rem; cursor: pointer; }
     .filter-select:hover { border-color: var(--border-hi); }
+
+    /* Paste-code import row under the Save buttons — mirrors the code boxes
+       on compare.html, so a share code can be loaded straight into this
+       browser's own collection, not just used for diffing on Compare. */
+    .code-input-row { display: flex; gap: 0.5rem; }
+    .code-input {
+      flex: 1 1 auto; font-family: monospace; font-size: 0.76rem;
+      color: var(--text); background: var(--surface-hi); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.36rem 0.55rem;
+    }
+    .code-input::placeholder { color: var(--text-faint); }
+    .code-input:hover { border-color: var(--border-hi); }
+    .code-input:focus { outline: none; border-color: rgba(56,189,248,0.55); }
 
     .btn { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.03em; color: var(--text-dim); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 99px; padding: 0.5rem 1.1rem; cursor: pointer; transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease; }
     .btn:hover { color: var(--text); border-color: var(--border-hi); }
@@ -203,12 +219,8 @@
     .axis-btn { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; line-height: 1.25; }
     .axis-btn .axis-sub { font-size: 0.6rem; font-style: italic; color: var(--text-dim); font-weight: 400; letter-spacing: 0.02em; }
 
-    /* stat-label sits 30px further right than it used to (via left margin) — the
-       bar (grid col 2) picks up that lost width automatically since the column
-       template is fixed at 108px regardless of where the text sits inside it. */
-    .stat-label { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-left: 30px; }
-    .stat-label-spacer { display: block; }
-    .progress-bar { height: 16px; border-radius: 99px; background: var(--surface-hi); border: 1px solid var(--border); overflow: hidden; }
+    .stat-label { font-size: 0.82rem; font-weight: 600; color: var(--text); flex: 0 0 auto; width: 72px; }
+    .progress-bar { flex: 1 1 auto; min-width: 60px; height: 16px; border-radius: 99px; background: var(--surface-hi); border: 1px solid var(--border); overflow: hidden; }
     .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--opal-1), var(--opal-4), var(--opal-2)); transition: width 0.3s ease; }
     .progress-fill.mastery-fill { background: linear-gradient(90deg, #f5c842, #e8972a); }
     .stat-ratio { font-size: 0.78rem; color: var(--text-dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -220,7 +232,13 @@
     .legend-swatch.mastered { border: none; background: linear-gradient(135deg, #f5c842, #e8972a); }
     .legend-swatch.invalid { border-style: dashed; opacity: 0.35; }
 
-    .table-wrap { border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); overflow: auto; max-height: calc(100vh - 3rem); padding: 0.5rem; }
+    /* No top padding here on purpose: padding on a scroll container sits
+       "outside" the scrolling content, so a sticky header's top:0 leaves that
+       padding strip uncovered — rows scrolled underneath show through it as
+       they pass. The equivalent top gap is added as padding-top on the grid
+       itself instead, which scrolls away normally instead of acting as a
+       permanent window into whatever's behind the sticky row. */
+    .table-wrap { border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); overflow: auto; max-height: calc(100vh - 3rem); padding: 0 0.5rem 0.5rem; }
 
     /* CSS Grid instead of an HTML table: each data column is minmax(44px, 1fr), so
        columns split whatever width is actually available evenly among however many
@@ -228,10 +246,17 @@
        — at which point the grid overflows and .table-wrap's overflow:auto scrolls it,
        rather than cells quietly staying small while empty space sits unused elsewhere.
        grid-template-columns is set inline by JS per render since the column count varies. */
-    .sprite-grid { display: grid; gap: 6px; }
+    .sprite-grid { display: grid; gap: 6px; padding-top: 0.5rem; }
+    /* Sticky header/row-label cells only paint their own box — the grid's 6px
+       gap around them is transparent, so whatever scrolls underneath (the
+       previous row, a neighboring column) shows through in that gutter as the
+       grid scrolls past. The ::before extends each sticky cell's background
+       6px past its own edges (matching .sprite-grid's gap) so it covers that
+       gutter too, without affecting layout since it's absolutely positioned. */
     .g-header { font-size: 0.68rem; font-weight: 500; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; padding: 0.4rem 0.3rem; text-align: center; position: sticky; top: 0; background: var(--surface); z-index: 3; overflow: hidden; text-overflow: ellipsis; }
     .g-header.row-label-col { text-align: left; position: sticky; left: 0; z-index: 4; }
     .g-row-label { position: sticky; left: 0; background: var(--surface); font-size: 0.82rem; font-weight: 500; color: var(--text); padding: 0.4rem 0.9rem 0.4rem 0.3rem; text-align: left; white-space: nowrap; z-index: 2; display: flex; align-items: center; }
+    .g-header::before, .g-row-label::before { content: ""; position: absolute; inset: -6px; background: inherit; z-index: -1; }
 
     .cell { width: 100%; aspect-ratio: 1 / 1; border-radius: 10px; background: var(--surface-hi); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease; }
     .cell:hover { border-color: var(--border-hi); }
@@ -268,6 +293,21 @@
     .filtered-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; padding: 0.5rem; }
     .filtered-tile { display: flex; flex-direction: column; gap: 6px; }
     .filtered-tile-label { font-size: 0.75rem; color: var(--text-dim); text-align: center; line-height: 1.3; }
+
+    /* Compact filtered view (Collection/Mastery filters active): rows follow
+       whatever's currently on rows per the View toggle, same as the full
+       table — but each row only shows as many cells as actually match the
+       filter, with no fixed column count and no column header (a column's
+       position doesn't mean the same thing from one row to the next here).
+       Each cell gets a small caption for just the "other" axis, since the
+       row label already supplies half of what the cell is. Rows with zero
+       matches are skipped outright rather than rendered empty. */
+    .compact-filtered { display: flex; flex-direction: column; gap: 16px; padding: 0.5rem; }
+    .compact-row { display: flex; align-items: flex-start; gap: 14px; }
+    .compact-row-label { flex: 0 0 110px; padding-top: 0.5rem; font-size: 0.82rem; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .compact-row-cells { display: flex; flex-wrap: wrap; gap: 10px; flex: 1 1 auto; }
+    .compact-tile { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 96px; }
+    .compact-tile-label { font-size: 0.68rem; color: var(--text-dim); text-align: center; line-height: 1.2; }
 
     .v-normal { color: #c8c8d8; }
     .v-gold   { background: linear-gradient(90deg, var(--v-gold-1), var(--v-gold-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
@@ -353,12 +393,14 @@
     <div class="tool-section tool-section-view">
       <div class="frame-legend">View</div>
       <div class="tool-section-view-buttons">
-        <button class="btn accent" id="viewModeBtn" onclick="toggleViewMode()">Image View</button>
+        <!-- <button class="btn accent" id="viewModeBtn" onclick="toggleViewMode()">Image View</button> -->
         <button class="btn accent axis-btn" id="groupToggleBtn" onclick="toggleGrouping()">
           <span id="axisMain">Sprites</span>
           <span class="axis-sub">on rows</span>
         </button>
         <button class="btn accent" id="raritySortBtn" onclick="toggleRaritySort()">By Rarity</button>
+        <div class="view-panel-divider"></div>
+        <button class="btn accent" onclick="openImportExportModal()">Import/Export</button>
       </div>
     </div>
 
@@ -368,24 +410,14 @@
         <div class="frame-legend">Completion</div>
         <div class="completion-body">
           <div class="stat-block">
-            <div class="stat-top">
-              <span class="stat-label">Completion</span>
-              <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
-            </div>
-            <div class="stat-bottom">
-              <span class="stat-label-spacer"></span>
-              <span class="stat-ratio" id="prog">0 / 121 &middot; 0%</span>
-            </div>
+            <span class="stat-label">Completion</span>
+            <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+            <span class="stat-ratio" id="prog">0 / 121 &middot; 0%</span>
           </div>
           <div class="stat-block">
-            <div class="stat-top">
-              <span class="stat-label">Mastery</span>
-              <div class="progress-bar"><div class="progress-fill mastery-fill" id="masteryFill"></div></div>
-            </div>
-            <div class="stat-bottom">
-              <span class="stat-label-spacer"></span>
-              <span class="stat-ratio" id="masteryProg">0 / 0 &middot; 0%</span>
-            </div>
+            <span class="stat-label">Mastery</span>
+            <div class="progress-bar"><div class="progress-fill mastery-fill" id="masteryFill"></div></div>
+            <span class="stat-ratio" id="masteryProg">0 / 0 &middot; 0%</span>
           </div>
         </div>
       </div>
@@ -432,20 +464,19 @@
 
       <div class="tool-subsection tool-subsection-save">
         <div class="frame-legend">Save</div>
-        <div class="save-row">
-          <button class="btn accent save-btn" onclick="document.getElementById('importFile').click()">
-            <span class="save-icon">&#8681;</span><span class="save-label">Import JSON</span>
-          </button>
-          <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this.files[0])">
-          <button class="btn accent save-btn" onclick="exportState()">
-            <span class="save-icon">&#8679;</span><span class="save-label">Export Full JSON</span>
-          </button>
-          <button class="btn accent save-btn" onclick="exportMissing()">
-            <span class="save-icon">&#8679;</span><span class="save-label">Export Missing</span>
-          </button>
-          <button class="btn accent save-btn" onclick="openShareCodeModal()">
-            <span class="save-icon">&#128273;</span><span class="save-label">Share Code</span>
-          </button>
+        <div class="save-content">
+          <div class="save-row">
+            <button class="btn accent save-btn" onclick="exportMissing()">
+              <span class="save-icon">&#8679;</span><span class="save-label">Export Missing</span>
+            </button>
+            <button class="btn accent save-btn" onclick="openShareCodeModal()">
+              <span class="save-icon">&#128273;</span><span class="save-label">Share Code</span>
+            </button>
+          </div>
+          <div class="code-input-row">
+            <input type="text" class="filter-select code-input" id="importCode" placeholder="Paste code to import" autocomplete="off" onkeydown="if (event.key === 'Enter') importFromCode();" />
+            <button class="btn accent" onclick="importFromCode()">Import</button>
+          </div>
         </div>
       </div>
 
@@ -475,6 +506,19 @@
     <p><a href="index.html">hub</a> &middot; <a href="override.html">override</a> &middot; <a href="compare.html">compare with a friend</a></p>
   </footer>
 
+  <div class="modal-overlay" id="importExportModal">
+    <div class="modal-box">
+      <h3>Import or export&hellip;</h3>
+      <p>Import replaces this browser's collection with a JSON file. Export downloads your full collection as JSON.</p>
+      <div class="modal-actions">
+        <button class="btn accent" onclick="chooseImportFile()">Import</button>
+        <button class="btn accent" onclick="doExportState()">Export</button>
+        <button class="btn btn-cancel" onclick="closeImportExportModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this.files[0])">
+
   <div class="modal-overlay" id="missingExportModal">
     <div class="modal-box">
       <h3>Export missing as&hellip;</h3>
@@ -498,6 +542,7 @@
       </div>
     </div>
   </div>
+
 
 </div><!-- end .page -->
 
@@ -724,7 +769,8 @@
     updateViewModeButton();
   }
   function updateViewModeButton() {
-    document.getElementById("viewModeBtn").textContent = viewMode === "image" ? "Image View" : "Table View";
+    const btn = document.getElementById("viewModeBtn");
+    if (btn) btn.textContent = viewMode === "image" ? "Image View" : "Table View";
   }
 
   // Filters replace the old Remaining / Collected-Not-Mastered sidebar. Rather than
@@ -947,31 +993,51 @@
     document.getElementById("list").innerHTML = html;
   }
 
-  // Filtered view: every matching sprite/variant, flattened into one continuous
-  // grid — filling left to right, wrapping to the next row once a row's full,
-  // same as lining up screenshots of the matching cards. Always walks sprites in
-  // their natural order (ignoring the axis toggle, which stops meaning anything
-  // once rows aren't grouped by sprite/variant anymore), so variants of the same
-  // sprite land next to each other. Since there's no row label to supply context
-  // here, each tile gets its own "Sprite · Variant" caption underneath.
+  // Filtered view: rows follow the current View-toggle axis (getGroups(),
+  // same rows the full table would use), but each row only renders the
+  // cells that actually match the Collection/Mastery filter — no fixed
+  // column count, no column header, and rows with zero matches are skipped
+  // entirely rather than shown empty. Each cell gets a small caption for
+  // just the "other" axis (a variant name when rows are sprites, or vice
+  // versa), since the row label already covers half of what the cell means.
   function renderFilteredGrid(predicate) {
-    const items = [];
-    activeAllSprites().filter(spriteVisible).forEach(sprite => {
-      activeVariantsForSprite(sprite).filter(variantVisible).forEach(variant => {
-        const level = state[sprite + "||" + variant] || 0;
-        if (predicate(level)) items.push({ sprite, variant });
+    const rowAxisIsSprite = groupBy === "sprite";
+    const groups = [];
+    getGroups().forEach(row => {
+      const others = rowAxisIsSprite
+        ? activeVariantsForSprite(row).filter(variantVisible)
+        : spritesForVariant(row).filter(spriteVisible);
+      const matches = others.filter(other => {
+        const sprite = rowAxisIsSprite ? row : other;
+        const variant = rowAxisIsSprite ? other : row;
+        return predicate(state[sprite + "||" + variant] || 0);
       });
+      if (matches.length > 0) groups.push({ row, matches });
     });
-    if (items.length === 0) {
+
+    if (groups.length === 0) {
       document.getElementById("list").innerHTML = `<div style="padding:1.5rem; color:var(--opal-2);">Nothing here!</div>`;
       return;
     }
-    const html = `<div class="filtered-grid">${items.map(({ sprite, variant }) => `
-      <div class="filtered-tile">
-        ${cellHTML(sprite, variant)}
-        <div class="filtered-tile-label"><span class="${spriteRarityClass(sprite)}">${sprite}</span> &middot; <span class="${VCLS[variant] || ''}">${variant}</span></div>
-      </div>`).join("")}</div>`;
-    document.getElementById("list").innerHTML = html;
+
+    const html = groups.map(({ row, matches }) => {
+      const rowLabelClass = rowAxisIsSprite ? spriteRarityClass(row) : (VCLS[row] || "");
+      const cells = matches.map(other => {
+        const sprite = rowAxisIsSprite ? row : other;
+        const variant = rowAxisIsSprite ? other : row;
+        const otherLabelClass = rowAxisIsSprite ? (VCLS[other] || "") : spriteRarityClass(other);
+        return `<div class="compact-tile">
+            ${cellHTML(sprite, variant)}
+            <div class="compact-tile-label"><span class="${otherLabelClass}">${other}</span></div>
+          </div>`;
+      }).join("");
+      return `<div class="compact-row">
+          <div class="compact-row-label"><span class="${rowLabelClass}">${row}</span></div>
+          <div class="compact-row-cells">${cells}</div>
+        </div>`;
+    }).join("");
+
+    document.getElementById("list").innerHTML = `<div class="compact-filtered">${html}</div>`;
   }
 
   function render() {
@@ -1012,6 +1078,24 @@
     URL.revokeObjectURL(a.href);
   }
 
+  // Import JSON and Export Full JSON used to be two separate buttons — now
+  // one "Import/Export" button (moved into the View panel) opens this modal
+  // to pick between them, same JSON-file behavior as before either way.
+  function openImportExportModal() {
+    document.getElementById("importExportModal").classList.add("open");
+  }
+  function closeImportExportModal() {
+    document.getElementById("importExportModal").classList.remove("open");
+  }
+  function chooseImportFile() {
+    closeImportExportModal();
+    document.getElementById("importFile").click();
+  }
+  function doExportState() {
+    closeImportExportModal();
+    exportState();
+  }
+
   // ---- Share code: compact base64url encoding of the whole collection state,
   // for pasting into Compare instead of exporting/uploading a JSON file.
   //
@@ -1035,6 +1119,46 @@
     let binary = "";
     bytes.forEach(b => { binary += String.fromCharCode(b); });
     return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function base64UrlToBytes(str) {
+    let b64 = str.replace(/-/g, "+").replace(/_/g, "/");
+    while (b64.length % 4) b64 += "=";
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return bytes;
+  }
+  // Decode half of the share-code scheme — same math as encodeStateToCode
+  // below, run in reverse. Used for importing a code (from this browser's
+  // own past export, or someone else's), same as importState() does for a
+  // JSON file.
+  function decodeCodeToState(code) {
+    const bytes = base64UrlToBytes(code.trim());
+    if (bytes.length === 0) return {};
+    let hex = "";
+    bytes.forEach(b => { hex += b.toString(16).padStart(2, "0"); });
+    let big = BigInt("0x" + hex);
+    const pairs = buildCanonicalPairs();
+    const digits = new Array(pairs.length);
+    for (let i = pairs.length - 1; i >= 0; i--) {
+      digits[i] = Number(big % 3n);
+      big /= 3n;
+    }
+    const decoded = {};
+    pairs.forEach(([sprite, variant], i) => { if (digits[i] > 0) decoded[sprite + "||" + variant] = digits[i]; });
+    return decoded;
+  }
+  function importFromCode() {
+    const input = document.getElementById("importCode");
+    const code = input.value.trim();
+    if (!code) { alert("Paste a code first."); return; }
+    try {
+      state = decodeCodeToState(code);
+      save(); render();
+      input.value = "";
+    } catch (err) {
+      alert("Couldn't read that code — check for typos or a missing character.");
+    }
   }
   function encodeStateToCode(st) {
     const pairs = buildCanonicalPairs();
