@@ -99,6 +99,109 @@
     footer p { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.05em; }
     footer a { color: var(--opal-3); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
+
+    /* ══ Tracker CSS (built out, staying unused until the commented-out ══
+       markup/script below is uncommented). Dead classes with no matching
+       elements have zero visual effect, so this can live here now — when
+       the HTML/JS tracker block ships, it just works with no CSS step
+       needed. Ported 1:1 from runners.html. */
+    .toolbar-frame { display: flex; flex-wrap: wrap; gap: 1.4rem; border: 1px solid var(--border); border-radius: 14px; padding: 0.75rem 1.1rem; background: var(--surface); margin-bottom: 1.5rem; }
+    .tool-section { display: flex; flex-direction: column; gap: 8px; padding-bottom: 8px; }
+    .tool-section + .tool-section { border-left: 1px solid var(--border); padding-left: 1.4rem; }
+    .tool-section-view { width: 150px; flex: 0 0 150px; flex-direction: row; align-items: stretch; gap: 8px; }
+    .tool-section-view-buttons { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; justify-content: space-evenly; }
+    .tool-section-view .btn { width: 100%; height: 40px; padding: 0 6px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 0.7rem; line-height: 1.15; }
+    .tool-section-view .btn.active { background: rgba(56,189,248,0.16); border-color: rgba(56,189,248,0.55); color: var(--text); }
+    .view-panel-divider { width: 100%; height: 1px; background: var(--border); margin: 1px 0; }
+    .tool-section-filters-save { flex: 1 1 480px; min-width: 480px; gap: 8px; }
+    .tool-subsection { display: flex; flex-direction: row; align-items: center; gap: 10px; }
+    .tool-subsection + .tool-subsection { border-top: 1px solid var(--border); padding-top: 8px; }
+    .filters-row { display: flex; flex-wrap: nowrap; gap: 8px; align-items: flex-end; flex: 1; min-width: 0; }
+    .filters-row .filter-field { flex: 1 1 0; min-width: 0; }
+    .save-content { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
+    .ms-dropdown { position: relative; }
+    .ms-toggle { width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--text); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.36rem 0.55rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 0.4rem; }
+    .ms-toggle:hover { border-color: var(--border-hi); }
+    .ms-toggle.has-selection { color: var(--opal-4); border-color: rgba(56,189,248,0.35); }
+    .ms-toggle-caret { font-size: 0.6rem; color: var(--text-faint); transition: transform 0.2s ease; }
+    .ms-dropdown.open .ms-toggle-caret { transform: rotate(180deg); }
+    .ms-panel { display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 20; background: var(--surface-hi); border: 1px solid var(--border-hi); border-radius: 8px; max-height: 220px; overflow-y: auto; padding: 0.35rem; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .ms-dropdown.open .ms-panel { display: block; }
+    .ms-option { display: flex; align-items: center; gap: 0.5rem; padding: 0.32rem 0.4rem; border-radius: 6px; cursor: pointer; font-size: 0.78rem; color: var(--text); }
+    .ms-option:hover { background: rgba(255,255,255,0.06); }
+    .ms-option input[type="checkbox"] { accent-color: var(--opal-4); cursor: pointer; }
+    .ms-panel-actions { display: flex; gap: 0.4rem; padding: 0.3rem 0.4rem 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 0.3rem; position: sticky; top: 0; background: var(--surface-hi); z-index: 1; }
+    .ms-panel-actions button { flex: 1 1 0; font-size: 0.68rem; padding: 0.3rem 0.4rem; border-radius: 6px; background: transparent; border: 1px solid var(--border); color: var(--text-dim); cursor: pointer; }
+    .ms-panel-actions button:hover { color: var(--text); border-color: var(--border-hi); }
+    .save-row { display: flex; flex-wrap: nowrap; gap: 6px; }
+    .save-btn { flex: 1 1 0; min-width: 0; padding: 0.32rem 0.45rem; border-radius: 8px; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; }
+    .save-icon { font-size: 0.85rem; line-height: 1; flex: 0 0 auto; }
+    .save-label { font-size: 0.61rem; letter-spacing: 0.01em; text-align: center; line-height: 1.1; }
+    .completion-body { display: flex; flex-direction: column; gap: 10px; flex: 1; min-width: 0; justify-content: center; }
+    .stat-block { display: flex; align-items: center; gap: 0.6rem; }
+    .frame-legend { display: none; font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); writing-mode: vertical-rl; text-orientation: upright; flex: 0 0 auto; white-space: nowrap; align-items: center; justify-content: center; padding: 0.2rem 0; }
+    .filter-field { display: flex; flex-direction: column; gap: 0.2rem; }
+    .filter-field label { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); font-style: italic; }
+    .filter-select { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--text); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.36rem 0.55rem; cursor: pointer; }
+    .filter-select:hover { border-color: var(--border-hi); }
+    .code-input-row { display: flex; gap: 0.5rem; }
+    .code-input { flex: 1 1 auto; font-family: monospace; font-size: 0.76rem; color: var(--text); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.36rem 0.55rem; }
+    .code-input::placeholder { color: var(--text-faint); }
+    .code-input:hover { border-color: var(--border-hi); }
+    .code-input:focus { outline: none; border-color: rgba(56,189,248,0.55); }
+    .axis-btn { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; line-height: 1.25; }
+    .axis-btn .axis-sub { font-size: 0.6rem; font-style: italic; color: var(--text-dim); font-weight: 400; letter-spacing: 0.02em; }
+    .stat-label { font-size: 0.82rem; font-weight: 600; color: var(--text); flex: 0 0 auto; width: 72px; }
+    .progress-bar { flex: 1 1 auto; min-width: 60px; height: 16px; border-radius: 99px; background: var(--surface-hi); border: 1px solid var(--border); overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--opal-1), var(--opal-4), var(--opal-2)); transition: width 0.3s ease; }
+    .progress-fill.mastery-fill { background: linear-gradient(90deg, #f5c842, #e8972a); }
+    .stat-ratio { font-size: 0.78rem; color: var(--text-dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .legend { display: flex; flex-wrap: wrap; gap: 1.2rem; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 1.25rem; }
+    .legend-item { display: flex; align-items: center; gap: 0.45rem; }
+    .legend-swatch { width: 16px; height: 16px; border-radius: 5px; border: 1px solid var(--border-hi); background: var(--surface); }
+    .legend-swatch.collected { border-color: var(--opal-4); background: rgba(56,189,248,0.34); }
+    .legend-swatch.mastered { border: none; background: linear-gradient(135deg, #f5c842, #e8972a); }
+    .legend-swatch.invalid { border-style: dashed; opacity: 0.35; }
+    .table-wrap { border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); overflow: auto; max-height: calc(100vh - 3rem); padding: 0 0.5rem 0.5rem; }
+    .sprite-grid { display: grid; gap: 6px; padding-top: 0.5rem; }
+    .g-header { font-size: 0.68rem; font-weight: 500; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; padding: 0.4rem 0.3rem; text-align: center; position: sticky; top: 0; background: var(--surface); z-index: 3; overflow: hidden; text-overflow: ellipsis; }
+    .g-header.row-label-col { text-align: left; position: sticky; left: 0; z-index: 4; }
+    .g-row-label { position: sticky; left: 0; background: var(--surface); font-size: 0.82rem; font-weight: 500; color: var(--text); padding: 0.4rem 0.9rem 0.4rem 0.3rem; text-align: left; white-space: nowrap; z-index: 2; display: flex; align-items: center; }
+    .g-header::before, .g-row-label::before { content: ""; position: absolute; inset: -6px; background: inherit; z-index: -1; }
+    .cell { width: 100%; aspect-ratio: 1 / 1; border-radius: 10px; background: var(--surface-hi); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease; }
+    .cell:hover { border-color: var(--border-hi); }
+    .cell.invalid { background: rgba(255,255,255,0.025); border: 1px dashed var(--border-hi); cursor: default; opacity: 0.6; }
+    .cell::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1; transition: background 0.25s ease; background: transparent; }
+    .cell.collected { border-color: var(--opal-4); }
+    .cell.collected::after { background: rgba(56, 189, 248, 0.34); }
+    .cell.mastered { border-color: rgba(245, 200, 66, 0.7); }
+    .cell.mastered::after { background: linear-gradient(135deg, rgba(245, 200, 66, 0.4), rgba(232, 151, 42, 0.4)); }
+    .cell img { width: 100%; height: 100%; object-fit: contain; border-radius: 9px; padding: 4px; }
+    .cell .placeholder { width: 70%; height: 70%; border-radius: 8px; border: 1px dashed var(--border-hi); }
+    .cell .badge { position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; background: var(--opal-4); color: var(--bg); z-index: 2; }
+    .cell.mastered .badge { background: linear-gradient(135deg, #f5c842, #e8972a); color: #3a2a06; }
+    .cell.text-mode { aspect-ratio: 3 / 2; font-size: clamp(0.7rem, 1.3vw, 1.05rem); color: var(--text-faint); }
+    .cell.text-mode.collected { color: var(--opal-4); background: rgba(56,189,248,0.1); }
+    .cell.text-mode.mastered { color: #fff; background: rgba(245,200,66,0.16); }
+    .compact-filtered { display: flex; flex-direction: column; gap: 16px; padding: 0.5rem; }
+    .compact-row { display: flex; align-items: flex-start; gap: 14px; }
+    .compact-row-label { flex: 0 0 110px; padding-top: 0.5rem; font-size: 0.82rem; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .compact-row-cells { display: flex; flex-wrap: wrap; gap: 10px; flex: 1 1 auto; }
+    .compact-tile { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 96px; }
+    .compact-tile-label { font-size: 0.68rem; color: var(--text-dim); text-align: center; line-height: 1.2; }
+    .v-normal { color: #c8c8d8; }
+    .rarity-rare { color: #00fffb; }
+    .rarity-epic { color: #d825ee; }
+    .rarity-legendary { color: #fbc363; }
+    .rarity-mythic { color: #fff0a6; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(5,5,10,0.7); display: none; align-items: center; justify-content: center; z-index: 50; padding: 1rem; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: var(--surface); border: 1px solid var(--border-hi); border-radius: 14px; padding: 1.5rem; max-width: 340px; width: 100%; display: flex; flex-direction: column; gap: 1rem; }
+    .modal-box h3 { font-size: 1rem; font-weight: 600; color: var(--text); }
+    .modal-box p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
+    .modal-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .modal-actions .btn { flex: 1 1 auto; padding: 0.6rem 0.8rem; }
+    .modal-actions .btn-cancel { flex: 1 1 100%; color: var(--text-faint); }
   </style>
 </head>
 <body>
@@ -153,15 +256,145 @@
     <p><a href="index.html">hub</a> &middot; <a href="runners.html">runners tracker</a> &middot; <a href="compare.html">compare with a friend</a></p>
   </footer>
 
-  <!-- ══ SHARE CODE (disabled until Override has real tracker state) ═══════
-       Uncomment this block once the toolbar/grid/state layer from runners.html
-       has been built out here — it needs the Save-section toolbar to live in,
-       plus the SPRITES / SPRITE_VARIANT_OVERRIDES / state object this markup
-       and its script (below) both assume already exist on this page. Until
-       then there's nothing for it to encode. ═══════════════════════════════
-  <button class="btn accent save-btn" onclick="openShareCodeModal()">
-    <span class="save-icon">&#128273;</span><span class="save-label">Share Code</span>
-  </button>
+  <!-- ══ TRACKER (built out, staying commented until Override goes live) ════
+       Confirmed for launch so far: the five Design-a-sprite contest winners —
+       Bullet, Raccoon, Honey, Pond, XRay — each with a Normal variant only.
+       These are mid-season additions per the contest rules, not day-one
+       drops, so the countdown above stays the only visible content on this
+       page until Ch7 S4 actually starts. Uncomment this whole block (and the
+       matching script block down in <script>) once real per-sprite art and
+       any additional variants are confirmed. Mirrors runners.html's toolbar
+       + legend + grid + modals 1:1 — SPRITES/SPRITE_RARITY/etc. live in the
+       script block below and differ from Runners' data. ═══════════════════
+
+  <div class="toolbar-frame">
+
+    <div class="tool-section tool-section-view">
+      <div class="frame-legend">View</div>
+      <div class="tool-section-view-buttons">
+        <button class="btn accent axis-btn" id="groupToggleBtn" onclick="toggleGrouping()">
+          <span id="axisMain">Sprites</span>
+          <span class="axis-sub">on rows</span>
+        </button>
+        <button class="btn accent" id="raritySortBtn" onclick="toggleRaritySort()">By Rarity</button>
+        <div class="view-panel-divider"></div>
+        <button class="btn accent" onclick="openImportExportModal()">Import/Export</button>
+      </div>
+    </div>
+
+    <div class="tool-section tool-section-filters-save">
+
+      <div class="tool-subsection tool-subsection-completion">
+        <div class="frame-legend">Completion</div>
+        <div class="completion-body">
+          <div class="stat-block">
+            <span class="stat-label">Completion</span>
+            <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+            <span class="stat-ratio" id="prog">0 / 5 &middot; 0%</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-label">Mastery</span>
+            <div class="progress-bar"><div class="progress-fill mastery-fill" id="masteryFill"></div></div>
+            <span class="stat-ratio" id="masteryProg">0 / 0 &middot; 0%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-subsection tool-subsection-filters">
+        <div class="frame-legend">Filters</div>
+        <div class="filters-row">
+          <div class="filter-field">
+            <label for="collectionFilter">Collection</label>
+            <select class="filter-select" id="collectionFilter" autocomplete="off" onchange="onFilterChange()">
+              <option value="all">All</option>
+              <option value="owned">Owned</option>
+              <option value="unowned">Unowned</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label for="masteryFilter">Mastery</label>
+            <select class="filter-select" id="masteryFilter" autocomplete="off" onchange="onFilterChange()">
+              <option value="all">All</option>
+              <option value="unmastered">Unmastered</option>
+              <option value="mastered">Mastered</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label>Sprite</label>
+            <div class="ms-dropdown" id="spriteFilterDropdown">
+              <button type="button" class="ms-toggle" id="spriteFilterToggle" onclick="toggleMsDropdown('sprite')">
+                <span id="spriteFilterToggleLabel">All sprites</span><span class="ms-toggle-caret">&#9662;</span>
+              </button>
+              <div class="ms-panel" id="spriteFilterPanel"></div>
+            </div>
+          </div>
+          <div class="filter-field">
+            <label>Variant</label>
+            <div class="ms-dropdown" id="variantFilterDropdown">
+              <button type="button" class="ms-toggle" id="variantFilterToggle" onclick="toggleMsDropdown('variant')">
+                <span id="variantFilterToggleLabel">All variants</span><span class="ms-toggle-caret">&#9662;</span>
+              </button>
+              <div class="ms-panel" id="variantFilterPanel"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-subsection tool-subsection-save">
+        <div class="frame-legend">Save</div>
+        <div class="save-content">
+          <div class="save-row">
+            <button class="btn accent save-btn" onclick="exportMissing()">
+              <span class="save-icon">&#8679;</span><span class="save-label">Export Missing</span>
+            </button>
+            <button class="btn accent save-btn" onclick="openShareCodeModal()">
+              <span class="save-icon">&#128273;</span><span class="save-label">Share Code</span>
+            </button>
+          </div>
+          <div class="code-input-row">
+            <input type="text" class="filter-select code-input" id="importCode" placeholder="Paste code to import" autocomplete="off" onkeydown="if (event.key === 'Enter') importFromCode();" />
+            <button class="btn accent" onclick="importFromCode()">Import</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch"></span> Unowned</div>
+    <div class="legend-item"><span class="legend-swatch collected"></span> Collected</div>
+    <div class="legend-item"><span class="legend-swatch mastered"></span> Mastered</div>
+    <div class="legend-item"><span class="legend-swatch invalid"></span> Not a valid combo</div>
+  </div>
+
+  <div class="table-wrap"><div id="list"></div></div>
+
+  <div class="modal-overlay" id="importExportModal">
+    <div class="modal-box">
+      <h3>Import or export&hellip;</h3>
+      <p>Import replaces this browser's collection with a JSON file. Export downloads your full collection as JSON.</p>
+      <div class="modal-actions">
+        <button class="btn accent" onclick="chooseImportFile()">Import</button>
+        <button class="btn accent" onclick="doExportState()">Export</button>
+        <button class="btn btn-cancel" onclick="closeImportExportModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this.files[0])">
+
+  <div class="modal-overlay" id="missingExportModal">
+    <div class="modal-box">
+      <h3>Export missing as&hellip;</h3>
+      <p>Pick a format for the sprites and variants you haven't collected yet.</p>
+      <div class="modal-actions">
+        <button class="btn accent" onclick="confirmExportMissing('json')">JSON</button>
+        <button class="btn accent" onclick="confirmExportMissing('list')">Plain List</button>
+        <button class="btn btn-cancel" onclick="closeMissingExportModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
 
   <div class="modal-overlay" id="shareCodeModal">
     <div class="modal-box">
@@ -174,7 +407,7 @@
       </div>
     </div>
   </div>
-  ══ END SHARE CODE ══ -->
+  ══ END TRACKER ══ -->
 
 </div><!-- end .page -->
 
@@ -210,11 +443,414 @@
   tick();
   setInterval(tick, 1000);
 
-  /* ══ SHARE CODE (disabled until Override has real tracker state) ═════════
-     Uncomment once the full tracker (SPRITES, SPRITE_VARIANT_OVERRIDES,
-     variantsForSprite(), and the `state` object from runners.html) has been
-     built out on this page — this code assumes all of that already exists,
-     same as it does on runners.html today. Paired with the HTML block above.
+  /* ══ TRACKER (built out, staying commented until Override goes live) ═════
+     Data layer + render/interaction logic, mirrored from runners.html. Only
+     the Normal variant is confirmed so far for these five: Bullet, Raccoon,
+     Honey, Pond, XRay — the Design-a-sprite contest winners, dropping
+     mid-season rather than day one. VARIANTS is just ["Normal"], so there's
+     no need for runners.html's per-sprite SPRITE_VARIANT_OVERRIDES map here
+     — variantsForSprite() just returns VARIANTS directly. Rarity is also
+     unconfirmed, so SPRITE_RARITY stays empty (renders uncolored, same
+     fallback runners.html uses for anything not yet in that map). Uncomment
+     this together with the HTML block above once real launch data lands.
+
+  const SPRITES = ["Bullet", "Raccoon", "Honey", "Pond", "XRay"];
+  const VARIANTS = ["Normal"];
+  const ALL_SPRITES = SPRITES;
+  const KEY = "fn_sprites_v1";
+  const VCLS = { Normal: "v-normal" };
+
+  const SPRITE_RARITY = {};
+  const RARITY_CLS = { Rare: "rarity-rare", Epic: "rarity-epic", Legendary: "rarity-legendary", Mythic: "rarity-mythic" };
+  function spriteRarityClass(sprite) { return RARITY_CLS[SPRITE_RARITY[sprite]] || ""; }
+  const RARITY_RANK = { Rare: 1, Epic: 2, Legendary: 3, Mythic: 4 };
+  function spriteRarityRank(sprite) { return RARITY_RANK[SPRITE_RARITY[sprite]] || 99; }
+
+  function variantsForSprite(sprite) { return VARIANTS; }
+  function activeVariantsForSprite(sprite) { return variantsForSprite(sprite).filter(v => activeVariants().includes(v)); }
+  function spritesForVariant(variantName) { return activeAllSprites().filter(s => variantsForSprite(s).includes(variantName)); }
+
+  const RENAMES = {};
+  const VARIANT_RENAMES = {};
+
+  const HIDDEN_VARIANTS = [];
+  function activeVariants() { return VARIANTS.filter(v => !HIDDEN_VARIANTS.includes(v)); }
+  function activeSprites() { return SPRITES; }
+  let sortByRarity = false;
+  function toggleRaritySort() {
+    sortByRarity = !sortByRarity;
+    document.getElementById("raritySortBtn").classList.toggle("active", sortByRarity);
+    render();
+  }
+  function activeAllSprites() {
+    return sortByRarity ? [...SPRITES].sort((a, b) => spriteRarityRank(a) - spriteRarityRank(b)) : SPRITES;
+  }
+
+  const LEVEL_LABEL = { 0: "none", 1: "collected", 2: "mastered" };
+  const LABEL_LEVEL = { none: 0, collected: 1, mastered: 2 };
+  function valueToLevel(v) {
+    if (typeof v === "string") { const n = LABEL_LEVEL[v.toLowerCase()]; return n === undefined ? 0 : n; }
+    if (v === true) return 1;
+    if (typeof v === "number" && !isNaN(v)) return Math.max(0, Math.min(2, Math.round(v)));
+    return 0;
+  }
+  function normalizeStateLevels(obj) {
+    const result = {};
+    Object.keys(obj || {}).forEach(k => { const lvl = valueToLevel(obj[k]); if (lvl > 0) result[k] = lvl; });
+    return result;
+  }
+  function migrateState(obj) {
+    const result = { ...(obj && typeof obj === "object" ? obj : {}) };
+    return normalizeStateLevels(result);
+  }
+
+  let state = {};
+  try {
+    const saved = localStorage.getItem(KEY);
+    state = migrateState(saved ? JSON.parse(saved) : {});
+  } catch (e) { state = {}; }
+
+  const SAVED_AT_KEY = "fn_sprites_saved_at_v1";
+  function formatSavedAt(ts) {
+    const d = new Date(ts);
+    return "Saved " + d.toLocaleDateString(undefined, { month: "short", day: "numeric" }) + ", " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+  }
+  function updateSavedLabel(ts) {
+    const el = document.getElementById("lastSaved");
+    if (!el) return;
+    el.textContent = ts ? formatSavedAt(ts) : "Not saved yet";
+  }
+  function save() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(state));
+      const now = Date.now();
+      localStorage.setItem(SAVED_AT_KEY, String(now));
+      updateSavedLabel(now);
+    } catch (e) {}
+  }
+  save();
+
+  function getTotal() { let n = 0; activeAllSprites().forEach(s => { n += activeVariantsForSprite(s).length; }); return n; }
+  function getChecked() {
+    let n = 0;
+    activeAllSprites().forEach(s => { activeVariantsForSprite(s).forEach(v => { if (state[s + "||" + v]) n++; }); });
+    return n;
+  }
+  function updateProgress() {
+    const tot = getTotal(), ch = getChecked();
+    const pct = tot > 0 ? Math.round(ch / tot * 100) : 0;
+    document.getElementById("prog").textContent = ch + " / " + tot + " · " + pct + "%";
+    document.getElementById("fill").style.width = pct + "%";
+  }
+
+  function getMasteryStats() {
+    let collected = 0, mastered = 0;
+    activeAllSprites().forEach(s => {
+      activeVariantsForSprite(s).forEach(v => {
+        const lvl = state[s + "||" + v] || 0;
+        if (lvl >= 1) collected++;
+        if (lvl === 2) mastered++;
+      });
+    });
+    return { collected, mastered };
+  }
+  function updateMasteryProgress() {
+    const { collected, mastered } = getMasteryStats();
+    const pct = collected > 0 ? Math.round(mastered / collected * 100) : 0;
+    document.getElementById("masteryProg").textContent = mastered + " / " + collected + " · " + pct + "%";
+    document.getElementById("masteryFill").style.width = pct + "%";
+  }
+
+  let groupBy = "sprite";
+  function getGroups() {
+    return groupBy === "sprite" ? activeAllSprites().filter(spriteVisible) : activeVariants().filter(variantVisible);
+  }
+  function getItemsForGroup(group) {
+    if (groupBy === "sprite") return activeVariantsForSprite(group);
+    return spritesForVariant(group);
+  }
+  function keyFor(group, item) { return groupBy === "sprite" ? (group + "||" + item) : (item + "||" + group); }
+  function toggleGrouping() {
+    groupBy = groupBy === "sprite" ? "variant" : "sprite";
+    render();
+    updateGroupButton();
+  }
+  function updateGroupButton() {
+    document.getElementById("axisMain").textContent = groupBy === "sprite" ? "Sprites" : "Variants";
+  }
+
+  let viewMode = "image"; // "image" | "text"
+  function toggleViewMode() {
+    viewMode = viewMode === "image" ? "text" : "image";
+    render();
+    updateViewModeButton();
+  }
+  function updateViewModeButton() {
+    const btn = document.getElementById("viewModeBtn");
+    if (btn) btn.textContent = viewMode === "image" ? "Image View" : "Table View";
+  }
+
+  let collectionFilter = "all"; // "all" | "owned" | "unowned"
+  let masteryFilter = "all";    // "all" | "unmastered" | "mastered"
+  function onFilterChange() {
+    collectionFilter = document.getElementById("collectionFilter").value;
+    masteryFilter = document.getElementById("masteryFilter").value;
+    render();
+  }
+  function filterPredicate() {
+    if (collectionFilter === "unowned") return lvl => lvl === 0;
+    if (masteryFilter === "unmastered") return lvl => lvl === 1;
+    if (masteryFilter === "mastered") return lvl => lvl === 2;
+    if (collectionFilter === "owned") return lvl => lvl > 0;
+    return null; // All + All: no filter
+  }
+
+  let selectedSprites = [];
+  let selectedVariants = [];
+  let openMsDropdown = null; // "sprite" | "variant" | null
+  function spriteVisible(sprite) { return selectedSprites.length === 0 || selectedSprites.includes(sprite); }
+  function variantVisible(variant) { return selectedVariants.length === 0 || selectedVariants.includes(variant); }
+
+  function msConfig(type) {
+    return type === "sprite"
+      ? { options: SPRITES, get: () => selectedSprites, set: v => { selectedSprites = v; }, noun: "sprite" }
+      : { options: activeVariants(), get: () => selectedVariants, set: v => { selectedVariants = v; }, noun: "variant" };
+  }
+
+  function updateMsToggleLabel(type) {
+    const { get, noun, options } = msConfig(type);
+    const sel = get();
+    const label = document.getElementById(type + "FilterToggleLabel");
+    const toggle = document.getElementById(type + "FilterToggle");
+    if (sel.length === 0) label.textContent = `All ${noun}s`;
+    else if (sel.length === 1 && sel[0] === "__none__") label.textContent = `No ${noun}s`;
+    else if (sel.length === options.length) label.textContent = `All ${noun}s`;
+    else if (sel.length === 1) label.textContent = sel[0];
+    else label.textContent = `${sel.length} ${noun}s selected`;
+    toggle.classList.toggle("has-selection", sel.length > 0);
+  }
+
+  function renderMsPanel(type) {
+    const { options, get } = msConfig(type);
+    const sel = get();
+    const panel = document.getElementById(type + "FilterPanel");
+    panel.innerHTML = `
+      <div class="ms-panel-actions">
+        <button type="button" onclick="msSelectAll('${type}')">All</button>
+        <button type="button" onclick="msSelectNone('${type}')">None</button>
+      </div>` + options.map(opt => `
+      <label class="ms-option">
+        <input type="checkbox" value="${opt}" ${sel.includes(opt) ? "checked" : ""} onchange="onMsOptionChange('${type}', this)">
+        <span>${opt}</span>
+      </label>`).join("");
+  }
+
+  function onMsOptionChange(type, checkbox) {
+    const { get, set } = msConfig(type);
+    const sel = get();
+    if (checkbox.checked) { if (!sel.includes(checkbox.value)) sel.push(checkbox.value); }
+    else { set(sel.filter(v => v !== checkbox.value)); }
+    updateMsToggleLabel(type);
+    render();
+  }
+
+  function msSelectAll(type) {
+    const { set } = msConfig(type);
+    set([]); // empty selection == everything visible, same as picking every option
+    renderMsPanel(type);
+    updateMsToggleLabel(type);
+    render();
+  }
+  function msSelectNone(type) {
+    const { set } = msConfig(type);
+    set(["__none__"]);
+    renderMsPanel(type);
+    updateMsToggleLabel(type);
+    render();
+  }
+
+  function toggleMsDropdown(type) {
+    if (openMsDropdown === type) { closeMsDropdown(); return; }
+    renderMsPanel(type);
+    document.getElementById(type + "FilterDropdown").classList.add("open");
+    if (openMsDropdown && openMsDropdown !== type) {
+      document.getElementById(openMsDropdown + "FilterDropdown").classList.remove("open");
+    }
+    openMsDropdown = type;
+  }
+  function closeMsDropdown() {
+    if (!openMsDropdown) return;
+    document.getElementById(openMsDropdown + "FilterDropdown").classList.remove("open");
+    openMsDropdown = null;
+  }
+  document.addEventListener("click", e => {
+    if (!openMsDropdown) return;
+    const dropdown = document.getElementById(openMsDropdown + "FilterDropdown");
+    if (dropdown && !dropdown.contains(e.target)) closeMsDropdown();
+  });
+
+  function initMsDropdowns() {
+    updateMsToggleLabel("sprite");
+    updateMsToggleLabel("variant");
+  }
+
+  function tableColumns() {
+    return groupBy === "sprite" ? activeVariants().filter(variantVisible) : activeAllSprites().filter(spriteVisible);
+  }
+  function cellSpriteVariant(row, col) {
+    return groupBy === "sprite" ? { sprite: row, variant: col } : { sprite: col, variant: row };
+  }
+  function imgPath(sprite, variant) {
+    return "images/" + sprite.toLowerCase().replace(/ /g, "_") + "_" + variant.toLowerCase() + ".webp";
+  }
+  function cycleCell(sprite, variant) {
+    const key = sprite + "||" + variant;
+    const next = ((state[key] || 0) + 1) % 3;
+    if (next === 0) delete state[key]; else state[key] = next;
+    save();
+    render();
+  }
+
+  const missingImages = new Set();
+  function markImageMissing(src, imgEl) {
+    missingImages.add(src);
+    imgEl.replaceWith(Object.assign(document.createElement("div"), { className: "placeholder" }));
+  }
+
+  function cellHTML(sprite, variant) {
+    const key = sprite + "||" + variant;
+    const level = state[key] || 0;
+    const stateClass = level === 2 ? " mastered" : level === 1 ? " collected" : "";
+    const badge = level === 2 ? "★" : level === 1 ? "✓" : "";
+    const src = imgPath(sprite, variant);
+    const imageOrPlaceholder = missingImages.has(src)
+      ? `<div class="placeholder"></div>`
+      : `<img src="${src}" alt="" onerror="markImageMissing('${src}', this)">`;
+    return viewMode === "text"
+      ? `<div class="cell text-mode${stateClass}" data-sprite="${sprite}" data-variant="${variant}" onclick="cycleCell('${sprite}','${variant}')">${badge || "–"}</div>`
+      : `<div class="cell${stateClass}" data-sprite="${sprite}" data-variant="${variant}" onclick="cycleCell('${sprite}','${variant}')">
+          ${imageOrPlaceholder}
+          ${badge ? `<span class="badge">${badge}</span>` : ""}
+        </div>`;
+  }
+
+  function renderCell(row, col) {
+    const { sprite, variant } = cellSpriteVariant(row, col);
+    if (!variantsForSprite(sprite).includes(variant)) {
+      const modeClass = viewMode === "text" ? " text-mode" : "";
+      return `<div class="cell invalid${modeClass}" data-sprite="${sprite}" data-variant="${variant}"></div>`;
+    }
+    return cellHTML(sprite, variant);
+  }
+
+  function renderTable() {
+    const rows = getGroups();
+    const cols = tableColumns();
+    const rowAxisLabel = groupBy === "sprite" ? "Sprite" : "Variant";
+    const gridCols = "120px " + cols.map(() => "minmax(44px, 120px)").join(" ");
+    let html = `<div class="sprite-grid" style="grid-template-columns: ${gridCols};">`;
+    html += `<div class="g-header row-label-col">${rowAxisLabel}</div>`;
+    cols.forEach(c => { html += `<div class="g-header"><span class="${groupBy === "sprite" ? (VCLS[c] || "") : spriteRarityClass(c)}">${c}</span></div>`; });
+    rows.forEach(row => {
+      html += `<div class="g-row-label"><span class="${groupBy === "variant" ? (VCLS[row] || "") : spriteRarityClass(row)}">${row}</span></div>`;
+      cols.forEach(col => { html += renderCell(row, col); });
+    });
+    html += `</div>`;
+    document.getElementById("list").innerHTML = html;
+  }
+
+  function renderFilteredGrid(predicate) {
+    const rowAxisIsSprite = groupBy === "sprite";
+    const groups = [];
+    getGroups().forEach(row => {
+      const others = rowAxisIsSprite
+        ? activeVariantsForSprite(row).filter(variantVisible)
+        : spritesForVariant(row).filter(spriteVisible);
+      const matches = others.filter(other => {
+        const sprite = rowAxisIsSprite ? row : other;
+        const variant = rowAxisIsSprite ? other : row;
+        return predicate(state[sprite + "||" + variant] || 0);
+      });
+      if (matches.length > 0) groups.push({ row, matches });
+    });
+
+    if (groups.length === 0) {
+      document.getElementById("list").innerHTML = `<div style="padding:1.5rem; color:var(--opal-2);">Nothing here!</div>`;
+      return;
+    }
+
+    const html = groups.map(({ row, matches }) => {
+      const rowLabelClass = rowAxisIsSprite ? spriteRarityClass(row) : (VCLS[row] || "");
+      const cells = matches.map(other => {
+        const sprite = rowAxisIsSprite ? row : other;
+        const variant = rowAxisIsSprite ? other : row;
+        const otherLabelClass = rowAxisIsSprite ? (VCLS[other] || "") : spriteRarityClass(other);
+        return `<div class="compact-tile">
+            ${cellHTML(sprite, variant)}
+            <div class="compact-tile-label"><span class="${otherLabelClass}">${other}</span></div>
+          </div>`;
+      }).join("");
+      return `<div class="compact-row">
+          <div class="compact-row-label"><span class="${rowLabelClass}">${row}</span></div>
+          <div class="compact-row-cells">${cells}</div>
+        </div>`;
+    }).join("");
+
+    document.getElementById("list").innerHTML = `<div class="compact-filtered">${html}</div>`;
+  }
+
+  function render() {
+    const pred = filterPredicate();
+    if (pred) renderFilteredGrid(pred);
+    else renderTable();
+    updateProgress();
+    updateMasteryProgress();
+  }
+
+  function checkAll() {
+    activeAllSprites().forEach(s => activeVariantsForSprite(s).forEach(v => { state[s + "||" + v] = 1; }));
+    save(); render();
+  }
+  function uncheckAll() {
+    activeAllSprites().forEach(s => activeVariantsForSprite(s).forEach(v => { delete state[s + "||" + v]; }));
+    save(); render();
+  }
+
+  const VARIANT_KEY = { Normal: "normal" };
+  const VARIANT_KEY_REVERSE = Object.fromEntries(Object.entries(VARIANT_KEY).map(([k, v]) => [v, k]));
+
+  function buildFullExport() {
+    return ALL_SPRITES.map(sprite => {
+      const variantList = variantsForSprite(sprite);
+      const variants = {};
+      variantList.forEach(v => { variants[VARIANT_KEY[v]] = LEVEL_LABEL[state[sprite + "||" + v] || 0]; });
+      return { sprite, variants };
+    });
+  }
+  function exportState() {
+    const full = buildFullExport();
+    const blob = new Blob([JSON.stringify(full, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "fortnite_sprites_save.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function openImportExportModal() {
+    document.getElementById("importExportModal").classList.add("open");
+  }
+  function closeImportExportModal() {
+    document.getElementById("importExportModal").classList.remove("open");
+  }
+  function chooseImportFile() {
+    closeImportExportModal();
+    document.getElementById("importFile").click();
+  }
+  function doExportState() {
+    closeImportExportModal();
+    exportState();
+  }
 
   function buildCanonicalPairs() {
     const pairs = [];
@@ -225,6 +861,42 @@
     let binary = "";
     bytes.forEach(b => { binary += String.fromCharCode(b); });
     return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function base64UrlToBytes(str) {
+    let b64 = str.replace(/-/g, "+").replace(/_/g, "/");
+    while (b64.length % 4) b64 += "=";
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return bytes;
+  }
+  function decodeCodeToState(code) {
+    const bytes = base64UrlToBytes(code.trim());
+    if (bytes.length === 0) return {};
+    let hex = "";
+    bytes.forEach(b => { hex += b.toString(16).padStart(2, "0"); });
+    let big = BigInt("0x" + hex);
+    const pairs = buildCanonicalPairs();
+    const digits = new Array(pairs.length);
+    for (let i = pairs.length - 1; i >= 0; i--) {
+      digits[i] = Number(big % 3n);
+      big /= 3n;
+    }
+    const decoded = {};
+    pairs.forEach(([sprite, variant], i) => { if (digits[i] > 0) decoded[sprite + "||" + variant] = digits[i]; });
+    return decoded;
+  }
+  function importFromCode() {
+    const input = document.getElementById("importCode");
+    const code = input.value.trim();
+    if (!code) { alert("Paste a code first."); return; }
+    try {
+      state = decodeCodeToState(code);
+      save(); render();
+      input.value = "";
+    } catch (err) {
+      alert("Couldn't read that code — check for typos or a missing character.");
+    }
   }
   function encodeStateToCode(st) {
     const pairs = buildCanonicalPairs();
@@ -259,7 +931,97 @@
     }
   }
 
-  ══ END SHARE CODE ══ */
+  function getMissingEntries() {
+    const entries = [];
+    activeAllSprites().forEach(sprite => {
+      activeVariantsForSprite(sprite).forEach(variant => {
+        const lvl = state[sprite + "||" + variant] || 0;
+        if (lvl === 0) entries.push({ sprite, variant });
+      });
+    });
+    return entries;
+  }
+  function buildMissingExportJSON() {
+    const bySprite = {};
+    getMissingEntries().forEach(({ sprite, variant }) => {
+      if (!bySprite[sprite]) bySprite[sprite] = {};
+      bySprite[sprite][VARIANT_KEY[variant]] = "none";
+    });
+    return Object.keys(bySprite).map(sprite => ({ sprite, variants: bySprite[sprite] }));
+  }
+  function downloadBlob(content, type, filename) {
+    const blob = new Blob([content], { type });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+  function exportMissingJSON() {
+    downloadBlob(JSON.stringify(buildMissingExportJSON(), null, 2), "application/json", "fortnite_sprites_missing.json");
+  }
+  function exportMissingPlainList() {
+    const lines = getMissingEntries().map(({ sprite, variant }) => `${sprite} - ${variant}`);
+    downloadBlob(lines.join("\n") + (lines.length ? "\n" : ""), "text/plain", "fortnite_sprites_missing.txt");
+  }
+  function exportMissing() {
+    if (getMissingEntries().length === 0) {
+      alert("Nothing missing — every visible variant is already collected!");
+      return;
+    }
+    document.getElementById("missingExportModal").classList.add("open");
+  }
+  function closeMissingExportModal() {
+    document.getElementById("missingExportModal").classList.remove("open");
+  }
+  function confirmExportMissing(format) {
+    closeMissingExportModal();
+    if (format === "json") exportMissingJSON(); else exportMissingPlainList();
+  }
+  function parseImport(data) {
+    let flat = {};
+    if (Array.isArray(data)) {
+      data.forEach(entry => {
+        if (!entry || typeof entry !== "object" || !entry.sprite || typeof entry.variants !== "object") return;
+        Object.keys(entry.variants).forEach(vKey => {
+          const variantName = VARIANT_KEY_REVERSE[vKey.toLowerCase()] || (vKey.charAt(0).toUpperCase() + vKey.slice(1).toLowerCase());
+          flat[entry.sprite + "||" + variantName] = valueToLevel(entry.variants[vKey]);
+        });
+      });
+    } else if (data && typeof data === "object") {
+      Object.keys(data).forEach(k => { flat[k] = valueToLevel(data[k]); });
+    }
+    return migrateState(flat);
+  }
+  function importState(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        state = parseImport(data);
+        save(); render();
+      } catch (err) {
+        alert("Couldn't read that file — expected a JSON export from this tool or the desktop tracker.");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  collectionFilter = "all";
+  masteryFilter = "all";
+  document.getElementById("collectionFilter").value = "all";
+  document.getElementById("masteryFilter").value = "all";
+
+  selectedSprites = [];
+  selectedVariants = [];
+  initMsDropdowns();
+
+  updateGroupButton();
+  updateViewModeButton();
+  render();
+
+  ══ END TRACKER ══ */
 </script>
 
 </body>
