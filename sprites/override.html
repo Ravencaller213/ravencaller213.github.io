@@ -25,6 +25,12 @@
       --text-dim:    #7a7495;
       --text-faint:  #4f4a63;
       --radius:      14px;
+      --v-gold-1: #f5c842; --v-gold-2: #e8972a;
+      --v-gummi-1: #e84545; --v-gummi-2: #50c878;
+      --v-galaxy-1: #a855f7; --v-galaxy-2: #22c55e; --v-galaxy-3: #3b82f6;
+      --v-holo-1: #e8e8f8; --v-holo-2: #c8d8f0; --v-holo-3: #d8c8f0;
+      --v-crystal-1: #f9a8d4; --v-crystal-2: #a5f3fc; --v-crystal-3: #c4b5fd; --v-crystal-4: #fbcfe8;
+      --v-cube-1: #0a0510; --v-cube-2: #7b2ff7; --v-cube-outline: #e619c9;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -190,6 +196,12 @@
     .compact-tile { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 96px; }
     .compact-tile-label { font-size: 0.68rem; color: var(--text-dim); text-align: center; line-height: 1.2; }
     .v-normal { color: #c8c8d8; }
+    .v-gold   { background: linear-gradient(90deg, var(--v-gold-1), var(--v-gold-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    .v-gummi  { background: linear-gradient(90deg, var(--v-gummi-1), var(--v-gummi-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    .v-galaxy { background: linear-gradient(90deg, var(--v-galaxy-1), var(--v-galaxy-2), var(--v-galaxy-3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    .v-holofoil { background: linear-gradient(90deg, var(--v-crystal-1), var(--v-crystal-2), var(--v-crystal-3), var(--v-crystal-4)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    .v-crystal { background: linear-gradient(90deg, var(--v-holo-1), var(--v-holo-2), var(--v-holo-3), var(--v-holo-1)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    .v-cube { background: linear-gradient(135deg, var(--v-cube-1), var(--v-cube-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
     .rarity-rare { color: #00fffb; }
     .rarity-epic { color: #d825ee; }
     .rarity-legendary { color: #fbc363; }
@@ -257,15 +269,18 @@
   </footer>
 
   <!-- ══ TRACKER (built out, staying commented until Override goes live) ════
-       Confirmed for launch so far: the five Design-a-sprite contest winners —
-       Bullet, Raccoon, Honey, Pond, XRay — each with a Normal variant only.
-       These are mid-season additions per the contest rules, not day-one
-       drops, so the countdown above stays the only visible content on this
-       page until Ch7 S4 actually starts. Uncomment this whole block (and the
-       matching script block down in <script>) once real per-sprite art and
-       any additional variants are confirmed. Mirrors runners.html's toolbar
-       + legend + grid + modals 1:1 — SPRITES/SPRITE_RARITY/etc. live in the
-       script block below and differ from Runners' data. ═══════════════════
+       Fourteen sprites staged so far, all still leak/unconfirmed-launch-day
+       status — see the data-layer comment down in <script> for the
+       sprite-by-sprite sourcing (contest winners vs. FNBRIntel leaks vs. the
+       unreleased Spiderman entry). Every sprite is assumed to have every
+       variant until told otherwise (Michael's call, 2026-08-18) — no
+       per-sprite overrides here, unlike runners.html. The countdown above
+       stays the only visible content on this page until Ch7 S4 actually
+       starts. Uncomment this whole block (and the matching script block)
+       once real per-sprite art and variant confirmations land. Mirrors
+       runners.html's toolbar + legend + grid + modals 1:1 —
+       SPRITES/SPRITE_RARITY/etc. live in the script block below and differ
+       from Runners' data. ══════════════════════════════════════════════════
 
   <div class="toolbar-frame">
 
@@ -290,7 +305,7 @@
           <div class="stat-block">
             <span class="stat-label">Completion</span>
             <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
-            <span class="stat-ratio" id="prog">0 / 5 &middot; 0%</span>
+            <span class="stat-ratio" id="prog">0 / 112 &middot; 0%</span>
           </div>
           <div class="stat-block">
             <span class="stat-label">Mastery</span>
@@ -444,21 +459,40 @@
   setInterval(tick, 1000);
 
   /* ══ TRACKER (built out, staying commented until Override goes live) ═════
-     Data layer + render/interaction logic, mirrored from runners.html. Only
-     the Normal variant is confirmed so far for these five: Bullet, Raccoon,
-     Honey, Pond, XRay — the Design-a-sprite contest winners, dropping
-     mid-season rather than day one. VARIANTS is just ["Normal"], so there's
-     no need for runners.html's per-sprite SPRITE_VARIANT_OVERRIDES map here
-     — variantsForSprite() just returns VARIANTS directly. Rarity is also
-     unconfirmed, so SPRITE_RARITY stays empty (renders uncolored, same
-     fallback runners.html uses for anything not yet in that map). Uncomment
-     this together with the HTML block above once real launch data lands.
+     Data layer + render/interaction logic, mirrored from runners.html.
 
-  const SPRITES = ["Bullet", "Raccoon", "Honey", "Pond", "XRay"];
-  const VARIANTS = ["Normal"];
+     SPRITES is two tiers of unconfirmed-but-leaked info, not yet a real
+     in-game menu order (same caveat runners.html notes for its own
+     provisional entries):
+       - Bullet, Raccoon, Honey, Pond, XRay: Design-a-sprite contest winners,
+         confirmed for a mid-season drop rather than day one.
+       - Sonic, Tails, Jazz Jackrabbit (aka "Jazz"), Klombo, Bushranger,
+         Killswitch, Victory Crown (aka "Crown"), Adventurer: per FNBRIntel
+         leaks as of 2026-08-18.
+       - Spiderman: sits in the game files as "unreleased" (was expected
+         alongside the Brand New Day webshooters update but didn't ship) —
+         included speculatively in case it drops with the new season.
+
+     FNBRIntel also reports variants are "still" coming to Season 4 sprites,
+     including new ones — no per-sprite confirmation exists yet for exactly
+     which variants which sprite gets, so per Michael's call (2026-08-18)
+     this assumes every sprite has every variant until told otherwise: no
+     SPRITE_VARIANT_OVERRIDES map, variantsForSprite() just returns the full
+     VARIANTS list for everything, same shape as this page had originally
+     before any leaks came in. Rarity is unconfirmed for all of these, so
+     SPRITE_RARITY stays empty (renders uncolored, same fallback runners.html
+     uses for anything not yet in that map). Uncomment this together with the
+     HTML block above once real launch data lands.
+
+  const SPRITES = [
+    "Bullet", "Raccoon", "Honey", "Pond", "XRay",
+    "Sonic", "Tails", "Jazz Jackrabbit", "Klombo", "Bushranger", "Killswitch", "Victory Crown", "Adventurer",
+    "Spiderman",
+  ];
+  const VARIANTS = ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem", "Cube", "Quack"];
   const ALL_SPRITES = SPRITES;
   const KEY = "fn_sprites_v1";
-  const VCLS = { Normal: "v-normal" };
+  const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Gem: "v-crystal", Cube: "v-cube" };
 
   const SPRITE_RARITY = {};
   const RARITY_CLS = { Rare: "rarity-rare", Epic: "rarity-epic", Legendary: "rarity-legendary", Mythic: "rarity-mythic" };
@@ -701,7 +735,7 @@
     return groupBy === "sprite" ? { sprite: row, variant: col } : { sprite: col, variant: row };
   }
   function imgPath(sprite, variant) {
-    return "images/" + sprite.toLowerCase().replace(/ /g, "_") + "_" + variant.toLowerCase() + ".webp";
+    return "images/override/" + sprite.toLowerCase().replace(/ /g, "_") + "_" + variant.toLowerCase() + ".webp";
   }
   function cycleCell(sprite, variant) {
     const key = sprite + "||" + variant;

@@ -913,7 +913,7 @@
     return groupBy === "sprite" ? { sprite: row, variant: col } : { sprite: col, variant: row };
   }
   function imgPath(sprite, variant) {
-    return "images/" + sprite.toLowerCase().replace(/ /g, "_") + "_" + variant.toLowerCase() + ".webp";
+    return "images/runners/" + sprite.toLowerCase().replace(/ /g, "_") + "_" + variant.toLowerCase() + ".webp";
   }
   function cycleCell(sprite, variant) {
     const key = sprite + "||" + variant;
