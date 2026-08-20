@@ -31,6 +31,7 @@
       --v-holo-1: #e8e8f8; --v-holo-2: #c8d8f0; --v-holo-3: #d8c8f0;
       --v-crystal-1: #f9a8d4; --v-crystal-2: #a5f3fc; --v-crystal-3: #c4b5fd; --v-crystal-4: #fbcfe8;
       --v-cube-1: #0a0510; --v-cube-2: #7b2ff7; --v-cube-outline: #e619c9;
+      --v-cheat-1: #39ff14; --v-cheat-2: #0a0f1a; --v-cheat-3: #ff2079;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -106,11 +107,8 @@
     footer a { color: var(--opal-3); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
-    /* ══ Tracker CSS (built out, staying unused until the commented-out ══
-       markup/script below is uncommented). Dead classes with no matching
-       elements have zero visual effect, so this can live here now — when
-       the HTML/JS tracker block ships, it just works with no CSS step
-       needed. Ported 1:1 from runners.html. */
+    /* Tracker CSS — live as of 2026-08-20. Ported 1:1 from runners.html,
+       plus a Cheat Master variant class below (Override-only). */
     .toolbar-frame { display: flex; flex-wrap: wrap; gap: 1.4rem; border: 1px solid var(--border); border-radius: 14px; padding: 0.75rem 1.1rem; background: var(--surface); margin-bottom: 1.5rem; }
     .tool-section { display: flex; flex-direction: column; gap: 8px; padding-bottom: 8px; }
     .tool-section + .tool-section { border-left: 1px solid var(--border); padding-left: 1.4rem; }
@@ -202,6 +200,10 @@
     .v-holofoil { background: linear-gradient(90deg, var(--v-crystal-1), var(--v-crystal-2), var(--v-crystal-3), var(--v-crystal-4)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
     .v-crystal { background: linear-gradient(90deg, var(--v-holo-1), var(--v-holo-2), var(--v-holo-3), var(--v-holo-1)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
     .v-cube { background: linear-gradient(135deg, var(--v-cube-1), var(--v-cube-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
+    /* Glitchy green-to-magenta gradient for the new Override-exclusive "Cheat
+       Master" variant — matches the season's hacking/corrupted-systems theme
+       rather than reusing an existing Runners variant palette. */
+    .v-cheatmaster { background: linear-gradient(90deg, var(--v-cheat-1), var(--v-cheat-2), var(--v-cheat-3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
     .rarity-rare { color: #00fffb; }
     .rarity-epic { color: #d825ee; }
     .rarity-legendary { color: #fbc363; }
@@ -238,8 +240,8 @@
       <img class="page-logo" src="logos/ch7s4_override_logo.png" alt="Override" />
     </div>
     <p class="tagline">
-      Ch7 S3: Runners sprites are being vaulted. This page goes live with the new
-      Override collection and tracker once Chapter 7 Season 4 drops.
+      Ch7 S4 is live. Runners sprites are vaulted — click any cell below to cycle
+      none &rarr; collected &rarr; mastered on the new Override collection.
     </p>
   </header>
 
@@ -268,19 +270,15 @@
     <p><a href="index.html">hub</a> &middot; <a href="runners.html">runners tracker</a> &middot; <a href="compare.html">compare with a friend</a></p>
   </footer>
 
-  <!-- ══ TRACKER (built out, staying commented until Override goes live) ════
-       Fourteen sprites staged so far, all still leak/unconfirmed-launch-day
-       status — see the data-layer comment down in <script> for the
-       sprite-by-sprite sourcing (contest winners vs. FNBRIntel leaks vs. the
-       unreleased Spiderman entry). Every sprite is assumed to have every
-       variant until told otherwise (Michael's call, 2026-08-18) — no
-       per-sprite overrides here, unlike runners.html. The countdown above
-       stays the only visible content on this page until Ch7 S4 actually
-       starts. Uncomment this whole block (and the matching script block)
-       once real per-sprite art and variant confirmations land. Mirrors
-       runners.html's toolbar + legend + grid + modals 1:1 —
-       SPRITES/SPRITE_RARITY/etc. live in the script block below and differ
-       from Runners' data. ══════════════════════════════════════════════════
+  <!-- Tracker live as of 2026-08-20 (Ch7 S4 launch). 12 sprites confirmed via
+       fortnite.gg's live datamined asset list: Jazz, Shadow, Bushranger,
+       Tails, Killswitch, Adventurer, Klombo, Jonesy, Sonic, Victory Crown,
+       8-Bit, Storm Scout — each with exactly 3 variants (Normal, Gold, Cheat
+       Master). Cheat Master is new to Override, replacing the old Runners
+       variant lineup (Gummi/Galaxy/Holofoil/Gem/Cube/Quack) entirely for this
+       season. Bullet/Raccoon/Honey/Pond/XRay (Design-a-sprite winners) and
+       Spiderman are still not live — add them once confirmed. See the
+       data-layer comment down in <script> for full sourcing. -->
 
   <div class="toolbar-frame">
 
@@ -305,7 +303,7 @@
           <div class="stat-block">
             <span class="stat-label">Completion</span>
             <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
-            <span class="stat-ratio" id="prog">0 / 112 &middot; 0%</span>
+            <span class="stat-ratio" id="prog">0 / 36 &middot; 0%</span>
           </div>
           <div class="stat-block">
             <span class="stat-label">Mastery</span>
@@ -422,7 +420,6 @@
       </div>
     </div>
   </div>
-  ══ END TRACKER ══ -->
 
 </div><!-- end .page -->
 
@@ -458,43 +455,43 @@
   tick();
   setInterval(tick, 1000);
 
-  /* ══ TRACKER (built out, staying commented until Override goes live) ═════
-     Data layer + render/interaction logic, mirrored from runners.html.
-
-     SPRITES is two tiers of unconfirmed-but-leaked info, not yet a real
-     in-game menu order (same caveat runners.html notes for its own
-     provisional entries):
-       - Bullet, Raccoon, Honey, Pond, XRay: Design-a-sprite contest winners,
-         confirmed for a mid-season drop rather than day one.
-       - Sonic, Tails, Jazz Jackrabbit (aka "Jazz"), Klombo, Bushranger,
-         Killswitch, Victory Crown (aka "Crown"), Adventurer: per FNBRIntel
-         leaks as of 2026-08-18.
-       - Spiderman: sits in the game files as "unreleased" (was expected
-         alongside the Brand New Day webshooters update but didn't ship) —
-         included speculatively in case it drops with the new season.
-
-     FNBRIntel also reports variants are "still" coming to Season 4 sprites,
-     including new ones — no per-sprite confirmation exists yet for exactly
-     which variants which sprite gets, so per Michael's call (2026-08-18)
-     this assumes every sprite has every variant until told otherwise: no
-     SPRITE_VARIANT_OVERRIDES map, variantsForSprite() just returns the full
-     VARIANTS list for everything, same shape as this page had originally
-     before any leaks came in. Rarity is unconfirmed for all of these, so
-     SPRITE_RARITY stays empty (renders uncolored, same fallback runners.html
-     uses for anything not yet in that map). Uncomment this together with the
-     HTML block above once real launch data lands.
-
+  // ---- Data layer. Live as of 2026-08-20 (Ch7 S4 launch), confirmed
+  // against fortnite.gg's own datamined asset list (parsed from a saved copy
+  // of the page, not guessed) rather than the earlier FNBRIntel leak text.
+  // 12 sprites, each with exactly 3 variants: Normal, Gold, and the new
+  // "Cheat Master" variant — Override drops the old Runners variant lineup
+  // (Gummi/Galaxy/Holofoil/Gem/Cube/Quack) entirely for this season, so
+  // there's no SPRITE_VARIANT_OVERRIDES map needed; every sprite just uses
+  // the full VARIANTS list. Rarity came from the site's own sprite-theme-*
+  // CSS classes per card. "Jazz" (not "Jazz Jackrabbit") and "Adventurer"
+  // (not "Adventure") are Michael's naming calls, matching the filenames
+  // already saved to images/override/. Still not live: Bullet, Raccoon,
+  // Honey, Pond, XRay (Design-a-sprite contest winners, mid-season drop)
+  // and Spiderman (sits unreleased in the game files) — add them once
+  // confirmed, following this same pattern.
   const SPRITES = [
-    "Bullet", "Raccoon", "Honey", "Pond", "XRay",
-    "Sonic", "Tails", "Jazz Jackrabbit", "Klombo", "Bushranger", "Killswitch", "Victory Crown", "Adventurer",
-    "Spiderman",
+    "Jazz", "Shadow", "Bushranger", "Tails", "Killswitch", "Adventurer",
+    "Klombo", "Jonesy", "Sonic", "Victory Crown", "8-Bit", "Storm Scout",
   ];
-  const VARIANTS = ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem", "Cube", "Quack"];
+  const VARIANTS = ["Normal", "Gold", "Cheat Master"];
   const ALL_SPRITES = SPRITES;
   const KEY = "fn_sprites_v1";
-  const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Gem: "v-crystal", Cube: "v-cube" };
+  const VCLS = { Normal: "v-normal", Gold: "v-gold", "Cheat Master": "v-cheatmaster" };
 
-  const SPRITE_RARITY = {};
+  const SPRITE_RARITY = {
+    "Jazz": "Legendary",
+    "Shadow": "Epic",
+    "Bushranger": "Rare",
+    "Tails": "Epic",
+    "Killswitch": "Epic",
+    "Adventurer": "Rare",
+    "Klombo": "Mythic",
+    "Jonesy": "Rare",
+    "Sonic": "Epic",
+    "Victory Crown": "Mythic",
+    "8-Bit": "Rare",
+    "Storm Scout": "Rare",
+  };
   const RARITY_CLS = { Rare: "rarity-rare", Epic: "rarity-epic", Legendary: "rarity-legendary", Mythic: "rarity-mythic" };
   function spriteRarityClass(sprite) { return RARITY_CLS[SPRITE_RARITY[sprite]] || ""; }
   const RARITY_RANK = { Rare: 1, Epic: 2, Legendary: 3, Mythic: 4 };
@@ -735,7 +732,10 @@
     return groupBy === "sprite" ? { sprite: row, variant: col } : { sprite: col, variant: row };
   }
   function imgPath(sprite, variant) {
-    return "images/override/" + sprite.toLowerCase().replace(/ /g, "_") + "_" + variant.toLowerCase() + ".webp";
+    // Both sprite and variant names can have spaces now ("Victory Crown",
+    // "Cheat Master") — both get collapsed to underscores to match the
+    // actual saved filenames (e.g. victory_crown_cheat_master.webp).
+    return "images/override/" + sprite.toLowerCase().replace(/ /g, "_") + "_" + variant.toLowerCase().replace(/ /g, "_") + ".webp";
   }
   function cycleCell(sprite, variant) {
     const key = sprite + "||" + variant;
@@ -1054,8 +1054,6 @@
   updateGroupButton();
   updateViewModeButton();
   render();
-
-  ══ END TRACKER ══ */
 </script>
 
 </body>
