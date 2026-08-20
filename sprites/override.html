@@ -275,8 +275,8 @@
   </footer>
 
   <!-- Tracker live as of 2026-08-20 (Ch7 S4 launch). 12 sprites confirmed via
-       fortnite.gg's live datamined asset list: Jazz, Shadow, Bushranger,
-       Tails, Killswitch, Adventurer, Klombo, Jonesy, Sonic, Victory Crown,
+       fortnite.gg's live datamined asset list: Jazz, Shadow, Bush,
+       Tails, Killswitch, Adventure, Klombo, Jonesy, Sonic, Victory Crown,
        8-Bit, Storm Scout — each with exactly 3 variants (Normal, Gold, Cheat
        Master). Cheat Master is new to Override, replacing the old Runners
        variant lineup (Gummi/Galaxy/Holofoil/Gem/Cube/Quack) entirely for this
@@ -470,14 +470,14 @@
   // (Gummi/Galaxy/Holofoil/Gem/Cube/Quack) entirely for this season, so
   // there's no SPRITE_VARIANT_OVERRIDES map needed; every sprite just uses
   // the full VARIANTS list. Rarity came from the site's own sprite-theme-*
-  // CSS classes per card. "Jazz" (not "Jazz Jackrabbit") and "Adventurer"
-  // (not "Adventure") are Michael's naming calls, matching the filenames
-  // already saved to images/override/. Still not live: Bullet, Raccoon,
-  // Honey, Pond, XRay (Design-a-sprite contest winners, mid-season drop)
-  // and Spiderman (sits unreleased in the game files) — add them once
-  // confirmed, following this same pattern.
+  // CSS classes per card. "Jazz" (not "Jazz Jackrabbit"), "Bush" (not
+  // "Bushranger"), and "Adventure" (not "Adventurer") are the actual in-game
+  // names, matching the filenames already saved to images/override/. Still
+  // not live: Bullet, Raccoon, Honey, Pond, XRay (Design-a-sprite contest
+  // winners, mid-season drop) and Spiderman (sits unreleased in the game
+  // files) — add them once confirmed, following this same pattern.
   const SPRITES = [
-    "Jazz", "Shadow", "Bushranger", "Tails", "Killswitch", "Adventurer",
+    "Jazz", "Shadow", "Bush", "Tails", "Killswitch", "Adventure",
     "Klombo", "Jonesy", "Sonic", "Victory Crown", "8-Bit", "Storm Scout",
   ];
   const VARIANTS = ["Normal", "Gold", "Cheat Master"];
@@ -488,10 +488,10 @@
   const SPRITE_RARITY = {
     "Jazz": "Legendary",
     "Shadow": "Epic",
-    "Bushranger": "Rare",
+    "Bush": "Rare",
     "Tails": "Epic",
     "Killswitch": "Epic",
-    "Adventurer": "Rare",
+    "Adventure": "Rare",
     "Klombo": "Mythic",
     "Jonesy": "Rare",
     "Sonic": "Epic",
