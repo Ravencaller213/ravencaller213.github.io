@@ -32,6 +32,7 @@
       --v-crystal-1: #f9a8d4; --v-crystal-2: #a5f3fc; --v-crystal-3: #c4b5fd; --v-crystal-4: #fbcfe8;
       --v-cube-1: #0a0510; --v-cube-2: #7b2ff7; --v-cube-outline: #e619c9;
       --v-cheat-1: #06270D; --v-cheat-2: #E9FBDE;
+      --v-hacker-1: #00fff2; --v-hacker-2: #ff2079;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -204,6 +205,10 @@
        Master" variant — matches the season's hacking/corrupted-systems theme
        rather than reusing an existing Runners variant palette. */
     .v-cheatmaster { background: linear-gradient(90deg, var(--v-cheat-1), var(--v-cheat-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
+    /* Cyan-to-magenta glitch gradient for the "Hacker" variant (renamed from
+       "Loot Hacker") — distinct from Cheat's green/mint, same corrupted-
+       systems theme. Confirmed so far only on XRay, Onigiri, Overshield. */
+    .v-hacker { background: linear-gradient(90deg, var(--v-hacker-1), var(--v-hacker-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
     .rarity-rare { color: #00fffb; }
     .rarity-epic { color: #d825ee; }
     .rarity-legendary { color: #fbc363; }
@@ -274,15 +279,16 @@
     <p><a href="index.html">hub</a> &middot; <a href="runners.html">runners tracker</a> &middot; <a href="compare.html">compare with a friend</a></p>
   </footer>
 
-  <!-- Tracker live as of 2026-08-20 (Ch7 S4 launch). 12 sprites confirmed via
-       fortnite.gg's live datamined asset list: Jazz, Shadow, Bush,
-       Tails, Killswitch, Adventure, Klombo, Jonesy, Sonic, Victory Crown,
-       8-Bit, Storm Scout — each with exactly 3 variants (Normal, Gold, Cheat
-       Master). Cheat Master is new to Override, replacing the old Runners
-       variant lineup (Gummi/Galaxy/Holofoil/Gem/Cube/Quack) entirely for this
-       season. Bullet/Raccoon/Honey/Pond/XRay (Design-a-sprite winners) and
-       Spiderman are still not live — add them once confirmed. See the
-       data-layer comment down in <script> for full sourcing. -->
+  <!-- Tracker live as of 2026-08-20 (Ch7 S4 launch), last updated
+       2026-09-03. 16 sprites confirmed. "Hacker" exists as a variant but is
+       only live on Victory Crown so far — every other sprite still renders
+       Hacker as the dashed "invalid" placeholder until it goes live for
+       them too. Megaman is Normal-only (no Gold/Cheat/Hacker slots exist
+       for it at all). "Cheat Master" was renamed to "Cheat" and "Loot
+       Hacker" to "Hacker" on 2026-09-03. Bullet/Raccoon/Honey/Pond
+       (Design-a-sprite winners) and Spiderman are still not live — add them
+       once confirmed. See the data-layer comment down in <script> for full
+       sourcing. -->
 
   <div class="toolbar-frame">
 
@@ -307,7 +313,7 @@
           <div class="stat-block">
             <span class="stat-label">Completion</span>
             <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
-            <span class="stat-ratio" id="prog">0 / 36 &middot; 0%</span>
+            <span class="stat-ratio" id="prog">0 / 47 &middot; 0%</span>
           </div>
           <div class="stat-block">
             <span class="stat-label">Mastery</span>
@@ -462,35 +468,68 @@
   setInterval(tick, 1000);
   */
 
-  // ---- Data layer. Live as of 2026-08-20 (Ch7 S4 launch), confirmed
-  // against fortnite.gg's own datamined asset list (parsed from a saved copy
-  // of the page, not guessed) rather than the earlier FNBRIntel leak text.
-  // 12 sprites, each with exactly 3 variants: Normal, Gold, and the new
-  // "Cheat Master" variant — Override drops the old Runners variant lineup
-  // (Gummi/Galaxy/Holofoil/Gem/Cube/Quack) entirely for this season, so
-  // there's no SPRITE_VARIANT_OVERRIDES map needed; every sprite just uses
-  // the full VARIANTS list. Rarity came from the site's own sprite-theme-*
-  // CSS classes per card. "Jazz" (not "Jazz Jackrabbit"), "Bush" (not
-  // "Bushranger"), and "Adventure" (not "Adventurer") are the actual in-game
-  // names, matching the filenames already saved to images/override/. Still
-  // not live: Bullet, Raccoon, Honey, Pond, XRay (Design-a-sprite contest
-  // winners, mid-season drop) and Spiderman (sits unreleased in the game
-  // files) — add them once confirmed, following this same pattern.
+  // ---- Data layer. Live as of 2026-08-20 (Ch7 S4 launch), last updated
+  // 2026-09-03. 16 sprites now — the original 12, plus XRay/Onigiri (added
+  // 2026-08-20) and Megaman/Overshield (added 2026-09-03).
+  //
+  // Variant renames (Michael's call, 2026-09-03, for simplicity):
+  // "Cheat Master" -> "Cheat", "Loot Hacker" -> "Hacker". Image filenames
+  // were renamed to match (e.g. bush_cheat_master.webp -> bush_cheat.webp),
+  // so imgPath()'s generic lowercase-and-underscore logic still resolves
+  // correctly with no code change needed there.
+  //
+  // "Hacker" exists as a variant category but is only live for Victory
+  // Crown so far (confirmed 2026-09-03) — every other sprite keeps it out
+  // of SPRITE_VARIANT_OVERRIDES so it renders as the dashed "invalid"
+  // placeholder, same as before it's ever gone live for them. Megaman
+  // stays ["Normal"] only (no Gold/Cheat/Hacker slots exist for it at all).
+  // New total: 14 regular sprites x 3 variants + Victory Crown x 4 +
+  // Megaman x 1 = 47.
+  //
+  // "Jazz" (not "Jazz Jackrabbit"), "Bush" (not "Bushranger"), and
+  // "Adventure" (not "Adventurer") are the actual in-game names. Still not
+  // live: Bullet, Raccoon, Honey, Pond (Design-a-sprite contest winners,
+  // mid-season drop) and Spiderman (sits unreleased in the game files) — add
+  // them once confirmed, following this same pattern.
   //
   // Order: first ten (Killswitch, Sonic, Tails, Jazz, Victory Crown,
   // Adventure, Jonesy, 8-Bit, Shadow, Bush) are Michael's confirmed in-game
-  // default-list order as of 2026-08-20. The rest (Klombo, Storm Scout) are
-  // provisional — appended at the end until their actual menu position is
-  // confirmed, same convention runners.html uses for its own late additions.
-  // Update this order as more positions come in.
+  // default-list order as of 2026-08-20. The rest (Klombo, Storm Scout,
+  // XRay, Onigiri, Megaman, Overshield) are provisional — appended at the
+  // end until their actual menu position is confirmed, same convention
+  // runners.html uses for its own late additions. Update this order as more
+  // positions come in.
   const SPRITES = [
     "Killswitch", "Sonic", "Tails", "Jazz", "Victory Crown", "Adventure", "Jonesy", "8-Bit", "Shadow", "Bush",
-    "Klombo", "Storm Scout",
+    "Klombo", "Storm Scout", "XRay", "Onigiri", "Megaman", "Overshield",
   ];
-  const VARIANTS = ["Normal", "Gold", "Cheat Master"];
+  const VARIANTS = ["Normal", "Gold", "Cheat", "Hacker"];
   const ALL_SPRITES = SPRITES;
   const KEY = "fn_sprites_v1";
-  const VCLS = { Normal: "v-normal", Gold: "v-gold", "Cheat Master": "v-cheatmaster" };
+  const VCLS = { Normal: "v-normal", Gold: "v-gold", Cheat: "v-cheatmaster", Hacker: "v-hacker" };
+
+  // Every regular sprite (Normal/Gold/Cheat only) gets an explicit entry
+  // rather than falling back to the full VARIANTS list, so the Hacker
+  // column renders as a clearly-invalid/grayed placeholder for them instead
+  // of implying it's real.
+  const SPRITE_VARIANT_OVERRIDES = {
+    "Killswitch": ["Normal", "Gold", "Cheat"],
+    "Sonic": ["Normal", "Gold", "Cheat"],
+    "Tails": ["Normal", "Gold", "Cheat"],
+    "Jazz": ["Normal", "Gold", "Cheat"],
+    "Victory Crown": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Adventure": ["Normal", "Gold", "Cheat"],
+    "Jonesy": ["Normal", "Gold", "Cheat"],
+    "8-Bit": ["Normal", "Gold", "Cheat"],
+    "Shadow": ["Normal", "Gold", "Cheat"],
+    "Bush": ["Normal", "Gold", "Cheat"],
+    "Klombo": ["Normal", "Gold", "Cheat"],
+    "Storm Scout": ["Normal", "Gold", "Cheat"],
+    "XRay": ["Normal", "Gold", "Cheat"],
+    "Onigiri": ["Normal", "Gold", "Cheat"],
+    "Overshield": ["Normal", "Gold", "Cheat"],
+    "Megaman": ["Normal"],
+  };
 
   const SPRITE_RARITY = {
     "Jazz": "Legendary",
@@ -511,7 +550,7 @@
   const RARITY_RANK = { Rare: 1, Epic: 2, Legendary: 3, Mythic: 4 };
   function spriteRarityRank(sprite) { return RARITY_RANK[SPRITE_RARITY[sprite]] || 99; }
 
-  function variantsForSprite(sprite) { return VARIANTS; }
+  function variantsForSprite(sprite) { return SPRITE_VARIANT_OVERRIDES[sprite] || VARIANTS; }
   function activeVariantsForSprite(sprite) { return variantsForSprite(sprite).filter(v => activeVariants().includes(v)); }
   function spritesForVariant(variantName) { return activeAllSprites().filter(s => variantsForSprite(s).includes(variantName)); }
 
