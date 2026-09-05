@@ -205,9 +205,9 @@
        Master" variant — matches the season's hacking/corrupted-systems theme
        rather than reusing an existing Runners variant palette. */
     .v-cheatmaster { background: linear-gradient(90deg, var(--v-cheat-1), var(--v-cheat-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
-    /* Cyan-to-magenta glitch gradient for the "Hacker" variant (renamed from
-       "Loot Hacker") — distinct from Cheat's green/mint, same corrupted-
-       systems theme. Confirmed so far only on XRay, Onigiri, Overshield. */
+    /* Cyan-to-magenta glitch gradient for the "Hacker" (Loot Hacker) variant
+       — distinct from Cheat's green/mint, same corrupted-systems theme.
+       Confirmed live for every sprite that has a Hacker slot (2026-09-04). */
     .v-hacker { background: linear-gradient(90deg, var(--v-hacker-1), var(--v-hacker-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
     .rarity-rare { color: #00fffb; }
     .rarity-epic { color: #d825ee; }
@@ -280,15 +280,17 @@
   </footer>
 
   <!-- Tracker live as of 2026-08-20 (Ch7 S4 launch), last updated
-       2026-09-03. 16 sprites confirmed. "Hacker" exists as a variant but is
-       only live on Victory Crown so far — every other sprite still renders
-       Hacker as the dashed "invalid" placeholder until it goes live for
-       them too. Megaman is Normal-only (no Gold/Cheat/Hacker slots exist
-       for it at all). "Cheat Master" was renamed to "Cheat" and "Loot
-       Hacker" to "Hacker" on 2026-09-03. Bullet/Raccoon/Honey/Pond
-       (Design-a-sprite winners) and Spiderman are still not live — add them
-       once confirmed. See the data-layer comment down in <script> for full
-       sourcing. -->
+       2026-09-04. 16 sprites confirmed. "Hacker" (Loot Hacker) is confirmed
+       live for every sprite that has a Hacker slot — it just has specific
+       unlock requirements rather than dropping in the wild like Normal/Gold/
+       Cheat, so it was slow to confirm. Megaman is Normal-only (no Gold/
+       Cheat/Hacker slots exist for it at all — a structural limit, not an
+       unconfirmed one). Internally the code still uses the short keys "Cheat"
+       and "Hacker" (Michael's shorthand, used in code/chat); the table
+       displays their full names "Cheat Master" and "Loot Hacker" via
+       VARIANT_RENAMES. Bullet/Raccoon/Honey/Pond (Design-a-sprite winners)
+       and Spiderman are still not live — add them once confirmed. See the
+       data-layer comment down in <script> for full sourcing. -->
 
   <div class="toolbar-frame">
 
@@ -313,7 +315,7 @@
           <div class="stat-block">
             <span class="stat-label">Completion</span>
             <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
-            <span class="stat-ratio" id="prog">0 / 47 &middot; 0%</span>
+            <span class="stat-ratio" id="prog">0 / 61 &middot; 0%</span>
           </div>
           <div class="stat-block">
             <span class="stat-label">Mastery</span>
@@ -469,22 +471,24 @@
   */
 
   // ---- Data layer. Live as of 2026-08-20 (Ch7 S4 launch), last updated
-  // 2026-09-03. 16 sprites now — the original 12, plus XRay/Onigiri (added
+  // 2026-09-04. 16 sprites now — the original 12, plus XRay/Onigiri (added
   // 2026-08-20) and Megaman/Overshield (added 2026-09-03).
   //
-  // Variant renames (Michael's call, 2026-09-03, for simplicity):
-  // "Cheat Master" -> "Cheat", "Loot Hacker" -> "Hacker". Image filenames
-  // were renamed to match (e.g. bush_cheat_master.webp -> bush_cheat.webp),
-  // so imgPath()'s generic lowercase-and-underscore logic still resolves
-  // correctly with no code change needed there.
+  // Variant short keys (Michael's shorthand, used internally in code/chat):
+  // "Cheat" = Cheat Master, "Hacker" = Loot Hacker. Image filenames use
+  // these short forms too (e.g. bush_cheat.webp), so imgPath()'s generic
+  // lowercase-and-underscore logic resolves correctly with no code change.
+  // The table itself displays the full names via VARIANT_RENAMES below —
+  // Michael's call (2026-09-04): shorthand in code/discussion, full names
+  // on the actual tracker table.
   //
-  // "Hacker" exists as a variant category but is only live for Victory
-  // Crown so far (confirmed 2026-09-03) — every other sprite keeps it out
-  // of SPRITE_VARIANT_OVERRIDES so it renders as the dashed "invalid"
-  // placeholder, same as before it's ever gone live for them. Megaman
-  // stays ["Normal"] only (no Gold/Cheat/Hacker slots exist for it at all).
-  // New total: 14 regular sprites x 3 variants + Victory Crown x 4 +
-  // Megaman x 1 = 47.
+  // "Hacker" confirmed live (2026-09-04) for every sprite that has a Hacker
+  // slot — it isn't found in the wild like the other variants, it has
+  // specific unlock requirements, which is why it took longer to confirm.
+  // SPRITE_VARIANT_OVERRIDES now only needs an entry for Megaman, which is
+  // Normal-only (no Gold/Cheat/Hacker slots exist for it at all — a
+  // structural limit). Every other sprite falls back to the full VARIANTS
+  // list. New total: 15 sprites x 4 variants + Megaman x 1 = 61.
   //
   // "Jazz" (not "Jazz Jackrabbit"), "Bush" (not "Bushranger"), and
   // "Adventure" (not "Adventurer") are the actual in-game names. Still not
@@ -509,26 +513,11 @@
   const KEY = "fn_sprites_v1";
   const VCLS = { Normal: "v-normal", Gold: "v-gold", Cheat: "v-cheatmaster", Hacker: "v-hacker" };
 
-  // Every regular sprite (Normal/Gold/Cheat only) gets an explicit entry
-  // rather than falling back to the full VARIANTS list, so the Hacker
-  // column renders as a clearly-invalid/grayed placeholder for them instead
-  // of implying it's real.
+  // Only Megaman needs an explicit entry now that Hacker is confirmed live
+  // for everyone else — it's structurally Normal-only, no Gold/Cheat/Hacker
+  // slots exist for it. Every other sprite falls back to the full VARIANTS
+  // list (Normal/Gold/Cheat/Hacker).
   const SPRITE_VARIANT_OVERRIDES = {
-    "Killswitch": ["Normal", "Gold", "Cheat"],
-    "Sonic": ["Normal", "Gold", "Cheat"],
-    "Tails": ["Normal", "Gold", "Cheat"],
-    "Jazz": ["Normal", "Gold", "Cheat"],
-    "Victory Crown": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Adventure": ["Normal", "Gold", "Cheat"],
-    "Jonesy": ["Normal", "Gold", "Cheat"],
-    "8-Bit": ["Normal", "Gold", "Cheat"],
-    "Shadow": ["Normal", "Gold", "Cheat"],
-    "Bush": ["Normal", "Gold", "Cheat"],
-    "Klombo": ["Normal", "Gold", "Cheat"],
-    "Storm Scout": ["Normal", "Gold", "Cheat"],
-    "XRay": ["Normal", "Gold", "Cheat"],
-    "Onigiri": ["Normal", "Gold", "Cheat"],
-    "Overshield": ["Normal", "Gold", "Cheat"],
     "Megaman": ["Normal"],
   };
 
@@ -556,7 +545,11 @@
   function spritesForVariant(variantName) { return activeAllSprites().filter(s => variantsForSprite(s).includes(variantName)); }
 
   const RENAMES = {};
-  const VARIANT_RENAMES = {};
+  // Display-only full names for the tracker table/filters. Internal code
+  // (keys, image filenames, share-code encoding, chat) keeps using the
+  // short forms "Cheat"/"Hacker" — Michael's call, 2026-09-04.
+  const VARIANT_RENAMES = { Cheat: "Cheat Master", Hacker: "Loot Hacker" };
+  function variantLabel(v) { return VARIANT_RENAMES[v] || v; }
 
   const HIDDEN_VARIANTS = [];
   function activeVariants() { return VARIANTS.filter(v => !HIDDEN_VARIANTS.includes(v)); }
@@ -710,7 +703,7 @@
     if (sel.length === 0) label.textContent = `All ${noun}s`;
     else if (sel.length === 1 && sel[0] === "__none__") label.textContent = `No ${noun}s`;
     else if (sel.length === options.length) label.textContent = `All ${noun}s`;
-    else if (sel.length === 1) label.textContent = sel[0];
+    else if (sel.length === 1) label.textContent = type === "variant" ? variantLabel(sel[0]) : sel[0];
     else label.textContent = `${sel.length} ${noun}s selected`;
     toggle.classList.toggle("has-selection", sel.length > 0);
   }
@@ -726,7 +719,7 @@
       </div>` + options.map(opt => `
       <label class="ms-option">
         <input type="checkbox" value="${opt}" ${sel.includes(opt) ? "checked" : ""} onchange="onMsOptionChange('${type}', this)">
-        <span>${opt}</span>
+        <span>${type === "variant" ? variantLabel(opt) : opt}</span>
       </label>`).join("");
   }
 
@@ -838,9 +831,9 @@
     const gridCols = "120px " + cols.map(() => "minmax(44px, 120px)").join(" ");
     let html = `<div class="sprite-grid" style="grid-template-columns: ${gridCols};">`;
     html += `<div class="g-header row-label-col">${rowAxisLabel}</div>`;
-    cols.forEach(c => { html += `<div class="g-header"><span class="${groupBy === "sprite" ? (VCLS[c] || "") : spriteRarityClass(c)}">${c}</span></div>`; });
+    cols.forEach(c => { html += `<div class="g-header"><span class="${groupBy === "sprite" ? (VCLS[c] || "") : spriteRarityClass(c)}">${groupBy === "sprite" ? variantLabel(c) : c}</span></div>`; });
     rows.forEach(row => {
-      html += `<div class="g-row-label"><span class="${groupBy === "variant" ? (VCLS[row] || "") : spriteRarityClass(row)}">${row}</span></div>`;
+      html += `<div class="g-row-label"><span class="${groupBy === "variant" ? (VCLS[row] || "") : spriteRarityClass(row)}">${groupBy === "variant" ? variantLabel(row) : row}</span></div>`;
       cols.forEach(col => { html += renderCell(row, col); });
     });
     html += `</div>`;
@@ -873,13 +866,15 @@
         const sprite = rowAxisIsSprite ? row : other;
         const variant = rowAxisIsSprite ? other : row;
         const otherLabelClass = rowAxisIsSprite ? (VCLS[other] || "") : spriteRarityClass(other);
+        const otherLabel = rowAxisIsSprite ? variantLabel(other) : other;
         return `<div class="compact-tile">
             ${cellHTML(sprite, variant)}
-            <div class="compact-tile-label"><span class="${otherLabelClass}">${other}</span></div>
+            <div class="compact-tile-label"><span class="${otherLabelClass}">${otherLabel}</span></div>
           </div>`;
       }).join("");
+      const rowLabel = rowAxisIsSprite ? row : variantLabel(row);
       return `<div class="compact-row">
-          <div class="compact-row-label"><span class="${rowLabelClass}">${row}</span></div>
+          <div class="compact-row-label"><span class="${rowLabelClass}">${rowLabel}</span></div>
           <div class="compact-row-cells">${cells}</div>
         </div>`;
     }).join("");
