@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trade Loops — No Man's Sky | ravencaller213</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Serif+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#060b0c;
+    --surface:#0b1616;
+    --surface-hi:#10201f;
+    --border:rgba(120,230,210,0.14);
+    --border-hi:rgba(120,230,210,0.38);
+    --nms-1:#5eead4;
+    --nms-2:#2dd4bf;
+    --nms-3:#ff8a5c;
+    --nms-4:#38bdf8;
+    --text:#dcf3ef;
+    --text-dim:#6f938d;
+    --radius:14px;
+
+    /* economy colors — kept close to the in-game HUD hues so they stay
+       instantly recognizable to anyone who's looked at a galaxy map */
+    --trading:#52d17c;
+    --advmat:#b389f0;
+    --scientific:#4d8bf0;
+    --mining:#f2934a;
+    --manufacturing:#f0c94d;
+    --technology:#45d3d9;
+    --power:#ec5f5f;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'DM Sans',sans-serif;
+    font-weight:300;
+    min-height:100vh;
+    position:relative;
+    overflow-x:hidden;
+  }
+  .bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(94,234,212,0.06), transparent 45%),
+      radial-gradient(circle at 85% 15%, rgba(255,138,92,0.05), transparent 40%),
+      radial-gradient(circle at 50% 90%, rgba(45,212,191,0.07), transparent 50%);
+  }
+  .grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  main{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:36px 24px 80px;}
+
+  .topbar{display:flex;align-items:center;gap:8px;font-size:13px;letter-spacing:0.03em;color:var(--text-dim);margin-bottom:40px;flex-wrap:wrap;}
+  .topbar a{color:var(--text-dim);text-decoration:none;transition:color .2s;}
+  .topbar a:hover{color:var(--nms-1);}
+  .topbar .sep{opacity:0.4;}
+  .topbar .current{color:var(--text);}
+
+  h1.wordmark{
+    font-family:'DM Serif Display',serif;
+    font-style:italic;
+    font-size:clamp(2.1rem,5vw,3rem);
+    margin:0 0 10px;
+    background:linear-gradient(90deg,var(--nms-1),var(--nms-4),var(--nms-3),var(--nms-1));
+    background-size:200%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:shimmer 8s ease-in-out infinite alternate;
+  }
+  @keyframes shimmer{from{background-position:0% 50%;}to{background-position:100% 50%;}}
+  .subtitle{color:var(--text-dim);font-size:15px;max-width:640px;line-height:1.6;margin:0 0 40px;}
+  .subtitle b{color:var(--text);font-weight:500;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ---------- Loop ---------- */
+  .loop{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    margin-bottom:28px;
+    overflow:hidden;
+    animation:fadeUp .6s ease both;
+  }
+  .loop-head{
+    list-style:none;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:22px 26px;
+    flex-wrap:wrap;
+    user-select:none;
+  }
+  .loop-head::-webkit-details-marker{display:none;}
+  .loop-head .chevron{
+    color:var(--text-dim);
+    font-size:11px;
+    transition:transform .2s ease;
+    flex-shrink:0;
+  }
+  .loop[open] > .loop-head .chevron{transform:rotate(90deg);}
+
+  .loop-badge{
+    width:30px;height:30px;border-radius:9px;flex-shrink:0;
+    background:var(--surface-hi);border:1px solid var(--border-hi);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'DM Serif Display',serif;font-style:italic;font-size:15px;color:var(--nms-1);
+  }
+  .loop-title{font-size:1.05rem;font-weight:500;color:var(--text);margin-right:4px;}
+
+  .flow-chain{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .chip{
+    font-size:11px;letter-spacing:0.03em;padding:4px 11px;border-radius:99px;
+    border:1px solid var(--c);color:var(--c);background:color-mix(in srgb, var(--c) 12%, transparent);
+    white-space:nowrap;
+  }
+  .flow-arrow{color:var(--text-dim);font-size:13px;}
+
+  .loop-body{padding:0 26px 26px;}
+
+  /* ---------- Buying / Selling toggle ---------- */
+  .subblock{margin-bottom:20px;}
+  .subblock:last-child{margin-bottom:0;}
+  .subblock-head{
+    list-style:none;cursor:pointer;
+    font-size:10.5px;font-weight:500;color:var(--text-dim);
+    text-transform:uppercase;letter-spacing:0.14em;
+    display:flex;align-items:center;gap:10px;
+    margin:0 0 16px;
+    user-select:none;
+  }
+  .subblock-head::-webkit-details-marker{display:none;}
+  .subblock-head .chevron{font-size:9px;transition:transform .2s ease;flex-shrink:0;}
+  .subblock[open] > .subblock-head .chevron{transform:rotate(90deg);}
+  .subblock-head .rule{flex:1;height:1px;background:var(--border);}
+  .subblock-head.selling{color:var(--nms-1);}
+
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
+
+  .eco-card{
+    background:var(--surface-hi);
+    border:1px solid var(--border);
+    border-left:3px solid var(--loc);
+    border-radius:10px;
+    padding:16px 18px;
+    transition:border-color .2s, transform .2s;
+  }
+  .eco-card:hover{border-color:var(--border-hi);transform:translateY(-2px);}
+  .eco-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px;}
+  .eco-name{font-weight:500;font-size:14.5px;color:var(--loc);}
+  .eco-swatch{font-size:10.5px;color:var(--text-dim);letter-spacing:0.03em;}
+  .eco-note{font-size:11.5px;color:var(--text-dim);margin-bottom:12px;}
+  .eco-note b{font-weight:500;}
+
+  .eco-list{margin:0;padding:0;list-style:none;}
+  .eco-list li{
+    display:flex;align-items:center;gap:10px;
+    padding:6px 0;font-size:13px;color:var(--ic);
+    border-top:1px solid rgba(255,255,255,0.05);
+  }
+  .eco-list li:first-child{border-top:none;}
+  .rank{
+    width:17px;height:17px;border-radius:50%;flex-shrink:0;
+    border:1px solid var(--ic);color:var(--ic);
+    font-size:9px;font-weight:500;
+    display:flex;align-items:center;justify-content:center;
+    opacity:0.85;
+  }
+
+  footer.page-footer{
+    margin-top:36px;font-size:12.5px;color:var(--text-dim);line-height:1.7;
+    border-top:1px solid var(--border);padding-top:20px;
+  }
+</style>
+</head>
+<body>
+<div class="bg-orbs"></div>
+<div class="grain"></div>
+
+<main>
+  <nav class="topbar">
+    <a href="../../">ravencaller213</a>
+    <span class="sep">/</span>
+    <a href="../">No Man's Sky</a>
+    <span class="sep">/</span>
+    <span class="current">Trade Loops</span>
+  </nav>
+
+  <h1 class="wordmark">Trade Loops</h1>
+  <p class="subtitle"><b>Selling</b> is what that economy produces and sells to you cheap. <b>Buying</b> is what it wants from you, shown in the color of the economy it comes from. Item 1 is highest value / lowest supply — item 5 is lowest value / most common.</p>
+
+  <!-- LOOP A -->
+  <details class="loop" open>
+    <summary class="loop-head">
+      <span class="chevron">▸</span>
+      <span class="loop-badge">A</span>
+      <span class="loop-title">Loop A</span>
+      <span class="flow-chain">
+        <span class="chip" style="--c:var(--trading)">Trading</span>
+        <span class="flow-arrow">→</span>
+        <span class="chip" style="--c:var(--advmat)">Advanced Materials</span>
+        <span class="flow-arrow">→</span>
+        <span class="chip" style="--c:var(--scientific)">Scientific</span>
+        <span class="flow-arrow">↺</span>
+      </span>
+    </summary>
+    <div class="loop-body">
+
+      <details class="subblock" open>
+        <summary class="subblock-head"><span class="chevron">▸</span>Buying<span class="rule"></span></summary>
+        <div class="card-grid">
+
+          <div class="eco-card" style="--loc:var(--trading)">
+            <div class="eco-head"><span class="eco-name">Trading</span><span class="eco-swatch">Green</span></div>
+            <div class="eco-note">wants <b style="color:var(--scientific)">Scientific</b> goods</div>
+            <ol class="eco-list">
+              <li style="--ic:var(--scientific)"><span class="rank">1</span>De-Scented Pheromone Bottle</li>
+              <li style="--ic:var(--scientific)"><span class="rank">2</span>Neutron Microscope</li>
+              <li style="--ic:var(--scientific)"><span class="rank">3</span>Instability Injector</li>
+              <li style="--ic:var(--scientific)"><span class="rank">4</span>Organic Piping</li>
+              <li style="--ic:var(--scientific)"><span class="rank">5</span>Neural Duct</li>
+            </ol>
+          </div>
+
+          <div class="eco-card" style="--loc:var(--advmat)">
+            <div class="eco-head"><span class="eco-name">Advanced Materials</span><span class="eco-swatch">Purple</span></div>
+            <div class="eco-note">wants <b style="color:var(--trading)">Trading</b> goods</div>
+            <ol class="eco-list">
+              <li style="--ic:var(--trading)"><span class="rank">1</span>Decrypted User Data</li>
+              <li style="--ic:var(--trading)"><span class="rank">2</span>Star Silk</li>
+              <li style="--ic:var(--trading)"><span class="rank">3</span>Comet Droplets</li>
+              <li style="--ic:var(--trading)"><span class="rank">4</span>Ion Sphere</li>
+              <li style="--ic:var(--trading)"><span class="rank">5</span>Teleport Coordinators</li>
+            </ol>
+          </div>
+
+          <div class="eco-card" style="--loc:var(--scientific)">
+            <div class="eco-head"><span class="eco-name">Scientific</span><span class="eco-swatch">Dark Blue</span></div>
+            <div class="eco-note">wants <b style="color:var(--advmat)">Advanced Materials</b> goods</div>
+            <ol class="eco-list">
+              <li style="--ic:var(--advmat)"><span class="rank">1</span>Nanotube Crate</li>
+              <li style="--ic:var(--advmat)"><span class="rank">2</span>Self-Repairing Heridium</li>
+              <li style="--ic:var(--advmat)"><span class="rank">3</span>Optical Solvent</li>
+              <li style="--ic:var(--advmat)"><span class="rank">4</span>Five Dimensional Torus</li>
+              <li style="--ic:var(--advmat)"><span class="rank">5</span>Superconducting Fibre</li>
+            </ol>
+          </div>
+
+        </div>
+      </details>
+
+      <details class="subblock" open>
+        <summary class="subblock-head selling"><span class="chevron">▸</span>Selling<span class="rule"></span></summary>
+        <div class="card-grid">
+
+          <div class="eco-card" style="--loc:var(--trading)">
+            <div class="eco-head"><span class="eco-name">Trading</span><span class="eco-swatch">Green</span></div>
+            <ol class="eco-list">
+              <li style="--ic:var(--trading)"><span class="rank">1</span>Decrypted User Data</li>
+              <li style="--ic:var(--trading)"><span class="rank">2</span>Star Silk</li>
+              <li style="--ic:var(--trading)"><span class="rank">3</span>Comet Droplets</li>
+              <li style="--ic:var(--trading)"><span class="rank">4</span>Ion Sphere</li>
+              <li style="--ic:var(--trading)"><span class="rank">5</span>Teleport Coordinators</li>
+            </ol>
+          </div>
+
+          <div class="eco-card" style="--loc:var(--advmat)">
+            <div class="eco-head"><span class="eco-name">Advanced Materials</span><span class="eco-swatch">Purple</span></div>
+            <ol class="eco-list">
+              <li style="--ic:var(--advmat)"><span class="rank">1</span>Nanotube Crate</li>
+              <li style="--ic:var(--advmat)"><span class="rank">2</span>Self-Repairing Heridium</li>
+              <li style="--ic:var(--advmat)"><span class="rank">3</span>Optical Solvent</li>
+              <li style="--ic:var(--advmat)"><span class="rank">4</span>Five Dimensional Torus</li>
+              <li style="--ic:var(--advmat)"><span class="rank">5</span>Superconducting Fibre</li>
+            </ol>
+          </div>
+
+          <div class="eco-card" style="--loc:var(--scientific)">
+            <div class="eco-head"><span class="eco-name">Scientific</span><span class="eco-swatch">Dark Blue</span></div>
+            <ol class="eco-list">
+              <li style="--ic:var(--scientific)"><span class="rank">1</span>De-Scented Pheromone Bottle</li>
+              <li style="--ic:var(--scientific)"><span class="rank">2</span>Neutron Microscope</li>
+              <li style="--ic:var(--scientific)"><span class="rank">3</span>Instability Injector</li>
+              <li style="--ic:var(--scientific)"><span class="rank">4</span>Organic Piping</li>
+              <li style="--ic:var(--scientific)"><span class="rank">5</span>Neural Duct</li>
+            </ol>
+          </div>
+
+        </div>
+      </details>
+
+    </div>
+  </details>
+
+  <!-- LOOP B -->
+  <details class="loop" open>
+    <summary class="loop-head">
+      <span class="chevron">▸</span>
+      <span class="loop-badge">B</span>
+      <span class="loop-title">Loop B</span>
+      <span class="flow-chain">
+        <span class="chip" style="--c:var(--mining)">Mining</span>
+        <span class="flow-arrow">→</span>
+        <span class="chip" style="--c:var(--manufacturing)">Manufacturing</span>
+        <span class="flow-arrow">→</span>
+        <span class="chip" style="--c:var(--technology)">Technology</span>
+        <span class="flow-arrow">→</span>
+        <span class="chip" style="--c:var(--power)">Power Generation</span>
+        <span class="flow-arrow">↺</span>
+      </span>
+    </summary>
+    <div class="loop-body">
+
+      <details class="subblock" open>
+        <summary class="subblock-head"><span class="chevron">▸</span>Buying<span class="rule"></span></summary>
+        <div class="card-grid">
+
+          <div class="eco-card" style="--loc:var(--mining)">
+            <div class="eco-head"><span class="eco-name">Mining</span><span class="eco-swatch">Orange</span></div>
+            <div class="eco-note">wants <b style="color:var(--power)">Power Generation</b> goods</div>
+            <ol class="eco-list">
+              <li style="--ic:var(--power)"><span class="rank">1</span>Spark Canister</li>
+              <li style="--ic:var(--power)"><span class="rank">2</span>Industrial-Grade Battery</li>
+              <li style="--ic:var(--power)"><span class="rank">3</span>Ohmic Gel</li>
+              <li style="--ic:var(--power)"><span class="rank">4</span>Experimental Power Fluid</li>
+              <li style="--ic:var(--power)"><span class="rank">5</span>Fusion Core</li>
+            </ol>
+          </div>
+
+          <div class="eco-card" style="--loc:var(--manufacturing)">
+            <div class="eco-head"><span class="eco-name">Manufacturing</span><span class="eco-swatch">Yellow</span></div>
+            <div class="eco-note">wants <b style="color:var(--mining)">Mining</b> goods</div>
+            <ol class="eco-list">
+              <li style="--ic:var(--mining)"><span class="rank">1</span>Dirt</li>
+              <li style="--ic:var(--mining)"><span class="rank">2</span>Unrefined Pyrite Grease</li>
+              <li style="--ic:var(--mining)"><span class="rank">3</span>Bromide Salt</li>
+              <li style="--ic:var(--mining)"><span class="rank">4</span>Polychromatic Zirconium</li>
+              <li style="--ic:var(--mining)"><span class="rank">5</span>Re-latticed Arc Crystal</li>
+            </ol>
+          </div>
+
+          <div class="eco-card" style="--loc:var(--technology)">
+            <div class="eco-head"><span class="eco-name">Technology</span><span class="eco-swatch">Cyan</span></div>
+            <div class="eco-note">wants <b style="color:var(--manufacturing)">Manufacturing</b> goods</div>
+            <ol class="eco-list">
+              <li style="--ic:var(--manufacturing)"><span class="rank">1</span>Enormous Metal Cog</li>
+              <li style="--ic:var(--manufacturing)"><span class="rank">2</span>Non-Stick Piston</li>
+              <li style="--ic:var(--manufacturing)"><span class="rank">3</span>Six-Pronged Mesh Decoupler</li>
+              <li style="--ic:var(--manufacturing)"><span class="rank">4</span>Holographic Crankshaft</li>
+              <li style="--ic:var(--manufacturing)"><span class="rank">5</span>High Capacity Vector Compressor</li>
+            </ol>
+          </div>
+
+          <div class="eco-card" style="--loc:var(--power)">
+            <div class="eco-head"><span class="eco-name">Power Generation</span><span class="eco-swatch">Red</span></div>
+            <div class="eco-note">wants <b style="color:var(--technology)">Technology</b> goods</div>
+            <ol class="eco-list">
+              <li style="--ic:var(--technology)"><span class="rank">1</span>Decommissioned Circuit Board</li>
+              <li style="--ic:var(--technology)"><span class="rank">2</span>Welding Soap</li>
+              <li style="--ic:var(--technology)"><span class="rank">3</span>Ion Capacitor</li>
+              <li style="--ic:var(--technology)"><span class="rank">4</span>Autonomous Positioning Unit</li>
+              <li style="--ic:var(--technology)"><span class="rank">5</span>Quantum Accelerator</li>
+            </ol>
+          </div>
+
+        </div>
+      </details>
+
+      <details class="subblock" open>
+        <summary class="subblock-head selling"><span class="chevron">▸</span>Selling<span class="rule"></span></summary>
+        <div class="card-grid">
+
+          <div class="eco-card" style="--loc:var(--mining)">
+            <div class="eco-head"><span class="eco-name">Mining</span><span class="eco-swatch">Orange</span></div>
+            <ol class="eco-list">
+              <li style="--ic:var(--mining)"><span class="rank">1</span>Dirt</li>
+              <li style="--ic:var(--mining)"><span class="rank">2</span>Unrefined Pyrite Grease</li>
+              <li style="--ic:var(--mining)"><span class="rank">3</span>Bromide Salt</li>
+              <li style="--ic:var(--mining)"><span class="rank">4</span>Polychromatic Zirconium</li>
+              <li style="--ic:var(--mining)"><span class="rank">5</span>Re-latticed Arc Crystal</li>
+            </ol>
+          </div>
+
+          <div class="eco-card" style="--loc:var(--manufacturing)">
+            <div class="eco-head"><span class="eco-name">Manufacturing</span><span class="eco-swatch">Yellow</span></div>
+            <ol class="eco-list">
+              <li style="--ic:var(--manufacturing)"><span class="rank">1</span>Enormous Metal Cog</li>
+              <li style="--ic:var(--manufacturing)"><span class="rank">2</span>Non-Stick Piston</li>
+              <li style="--ic:var(--manufacturing)"><span class="rank">3</span>Six-Pronged Mesh Decoupler</li>
+              <li style="--ic:var(--manufacturing)"><span class="rank">4</span>Holographic Crankshaft</li>
+              <li style="--ic:var(--manufacturing)"><span class="rank">5</span>High Capacity Vector Compressor</li>
+            </ol>
+          </div>
+
+          <div class="eco-card" style="--loc:var(--technology)">
+            <div class="eco-head"><span class="eco-name">Technology</span><span class="eco-swatch">Cyan</span></div>
+            <ol class="eco-list">
+              <li style="--ic:var(--technology)"><span class="rank">1</span>Decommissioned Circuit Board</li>
+              <li style="--ic:var(--technology)"><span class="rank">2</span>Welding Soap</li>
+              <li style="--ic:var(--technology)"><span class="rank">3</span>Ion Capacitor</li>
+              <li style="--ic:var(--technology)"><span class="rank">4</span>Autonomous Positioning Unit</li>
+              <li style="--ic:var(--technology)"><span class="rank">5</span>Quantum Accelerator</li>
+            </ol>
+          </div>
+
+          <div class="eco-card" style="--loc:var(--power)">
+            <div class="eco-head"><span class="eco-name">Power Generation</span><span class="eco-swatch">Red</span></div>
+            <ol class="eco-list">
+              <li style="--ic:var(--power)"><span class="rank">1</span>Spark Canister</li>
+              <li style="--ic:var(--power)"><span class="rank">2</span>Industrial-Grade Battery</li>
+              <li style="--ic:var(--power)"><span class="rank">3</span>Ohmic Gel</li>
+              <li style="--ic:var(--power)"><span class="rank">4</span>Experimental Power Fluid</li>
+              <li style="--ic:var(--power)"><span class="rank">5</span>Fusion Core</li>
+            </ol>
+          </div>
+
+        </div>
+      </details>
+
+    </div>
+  </details>
+
+  <footer class="page-footer">
+    Only Strong (★★★ / "High Supply" etc.) economies reliably stock all five tiers. Planetary Trading Posts beat space station prices in both directions — land when you can.
+  </footer>
+</main>
+</body>
+</html>
