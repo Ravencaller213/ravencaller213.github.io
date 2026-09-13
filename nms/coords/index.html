@@ -343,7 +343,7 @@
   // Renders a hex character through the NMS glyph fonts (which map 0-9/a-f
   // directly onto the 16 portal glyph pictographs). `tight` uses the denser
   // variant for small inline clusters (mini previews, saved-card rows).
-  const iconSvg = (h, tight) => `<span class="glyph-char${tight ? ' tight' : ''}">${h.toLowerCase()}</span>`;
+  const iconSvg = (h, tight) => `<span class="glyph-char${tight ? ' tight' : ''}">${h.toUpperCase()}</span>`;
   const STORE_KEY = 'nms-coords-v1';
 
   // ---- Wheel ----
