@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Coordinates — No Man's Sky | ravencaller213</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Serif+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#060b0c;
+    --surface:#0b1616;
+    --surface-hi:#10201f;
+    --border:rgba(120,230,210,0.14);
+    --border-hi:rgba(120,230,210,0.38);
+    --nms-1:#5eead4;   /* cyan-teal — glyph glow */
+    --nms-2:#2dd4bf;   /* deep teal */
+    --nms-3:#ff8a5c;   /* warm coral — sunset accent */
+    --nms-4:#38bdf8;   /* ice blue, ties back to site opal-4 */
+    --text:#dcf3ef;
+    --text-dim:#6f938d;
+    --radius:14px;
+  }
+  @font-face{
+    font-family:'NMS Glyphs Mono';
+    src:url('../fonts/NMS-Glyphs-Mono.ttf') format('truetype');
+    font-display:swap;
+  }
+  @font-face{
+    font-family:'NMS Glyphs Tight';
+    src:url('../fonts/NMS-Glyphs-Tight.ttf') format('truetype');
+    font-display:swap;
+  }
+  .glyph-char{font-family:'NMS Glyphs Mono',sans-serif;line-height:1;display:inline-block;font-style:normal;}
+  .glyph-char.tight{font-family:'NMS Glyphs Tight',sans-serif;}
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'DM Sans',sans-serif;
+    font-weight:300;
+    min-height:100vh;
+    position:relative;
+    overflow-x:hidden;
+  }
+  .bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(94,234,212,0.06), transparent 45%),
+      radial-gradient(circle at 85% 15%, rgba(255,138,92,0.05), transparent 40%),
+      radial-gradient(circle at 50% 90%, rgba(45,212,191,0.07), transparent 50%);
+  }
+  .grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  main{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:36px 24px 80px;}
+
+  .topbar{display:flex;align-items:center;gap:8px;font-size:13px;letter-spacing:0.03em;color:var(--text-dim);margin-bottom:40px;flex-wrap:wrap;}
+  .topbar a{color:var(--text-dim);text-decoration:none;transition:color .2s;}
+  .topbar a:hover{color:var(--nms-1);}
+  .topbar .sep{opacity:0.4;}
+  .topbar .current{color:var(--text);}
+
+  h1.wordmark{
+    font-family:'DM Serif Display',serif;
+    font-style:italic;
+    font-size:clamp(2.1rem,5vw,3rem);
+    margin:0 0 10px;
+    background:linear-gradient(90deg,var(--nms-1),var(--nms-4),var(--nms-3),var(--nms-1));
+    background-size:200%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:shimmer 8s ease-in-out infinite alternate;
+  }
+  @keyframes shimmer{from{background-position:0% 50%;}to{background-position:100% 50%;}}
+  .subtitle{color:var(--text-dim);font-size:15px;max-width:560px;line-height:1.6;margin:0 0 36px;}
+
+  .divider{height:1px;width:100%;margin:44px 0;
+    background:linear-gradient(90deg,transparent,var(--nms-1),var(--nms-2),var(--nms-3),transparent);
+    opacity:0.3;
+  }
+
+  /* ---------- Builder card ---------- */
+  .builder-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:32px;
+    display:grid;
+    grid-template-columns:minmax(280px,380px) 1fr;
+    gap:32px;
+    animation:fadeUp .7s ease .05s both;
+  }
+  @media (max-width:760px){ .builder-card{grid-template-columns:1fr;} }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+
+  .wheel-wrap{position:relative;width:100%;aspect-ratio:1/1;max-width:380px;margin:0 auto;}
+  .wheel-ring-svg{position:absolute;inset:0;width:100%;height:100%;}
+  .wheel-center-label{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    text-align:center;pointer-events:none;
+  }
+  .wheel-center-label .k{display:block;font-size:9px;letter-spacing:0.25em;color:var(--text-dim);}
+  .wheel-center-label .v{display:block;font-family:'DM Serif Display',serif;font-style:italic;font-size:15px;color:var(--nms-1);margin-top:4px;}
+
+  .glyph-btn{
+    position:absolute;top:50%;left:50%;width:44px;height:44px;margin:-22px;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--surface-hi);
+    border:1px solid var(--border);
+    border-radius:10px;
+    color:var(--text-dim);
+    cursor:pointer;
+    transition:border-color .2s, color .2s, box-shadow .2s, transform .2s;
+  }
+  .glyph-btn .glyph-char{font-size:24px;}
+  .glyph-btn:hover{color:var(--nms-1);border-color:var(--border-hi);box-shadow:0 0 14px rgba(94,234,212,0.25);transform:translate(-50%,-50%) scale(1.08) !important;}
+  .glyph-btn:hover .glyph-char{text-shadow:0 0 10px currentColor;}
+  .glyph-btn.used{color:var(--nms-2);}
+
+  /* ---------- Address panel ---------- */
+  .address-panel{display:flex;flex-direction:column;gap:22px;}
+  .slots{display:flex;flex-wrap:wrap;gap:16px;}
+  .slot-group{display:flex;flex-direction:column;gap:6px;}
+  .slot-group .label{font-size:9px;letter-spacing:0.2em;color:var(--text-dim);text-transform:uppercase;}
+  .slot-row{display:flex;gap:4px;}
+  .slot{
+    width:34px;height:34px;
+    background:var(--surface-hi);
+    border:1px solid var(--border);
+    border-radius:7px;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--text-dim);
+    cursor:pointer;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .slot .glyph-char{font-size:20px;}
+  .slot.active{border-color:var(--nms-1);box-shadow:0 0 0 1px var(--nms-1) inset, 0 0 12px rgba(94,234,212,0.3);}
+  .slot.filled{color:var(--nms-1);}
+
+  .decode{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;
+    font-size:13px;color:var(--text-dim);
+    border-top:1px solid var(--border);
+    padding-top:18px;
+  }
+  .decode div{display:flex;justify-content:space-between;gap:8px;}
+  .decode span{color:var(--text);font-variant-numeric:tabular-nums;}
+  .decode small{display:block;color:var(--text-dim);font-size:10px;}
+
+  .actions{display:flex;flex-wrap:wrap;gap:10px;}
+  button.btn{
+    font-family:'DM Sans',sans-serif;font-size:12.5px;letter-spacing:0.03em;
+    background:transparent;border:1px solid var(--border);color:var(--text);
+    padding:9px 16px;border-radius:99px;cursor:pointer;transition:all .2s;
+  }
+  button.btn:hover{border-color:var(--border-hi);color:var(--nms-1);box-shadow:0 0 12px rgba(94,234,212,0.2);}
+  button.btn.primary{border-color:var(--nms-2);color:var(--nms-1);}
+  button.btn.primary:hover{background:rgba(94,234,212,0.08);}
+  button.btn.ghost{opacity:0.7;}
+  button.btn.ghost:hover{opacity:1;}
+
+  /* ---------- Saved section ---------- */
+  .saved-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+  .saved-head h2{font-family:'DM Sans',sans-serif;font-weight:500;font-size:1.3rem;margin:0;color:var(--text);}
+  .saved-head .count{color:var(--text-dim);font-size:12px;margin-left:8px;}
+
+  #add-form{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    padding:24px;margin-bottom:22px;display:grid;gap:14px;grid-template-columns:1fr 1fr;
+    animation:fadeUp .4s ease both;
+  }
+  #add-form .full{grid-column:1/-1;}
+  #add-form label{font-size:11px;letter-spacing:0.1em;color:var(--text-dim);text-transform:uppercase;display:block;margin-bottom:6px;}
+  #add-form input[type=text], #add-form textarea{
+    width:100%;background:var(--surface-hi);border:1px solid var(--border);border-radius:8px;
+    color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 12px;resize:vertical;
+  }
+  #add-form input[type=text]:focus, #add-form textarea:focus{outline:none;border-color:var(--border-hi);}
+  #addr-preview{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px;}
+  #addr-preview .mini{width:26px;height:26px;border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--nms-1);}
+  #addr-preview .mini .glyph-char{font-size:15px;}
+  .form-actions{grid-column:1/-1;display:flex;gap:10px;justify-content:flex-end;}
+
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+  .coord-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px 20px;position:relative;transition:border-color .2s, transform .2s;
+    animation:fadeUp .6s ease both;
+  }
+  .coord-card:hover{border-color:var(--border-hi);transform:translateY(-3px);}
+  .coord-card .title-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}
+  .coord-card h3{margin:0;font-size:16px;font-weight:500;color:var(--text);}
+  .coord-card .galaxy{font-size:11px;color:var(--nms-1);letter-spacing:0.05em;white-space:nowrap;}
+  .coord-card .glyph-row{display:flex;gap:3px;flex-wrap:wrap;margin:12px 0;}
+  .coord-card .glyph-row .mini{width:22px;height:22px;border:1px solid var(--border);border-radius:5px;display:flex;align-items:center;justify-content:center;color:var(--text-dim);}
+  .coord-card .glyph-row .mini .glyph-char{font-size:13px;}
+  .coord-card .raw{font-size:11px;color:var(--text-dim);letter-spacing:0.08em;margin-bottom:10px;}
+  .coord-card .notes{font-size:12.5px;color:var(--text-dim);line-height:1.5;margin-bottom:12px;min-height:0;}
+  .coord-card .row-actions{display:flex;gap:8px;}
+  .coord-card .row-actions button{
+    font-size:11px;background:transparent;border:1px solid var(--border);color:var(--text-dim);
+    padding:5px 10px;border-radius:99px;cursor:pointer;transition:all .2s;
+  }
+  .coord-card .row-actions button:hover{color:var(--nms-1);border-color:var(--border-hi);}
+  .coord-card .row-actions button.danger:hover{color:var(--nms-3);}
+  .empty-state{color:var(--text-dim);font-size:13.5px;padding:30px 0;text-align:center;border:1px dashed var(--border);border-radius:var(--radius);}
+
+  .io-row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
+  .io-row label.btn{display:inline-flex;align-items:center;}
+</style>
+</head>
+<body>
+<div class="bg-orbs"></div>
+<div class="grain"></div>
+
+<main>
+  <nav class="topbar">
+    <a href="../../">ravencaller213</a>
+    <span class="sep">/</span>
+    <a href="../">No Man's Sky</a>
+    <span class="sep">/</span>
+    <span class="current">Coordinates</span>
+  </nav>
+
+  <h1 class="wordmark">Portal Coordinates</h1>
+  <p class="subtitle">Dial a 12-glyph address on the wheel, decode one you already have, or keep a running list of the ones worth going back to.</p>
+
+  <section class="builder-card">
+    <div class="wheel-wrap">
+      <svg class="wheel-ring-svg" viewBox="0 0 380 380">
+        <circle cx="190" cy="190" r="150" fill="none" stroke="rgba(120,230,210,0.14)" stroke-width="1"/>
+        <circle cx="190" cy="190" r="112" fill="none" stroke="rgba(120,230,210,0.14)" stroke-width="1"/>
+        <circle cx="190" cy="190" r="78" fill="url(#portalGlow)" stroke="rgba(120,230,210,0.38)" stroke-width="1.4"/>
+        <defs>
+          <radialGradient id="portalGlow" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="#ff8a5c" stop-opacity="0.28"/>
+            <stop offset="55%" stop-color="#0b3b38" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#060b0c" stop-opacity="0.9"/>
+          </radialGradient>
+        </defs>
+      </svg>
+      <div class="wheel-center-label">
+        <span class="k">SEQUENCE</span>
+        <span class="v" id="center-count">0 / 12</span>
+      </div>
+      <div id="wheel-buttons"></div>
+    </div>
+
+    <div class="address-panel">
+      <div class="slots">
+        <div class="slot-group" data-group-label>
+          <span class="label">Planet</span>
+          <div class="slot-row" data-group="0-1"></div>
+        </div>
+        <div class="slot-group">
+          <span class="label">System</span>
+          <div class="slot-row" data-group="1-4"></div>
+        </div>
+        <div class="slot-group">
+          <span class="label">Voxel Y</span>
+          <div class="slot-row" data-group="4-6"></div>
+        </div>
+        <div class="slot-group">
+          <span class="label">Voxel Z</span>
+          <div class="slot-row" data-group="6-9"></div>
+        </div>
+        <div class="slot-group">
+          <span class="label">Voxel X</span>
+          <div class="slot-row" data-group="9-12"></div>
+        </div>
+      </div>
+
+      <div class="decode">
+        <div>Planet Index <span id="d-planet">—</span></div>
+        <div>System Index <span id="d-system">—</span></div>
+        <div>Voxel Y <span id="d-y">—</span></div>
+        <div>Voxel Z <span id="d-z">—</span></div>
+        <div>Voxel X <span id="d-x">—</span></div>
+        <div>Hemisphere <span id="d-hemi">—</span></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="clear-btn">Clear</button>
+        <button class="btn" id="backspace-btn">◂ Backspace</button>
+        <button class="btn" id="paste-btn">Paste address</button>
+        <button class="btn primary" id="copy-btn">Copy address</button>
+        <button class="btn primary" id="save-btn">Save to list ↓</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="saved-section">
+    <div class="saved-head">
+      <h2>Saved Coordinates <span class="count" id="saved-count"></span></h2>
+      <button class="btn" id="add-toggle">+ Add manually</button>
+    </div>
+
+    <form id="add-form" hidden>
+      <div>
+        <label for="f-name">Name</label>
+        <input type="text" id="f-name" placeholder="e.g. Home base — Korvax ruins" required>
+      </div>
+      <div>
+        <label for="f-galaxy">Galaxy</label>
+        <input type="text" id="f-galaxy" placeholder="Euclid" value="Euclid">
+      </div>
+      <div class="full">
+        <label for="f-address">Address (12 glyphs, hex 0-F)</label>
+        <input type="text" id="f-address" maxlength="12" placeholder="003DFD6ACF8C">
+        <div id="addr-preview"></div>
+      </div>
+      <div class="full">
+        <label for="f-notes">Notes</label>
+        <textarea id="f-notes" rows="2" placeholder="Optional — biome, resources, why it's worth keeping"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn ghost" id="cancel-add">Cancel</button>
+        <button type="submit" class="btn primary">Save</button>
+      </div>
+    </form>
+
+    <div class="card-grid" id="saved-list"></div>
+
+    <div class="io-row">
+      <button class="btn" id="export-btn">Export JSON</button>
+      <label class="btn" for="import-file">Import JSON</label>
+      <input type="file" id="import-file" accept="application/json" hidden>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  const GLYPHS = [
+    {h:'0',n:'Sunset'},{h:'1',n:'Bird'},{h:'2',n:'Face'},{h:'3',n:'Diplo'},
+    {h:'4',n:'Eclipse'},{h:'5',n:'Balloon'},{h:'6',n:'Boat'},{h:'7',n:'Bug'},
+    {h:'8',n:'Dragonfly'},{h:'9',n:'Galaxy'},{h:'A',n:'Voxel'},{h:'B',n:'Fish'},
+    {h:'C',n:'Tent'},{h:'D',n:'Rocket'},{h:'E',n:'Tree'},{h:'F',n:'Atlas'}
+  ];
+  // Renders a hex character through the NMS glyph fonts (which map 0-9/a-f
+  // directly onto the 16 portal glyph pictographs). `tight` uses the denser
+  // variant for small inline clusters (mini previews, saved-card rows).
+  const iconSvg = (h, tight) => `<span class="glyph-char${tight ? ' tight' : ''}">${h.toLowerCase()}</span>`;
+  const STORE_KEY = 'nms-coords-v1';
+
+  // ---- Wheel ----
+  const wheelHost = document.getElementById('wheel-buttons');
+  wheelHost.style.position = 'absolute';
+  wheelHost.style.inset = '0';
+  GLYPHS.forEach((g, i) => {
+    const angle = (360 / 16) * i - 90; // start at top
+    const rad = angle * Math.PI / 180;
+    const btn = document.createElement('button');
+    btn.className = 'glyph-btn';
+    btn.title = `${g.h} · ${g.n}`;
+    btn.dataset.hex = g.h;
+    btn.style.left = `${50 + 39.5 * Math.cos(rad)}%`;
+    btn.style.top = `${50 + 39.5 * Math.sin(rad)}%`;
+    btn.innerHTML = iconSvg(g.h);
+    btn.addEventListener('click', () => fillActiveSlot(g.h));
+    wheelHost.appendChild(btn);
+  });
+
+  // ---- Address slots ----
+  const address = new Array(12).fill(null);
+  let activeIndex = 0;
+
+  const groupDefs = [
+    {sel:'0-1', from:0, to:1},
+    {sel:'1-4', from:1, to:4},
+    {sel:'4-6', from:4, to:6},
+    {sel:'6-9', from:6, to:9},
+    {sel:'9-12', from:9, to:12},
+  ];
+  const slotEls = [];
+  groupDefs.forEach(def => {
+    const row = document.querySelector(`.slot-row[data-group="${def.sel}"]`);
+    for (let i = def.from; i < def.to; i++) {
+      const s = document.createElement('button');
+      s.className = 'slot';
+      s.type = 'button';
+      s.addEventListener('click', () => { activeIndex = i; renderSlots(); });
+      row.appendChild(s);
+      slotEls[i] = s;
+    }
+  });
+
+  function fillActiveSlot(hex){
+    address[activeIndex] = hex.toUpperCase();
+    if (activeIndex < 11) activeIndex++;
+    renderSlots();
+    decode();
+  }
+
+  function renderSlots(){
+    slotEls.forEach((el, i) => {
+      el.classList.toggle('active', i === activeIndex);
+      const v = address[i];
+      el.classList.toggle('filled', !!v);
+      el.innerHTML = v ? iconSvg(v) : '';
+    });
+    document.getElementById('center-count').textContent = `${address.filter(Boolean).length} / 12`;
+  }
+
+  function decode(){
+    const filled = address.filter(Boolean).length;
+    const dP = document.getElementById('d-planet');
+    const dS = document.getElementById('d-system');
+    const dY = document.getElementById('d-y');
+    const dZ = document.getElementById('d-z');
+    const dX = document.getElementById('d-x');
+    const dH = document.getElementById('d-hemi');
+    if (filled < 12) { dP.textContent = dS.textContent = dY.textContent = dZ.textContent = dX.textContent = dH.textContent = '—'; return; }
+    const hexAt = (a,b) => address.slice(a,b).join('');
+    const planetHex = hexAt(0,1), sysHex = hexAt(1,4), yHex = hexAt(4,6), zHex = hexAt(6,9), xHex = hexAt(9,12);
+    const planetDec = parseInt(planetHex,16);
+    dP.textContent = `${planetHex} (${planetDec === 0 ? 'space / defaults to 1' : planetDec})`;
+    dS.textContent = `${sysHex} (${parseInt(sysHex,16)})`;
+    dY.textContent = `${yHex} (${parseInt(yHex,16)})`;
+    dZ.textContent = `${zHex} (${parseInt(zHex,16)})`;
+    dX.textContent = `${xHex} (${parseInt(xHex,16)})`;
+    const yDec = parseInt(yHex,16), zDec = parseInt(zHex,16), xDec = parseInt(xHex,16);
+    const yHemi = yDec === 0x80 ? 'border (unused)' : (yDec <= 0x7F ? 'upper' : 'lower');
+    const zHemi = zDec === 0x800 ? 'border (unused)' : (zDec <= 0x7FF ? 'south' : 'north');
+    const xHemi = xDec === 0x800 ? 'border (unused)' : (xDec <= 0x7FF ? 'east' : 'west');
+    dH.textContent = `${yHemi} · ${zHemi} · ${xHemi}`;
+  }
+
+  document.getElementById('clear-btn').addEventListener('click', () => {
+    for (let i=0;i<12;i++) address[i] = null;
+    activeIndex = 0; renderSlots(); decode();
+  });
+  document.getElementById('backspace-btn').addEventListener('click', () => {
+    if (activeIndex > 0 && !address[activeIndex]) activeIndex--;
+    address[activeIndex] = null; renderSlots(); decode();
+  });
+  document.getElementById('paste-btn').addEventListener('click', async () => {
+    let text = '';
+    try { text = await navigator.clipboard.readText(); } catch(e) {}
+    if (!text) text = prompt('Paste a 12-character portal address:') || '';
+    applyRawAddress(text);
+  });
+  document.getElementById('copy-btn').addEventListener('click', () => {
+    const str = address.map(v => v || '_').join('');
+    navigator.clipboard.writeText(str).catch(()=>{});
+    flashBtn(document.getElementById('copy-btn'));
+  });
+  function flashBtn(btn){
+    const original = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = original, 1400);
+  }
+  function applyRawAddress(str){
+    const clean = (str || '').trim().toUpperCase().replace(/[^0-9A-F]/g,'');
+    if (clean.length !== 12) { alert('Address must be exactly 12 hex characters (0-9, A-F).'); return; }
+    for (let i=0;i<12;i++) address[i] = clean[i];
+    activeIndex = 11;
+    renderSlots(); decode();
+  }
+
+  renderSlots(); decode();
+
+  // ---- Saved coordinates ----
+  const addToggle = document.getElementById('add-toggle');
+  const addForm = document.getElementById('add-form');
+  const cancelAdd = document.getElementById('cancel-add');
+  const fAddress = document.getElementById('f-address');
+  const addrPreview = document.getElementById('addr-preview');
+
+  addToggle.addEventListener('click', () => {
+    addForm.hidden = !addForm.hidden;
+    if (!addForm.hidden) {
+      const current = address.filter(Boolean).length === 12 ? address.join('') : '';
+      fAddress.value = current;
+      renderAddrPreview();
+    }
+  });
+  cancelAdd.addEventListener('click', () => { addForm.hidden = true; addForm.reset(); });
+  document.getElementById('save-btn').addEventListener('click', () => {
+    addForm.hidden = false;
+    const current = address.filter(Boolean).length === 12 ? address.join('') : '';
+    fAddress.value = current;
+    renderAddrPreview();
+    addForm.scrollIntoView({behavior:'smooth', block:'center'});
+  });
+  fAddress.addEventListener('input', renderAddrPreview);
+  function renderAddrPreview(){
+    const clean = fAddress.value.toUpperCase().replace(/[^0-9A-F]/g,'');
+    addrPreview.innerHTML = clean.split('').map(h => `<div class="mini">${iconSvg(h, true)}</div>`).join('');
+  }
+
+  function loadSaved(){
+    try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; }
+    catch(e){ return []; }
+  }
+  function persistSaved(list){
+    localStorage.setItem(STORE_KEY, JSON.stringify(list));
+  }
+  function renderSaved(){
+    const list = loadSaved();
+    const host = document.getElementById('saved-list');
+    document.getElementById('saved-count').textContent = list.length ? `(${list.length})` : '';
+    if (!list.length){
+      host.innerHTML = '<div class="empty-state">Nothing saved yet — dial an address above, or add one manually.</div>';
+      return;
+    }
+    host.innerHTML = list.map(item => `
+      <div class="coord-card" data-id="${item.id}">
+        <div class="title-row">
+          <h3>${escapeHtml(item.name)}</h3>
+          <span class="galaxy">${escapeHtml(item.galaxy || '')}</span>
+        </div>
+        <div class="glyph-row">${item.address.split('').map(h => `<div class="mini">${iconSvg(h, true)}</div>`).join('')}</div>
+        <div class="raw">${item.address}</div>
+        ${item.notes ? `<div class="notes">${escapeHtml(item.notes)}</div>` : ''}
+        <div class="row-actions">
+          <button data-action="copy">Copy</button>
+          <button data-action="load">Load to wheel</button>
+          <button data-action="delete" class="danger">Delete</button>
+        </div>
+      </div>
+    `).join('');
+  }
+  function escapeHtml(s){
+    return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  document.getElementById('saved-list').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    const card = e.target.closest('.coord-card');
+    const id = card.dataset.id;
+    const list = loadSaved();
+    const item = list.find(x => x.id === id);
+    if (!item) return;
+    if (btn.dataset.action === 'copy') {
+      navigator.clipboard.writeText(item.address).catch(()=>{});
+      flashBtn(btn);
+    } else if (btn.dataset.action === 'load') {
+      applyRawAddress(item.address);
+      window.scrollTo({top:0, behavior:'smooth'});
+    } else if (btn.dataset.action === 'delete') {
+      if (confirm(`Delete "${item.name}"?`)) {
+        persistSaved(list.filter(x => x.id !== id));
+        renderSaved();
+      }
+    }
+  });
+
+  addForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('f-name').value.trim();
+    const galaxy = document.getElementById('f-galaxy').value.trim();
+    const clean = fAddress.value.toUpperCase().replace(/[^0-9A-F]/g,'');
+    const notes = document.getElementById('f-notes').value.trim();
+    if (!name) return;
+    if (clean.length !== 12) { alert('Address must be exactly 12 hex characters (0-9, A-F).'); return; }
+    const list = loadSaved();
+    list.push({ id: 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2,6), name, galaxy, address: clean, notes });
+    persistSaved(list);
+    addForm.reset(); addForm.hidden = true;
+    renderSaved();
+  });
+
+  document.getElementById('export-btn').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(loadSaved(), null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'nms-coordinates.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  });
+  document.getElementById('import-file').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const incoming = JSON.parse(reader.result);
+        if (!Array.isArray(incoming)) throw new Error('bad format');
+        const existing = loadSaved();
+        const existingIds = new Set(existing.map(x => x.id));
+        const merged = existing.concat(incoming.filter(x => x && x.address && !existingIds.has(x.id)));
+        persistSaved(merged);
+        renderSaved();
+      } catch(err) {
+        alert('Could not import — expected a JSON file exported from this page.');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
+
+  renderSaved();
+})();
+</script>
+</body>
+</html>
