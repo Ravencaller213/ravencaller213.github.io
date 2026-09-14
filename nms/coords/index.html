@@ -208,6 +208,23 @@
 
   .io-row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
   .io-row label.btn{display:inline-flex;align-items:center;}
+
+  /* ---------- Galactic converter ---------- */
+  .section-title{font-size:1.3rem;font-weight:500;margin:0 0 8px;color:var(--text);}
+  .section-note{color:var(--text-dim);font-size:13px;line-height:1.6;max-width:600px;margin:0 0 20px;}
+  .converter-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    padding:28px 32px;animation:fadeUp .6s ease both;
+  }
+  .galactic-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
+  .galactic-row input{
+    flex:1;min-width:220px;background:var(--surface-hi);border:1px solid var(--border);border-radius:8px;
+    color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 14px;letter-spacing:0.04em;
+  }
+  .galactic-row input:focus{outline:none;border-color:var(--border-hi);}
+  .galactic-error{color:var(--nms-3);font-size:12.5px;margin:-8px 0 16px;display:none;}
+  .galactic-error.show{display:block;}
+  .galactic-result{border-top:1px solid var(--border);padding-top:18px;}
 </style>
 </head>
 <body>
@@ -286,6 +303,31 @@
         <button class="btn" id="paste-btn">Paste address</button>
         <button class="btn primary" id="copy-btn">Copy address</button>
         <button class="btn primary" id="save-btn">Save to list ↓</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="converter-card">
+    <h2 class="section-title">Galactic → Portal Converter</h2>
+    <p class="section-note">Paste a Signal Booster's Galactic Coordinates string — <code>XXXX:YYYY:ZZZZ:SSSS</code> — and get the matching 12-glyph portal address. Drop any leading galaxy letters first. This always resolves to Planet Index 0, so it lands you in the system, not on a specific planet or moon.</p>
+    <div class="galactic-row">
+      <input type="text" id="galactic-input" placeholder="043D:0072:0D44:00FB">
+      <button class="btn primary" id="galactic-convert">Convert</button>
+    </div>
+    <div class="galactic-error" id="galactic-error"></div>
+    <div class="galactic-result" id="galactic-result" hidden>
+      <div class="decode">
+        <div>Portal Address <span id="g-address">—</span></div>
+        <div>System Index <span id="g-sys">—</span></div>
+        <div>Voxel Y <span id="g-y">—</span></div>
+        <div>Voxel Z <span id="g-z">—</span></div>
+        <div>Voxel X <span id="g-x">—</span></div>
+      </div>
+      <div class="actions" style="margin-top:16px;">
+        <button class="btn" id="galactic-copy">Copy address</button>
+        <button class="btn primary" id="galactic-load">Load to wheel ↑</button>
       </div>
     </div>
   </section>
@@ -720,6 +762,79 @@
   }
 
   renderSlots(); decode();
+
+  // ---- Galactic Coordinates converter ----
+  // Galactic coordinates lay the galaxy out as a plain ascending grid from
+  // one corner (Alpha Minoris, 0000:0000:0000) to the other (Delta Majoris,
+  // 0FFE:00FE:0FFE), plus a Solar System Index. Portal addresses instead
+  // wrap around a pole/edge-centered scheme, so each axis needs remapping:
+  //   Y (2 hex digits):  <=0x7E -> +0x81   else -> -0x7F   (0x7F -> 0x00)
+  //   X/Z (3 hex digits): <=0x7FE -> +0x801  else -> -0x7FF  (0x7FF -> 0x000)
+  // System index carries straight across (just trimmed to 3 hex digits),
+  // and Planet Index always comes back 0.
+  function parseGalactic(str){
+    const raw = (str || '').trim();
+    if (!raw) return null;
+    let parts = raw.split(':').map(p => p.trim()).filter(Boolean);
+    if (parts.length < 4) return null;
+    parts = parts.slice(-4).map(p => p.replace(/[^0-9A-Fa-f]/g, ''));
+    if (parts.some(p => p.length === 0)) return null;
+    const [xRaw, yRaw, zRaw, sRaw] = parts;
+    const X = parseInt(xRaw, 16), Y = parseInt(yRaw, 16), Z = parseInt(zRaw, 16), S = parseInt(sRaw, 16);
+    if ([X, Y, Z, S].some(v => Number.isNaN(v))) return null;
+    return { X, Y, Z, S };
+  }
+
+  function galacticToPortal({ X, Y, Z, S }){
+    const conv2 = v => (v <= 0x7E ? v + 0x81 : v - 0x7F) & 0xFF;
+    const conv3 = v => (v <= 0x7FE ? v + 0x801 : v - 0x7FF) & 0xFFF;
+    const portalY = conv2(Y);
+    const portalZ = conv3(Z);
+    const portalX = conv3(X);
+    const sysHex = (S & 0xFFF).toString(16).toUpperCase().padStart(3, '0').slice(-3);
+    const yHex = portalY.toString(16).toUpperCase().padStart(2, '0');
+    const zHex = portalZ.toString(16).toUpperCase().padStart(3, '0');
+    const xHex = portalX.toString(16).toUpperCase().padStart(3, '0');
+    return { address: '0' + sysHex + yHex + zHex + xHex, sysHex, yHex, zHex, xHex };
+  }
+
+  const galacticInput = document.getElementById('galactic-input');
+  const galacticError = document.getElementById('galactic-error');
+  const galacticResult = document.getElementById('galactic-result');
+  let lastGalacticAddress = null;
+
+  document.getElementById('galactic-convert').addEventListener('click', runGalacticConvert);
+  galacticInput.addEventListener('keydown', e => { if (e.key === 'Enter') runGalacticConvert(); });
+
+  function runGalacticConvert(){
+    const parsed = parseGalactic(galacticInput.value);
+    if (!parsed) {
+      galacticError.textContent = 'Expected four colon-separated hex groups, e.g. 043D:0072:0D44:00FB.';
+      galacticError.classList.add('show');
+      galacticResult.hidden = true;
+      return;
+    }
+    galacticError.classList.remove('show');
+    const result = galacticToPortal(parsed);
+    lastGalacticAddress = result.address;
+    document.getElementById('g-address').innerHTML = result.address.split('').map(h => iconSvg(h, true)).join(' ');
+    document.getElementById('g-sys').textContent = `${result.sysHex} (${parseInt(result.sysHex, 16)})`;
+    document.getElementById('g-y').textContent = `${result.yHex} (${parseInt(result.yHex, 16)})`;
+    document.getElementById('g-z').textContent = `${result.zHex} (${parseInt(result.zHex, 16)})`;
+    document.getElementById('g-x').textContent = `${result.xHex} (${parseInt(result.xHex, 16)})`;
+    galacticResult.hidden = false;
+  }
+
+  document.getElementById('galactic-copy').addEventListener('click', (e) => {
+    if (!lastGalacticAddress) return;
+    navigator.clipboard.writeText(lastGalacticAddress).catch(()=>{});
+    flashBtn(e.currentTarget);
+  });
+  document.getElementById('galactic-load').addEventListener('click', () => {
+    if (!lastGalacticAddress) return;
+    applyRawAddress(lastGalacticAddress);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 
   // ---- Saved coordinates ----
   const addToggle = document.getElementById('add-toggle');
