@@ -33,6 +33,7 @@
       --v-cube-1: #0a0510; --v-cube-2: #7b2ff7; --v-cube-outline: #e619c9;
       --v-cheat-1: #06270D; --v-cheat-2: #E9FBDE;
       --v-hacker-1: #00fff2; --v-hacker-2: #ff2079;
+      --v-bounty-1: #ff8a3d; --v-bounty-2: #b91c1c;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -209,6 +210,11 @@
        — distinct from Cheat's green/mint, same corrupted-systems theme.
        Confirmed live for every sprite that has a Hacker slot (2026-09-04). */
     .v-hacker { background: linear-gradient(90deg, var(--v-hacker-1), var(--v-hacker-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
+    /* Orange-to-crimson "wanted poster" gradient for the "Bounty" (Bounty
+       Hunter) variant — distinct from Gold's amber and Cheat/Hacker's
+       hacking palette. Confirmed live so far only on Victory Crown
+       (2026-09-21). */
+    .v-bounty { background: linear-gradient(90deg, var(--v-bounty-1), var(--v-bounty-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
     .rarity-rare { color: #00fffb; }
     .rarity-epic { color: #d825ee; }
     .rarity-legendary { color: #fbc363; }
@@ -280,17 +286,21 @@
   </footer>
 
   <!-- Tracker live as of 2026-08-20 (Ch7 S4 launch), last updated
-       2026-09-04. 16 sprites confirmed. "Hacker" (Loot Hacker) is confirmed
-       live for every sprite that has a Hacker slot — it just has specific
-       unlock requirements rather than dropping in the wild like Normal/Gold/
-       Cheat, so it was slow to confirm. Megaman is Normal-only (no Gold/
-       Cheat/Hacker slots exist for it at all — a structural limit, not an
-       unconfirmed one). Internally the code still uses the short keys "Cheat"
-       and "Hacker" (Michael's shorthand, used in code/chat); the table
-       displays their full names "Cheat Master" and "Loot Hacker" via
-       VARIANT_RENAMES. Bullet/Raccoon/Honey/Pond (Design-a-sprite winners)
-       and Spiderman are still not live — add them once confirmed. See the
-       data-layer comment down in <script> for full sourcing. -->
+       2026-09-21. 21 sprites in the data layer, 19 currently visible
+       (Birthday and Morgana are entered but hidden — not live yet, any
+       variant). "Hacker" (Loot Hacker) is confirmed live for every sprite
+       that has a Hacker slot. "Bounty" (Bounty Hunter, Michael calls it
+       "Hunter") is confirmed live only for Victory Crown so far — every
+       other sprite's Bounty art is pre-positioned but renders as the
+       dashed "invalid" placeholder until confirmed. Megaman is Normal-only
+       (no Gold/Cheat/Hacker/Bounty slots exist for it at all — a structural
+       limit, not an unconfirmed one). Internally the code still uses the
+       short keys "Cheat"/"Hacker"/"Bounty" (Michael's shorthand, used in
+       code/chat); the table displays their full names "Cheat Master",
+       "Loot Hacker", "Bounty Hunter" via VARIANT_RENAMES. Bullet/Raccoon/
+       Honey and Spiderman still have no art pulled at all — still not
+       live. See the data-layer comment down in <script> for full sourcing,
+       including the fortnite.gg internal-codename mapping. -->
 
   <div class="toolbar-frame">
 
@@ -315,7 +325,7 @@
           <div class="stat-block">
             <span class="stat-label">Completion</span>
             <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
-            <span class="stat-ratio" id="prog">0 / 61 &middot; 0%</span>
+            <span class="stat-ratio" id="prog">0 / 74 &middot; 0%</span>
           </div>
           <div class="stat-block">
             <span class="stat-label">Mastery</span>
@@ -471,54 +481,109 @@
   */
 
   // ---- Data layer. Live as of 2026-08-20 (Ch7 S4 launch), last updated
-  // 2026-09-04. 16 sprites now — the original 12, plus XRay/Onigiri (added
-  // 2026-08-20) and Megaman/Overshield (added 2026-09-03).
+  // 2026-09-21. 21 sprites now — the original 12, plus XRay/Onigiri (added
+  // 2026-08-20), Megaman/Overshield (added 2026-09-03), and Birthday/Blinky/
+  // Crash/Morgana/Pond (added 2026-09-21, full fortnite.gg re-pull after
+  // Klombo, Pond).
   //
   // Variant short keys (Michael's shorthand, used internally in code/chat):
-  // "Cheat" = Cheat Master, "Hacker" = Loot Hacker. Image filenames use
-  // these short forms too (e.g. bush_cheat.webp), so imgPath()'s generic
-  // lowercase-and-underscore logic resolves correctly with no code change.
-  // The table itself displays the full names via VARIANT_RENAMES below —
-  // Michael's call (2026-09-04): shorthand in code/discussion, full names
-  // on the actual tracker table.
+  // "Cheat" = Cheat Master, "Hacker" = Loot Hacker, "Bounty" = Bounty
+  // Hunter (Michael calls it "Hunter" in conversation — "Bounty" is the
+  // code/filename key because that's the suffix the art was already
+  // downloaded/renamed with, e.g. blinky_bounty.webp). Image filenames use
+  // these short forms too, so imgPath()'s generic lowercase-and-underscore
+  // logic resolves correctly with no code change. The table itself displays
+  // the full names via VARIANT_RENAMES below — Michael's call (2026-09-04):
+  // shorthand in code/discussion, full names on the actual tracker table.
   //
-  // "Hacker" confirmed live (2026-09-04) for every sprite that has a Hacker
-  // slot — it isn't found in the wild like the other variants, it has
-  // specific unlock requirements, which is why it took longer to confirm.
-  // SPRITE_VARIANT_OVERRIDES now only needs an entry for Megaman, which is
-  // Normal-only (no Gold/Cheat/Hacker slots exist for it at all — a
-  // structural limit). Every other sprite falls back to the full VARIANTS
-  // list. New total: 15 sprites x 4 variants + Megaman x 1 = 61.
+  // fortnite.gg internal codenames (kept here so we don't lose the mapping
+  // — several don't match the in-game/community name at all):
+  //   Birthday      -> Birthday
+  //   Blinky        -> GhostDamage
+  //   Bush          -> BushRanger
+  //   Crash         -> BodySlam
+  //   Jazz          -> DoubleJump (Bounty/Hacker files) / JazzJackrabbit (Cheat/Gold/Normal) — split across two codenames, all 5 variants present under one or the other
+  //   Jonesy        -> Jonesy
+  //   Killswitch    -> Killswitch
+  //   Klombo        -> Klombo
+  //   Megaman       -> ImprovedSlide
+  //   Morgana       -> IncreaseHeals
+  //   Onigiri       -> WinnerC (Design-a-sprite contest winner)
+  //   Overshield    -> Overshield
+  //   Pond          -> WinnerA (Design-a-sprite contest winner)
+  //   Shadow        -> NarrowFlea_Scribe (Cheat/Gold/Normal) / ReloadOverTime (Bounty/Hacker) — same split pattern as Jazz
+  //   Sonic         -> NarrowFlea_Obsidian (Cheat/Gold/Normal) / NarrowFlea (Bounty/Hacker) — same split pattern
+  //   Storm Scout   -> StormScout
+  //   Tails         -> NarrowFlea_Monkey (Cheat/Gold/Hacker/Normal) / NarrowFleaMonkey (Bounty) — same split pattern
+  //   Victory Crown -> Crown
+  //   XRay          -> WinnerB (Design-a-sprite contest winner)
+  //   8-Bit         -> 8BitBlaster (Bounty file) / EightBitBlaster (Cheat/Gold/Normal/Hacker) — same split pattern
+  // Adventure/Advent. as "Dwarf" was already known; Bullet/Raccoon/Honey and
+  // Spiderman still have no fortnite.gg folder at all as of 2026-09-21 —
+  // still not live.
+  //
+  // "Bounty" (Loot Hacker's sibling "Bounty Hunter" variant) showed up in
+  // the 2026-09-21 fortnite.gg pull for nearly every sprite (all but
+  // Megaman, which has no non-Normal slots at all). Per Michael, it is NOT
+  // live yet except for Victory Crown — every other sprite's art is
+  // pre-positioned in images/override/ but excluded from
+  // SPRITE_VARIANT_OVERRIDES so it renders as the dashed "invalid"
+  // placeholder until confirmed. Flip a sprite's entry to include "Bounty"
+  // once Michael confirms it live for that sprite (same pattern used for
+  // Hacker going live 2026-09-04).
+  //
+  // Birthday and Morgana are NOT live at all yet (any variant) — art is
+  // pre-positioned but both sprites are hidden from the table/filters via
+  // HIDDEN_SPRITES below. Move a sprite's name from HIDDEN_SPRITES into the
+  // visible set once Michael confirms it live; don't delete its SPRITES/
+  // SPRITE_VARIANT_OVERRIDES entry in the meantime.
   //
   // "Jazz" (not "Jazz Jackrabbit"), "Bush" (not "Bushranger"), and
-  // "Adventure" (not "Adventurer") are the actual in-game names. Still not
-  // live: Bullet, Raccoon, Honey, Pond (Design-a-sprite contest winners,
-  // mid-season drop) and Spiderman (sits unreleased in the game files) — add
-  // them once confirmed, following this same pattern.
+  // "Adventure" (not "Adventurer") are the actual in-game names.
   //
   // Order: first fifteen (Jonesy, Adventure, Bush, Sonic, Tails, Shadow,
   // 8-Bit, Jazz, Victory Crown, Killswitch, Megaman, Overshield, XRay,
   // Onigiri, Storm Scout) are Michael's confirmed in-game default-list
-  // order as of 2026-09-03. Klombo is provisional — appended at the end
-  // until its actual menu position is confirmed, same convention
-  // runners.html uses for its own late additions. Update this order as more
-  // positions come in.
+  // order as of 2026-09-03. Klombo, Birthday, Blinky, Crash, Morgana, and
+  // Pond are all provisional — appended at the end until their actual menu
+  // positions are confirmed, same convention runners.html uses for its own
+  // late additions. Update this order as more positions come in.
   const SPRITES = [
     "Jonesy", "Adventure", "Bush", "Sonic", "Tails", "Shadow", "8-Bit", "Jazz", "Victory Crown", "Killswitch",
     "Megaman", "Overshield", "XRay", "Onigiri", "Storm Scout",
-    "Klombo",
+    "Klombo", "Birthday", "Blinky", "Crash", "Morgana", "Pond",
   ];
-  const VARIANTS = ["Normal", "Gold", "Cheat", "Hacker"];
+  const VARIANTS = ["Normal", "Gold", "Cheat", "Hacker", "Bounty"];
   const ALL_SPRITES = SPRITES;
   const KEY = "fn_sprites_v1";
-  const VCLS = { Normal: "v-normal", Gold: "v-gold", Cheat: "v-cheatmaster", Hacker: "v-hacker" };
+  const VCLS = { Normal: "v-normal", Gold: "v-gold", Cheat: "v-cheatmaster", Hacker: "v-hacker", Bounty: "v-bounty" };
 
-  // Only Megaman needs an explicit entry now that Hacker is confirmed live
-  // for everyone else — it's structurally Normal-only, no Gold/Cheat/Hacker
-  // slots exist for it. Every other sprite falls back to the full VARIANTS
-  // list (Normal/Gold/Cheat/Hacker).
+  // Megaman is structurally Normal-only. Every other sprite gets an
+  // explicit entry so "Bounty" renders as the dashed "invalid" placeholder
+  // until Michael confirms it live for that sprite — Victory Crown is the
+  // only one with it live so far (2026-09-21).
   const SPRITE_VARIANT_OVERRIDES = {
     "Megaman": ["Normal"],
+    "Victory Crown": ["Normal", "Gold", "Cheat", "Hacker", "Bounty"],
+    "Jonesy": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Adventure": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Bush": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Sonic": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Tails": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Shadow": ["Normal", "Gold", "Cheat", "Hacker"],
+    "8-Bit": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Jazz": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Killswitch": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Overshield": ["Normal", "Gold", "Cheat", "Hacker"],
+    "XRay": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Onigiri": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Storm Scout": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Klombo": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Birthday": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Blinky": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Crash": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Morgana": ["Normal", "Gold", "Cheat", "Hacker"],
+    "Pond": ["Normal", "Gold", "Cheat", "Hacker"],
   };
 
   const SPRITE_RARITY = {
@@ -547,13 +612,19 @@
   const RENAMES = {};
   // Display-only full names for the tracker table/filters. Internal code
   // (keys, image filenames, share-code encoding, chat) keeps using the
-  // short forms "Cheat"/"Hacker" — Michael's call, 2026-09-04.
-  const VARIANT_RENAMES = { Cheat: "Cheat Master", Hacker: "Loot Hacker" };
+  // short forms "Cheat"/"Hacker"/"Bounty" — Michael's call, 2026-09-04
+  // (reconfirmed 2026-09-21 for Bounty/Hunter).
+  const VARIANT_RENAMES = { Cheat: "Cheat Master", Hacker: "Loot Hacker", Bounty: "Bounty Hunter" };
   function variantLabel(v) { return VARIANT_RENAMES[v] || v; }
 
   const HIDDEN_VARIANTS = [];
   function activeVariants() { return VARIANTS.filter(v => !HIDDEN_VARIANTS.includes(v)); }
-  function activeSprites() { return SPRITES; }
+  // Birthday and Morgana aren't live yet (any variant) — keep their data
+  // entries above so art/overrides are ready to go, just hide them from the
+  // table/filters/totals until Michael confirms. Move a name out of this
+  // list (don't delete its other data-layer entries) once it's live.
+  const HIDDEN_SPRITES = ["Birthday", "Morgana"];
+  function activeSprites() { return SPRITES.filter(s => !HIDDEN_SPRITES.includes(s)); }
   let sortByRarity = false;
   function toggleRaritySort() {
     sortByRarity = !sortByRarity;
@@ -561,7 +632,8 @@
     render();
   }
   function activeAllSprites() {
-    return sortByRarity ? [...SPRITES].sort((a, b) => spriteRarityRank(a) - spriteRarityRank(b)) : SPRITES;
+    const visible = activeSprites();
+    return sortByRarity ? [...visible].sort((a, b) => spriteRarityRank(a) - spriteRarityRank(b)) : visible;
   }
 
   const LEVEL_LABEL = { 0: "none", 1: "collected", 2: "mastered" };
@@ -691,7 +763,7 @@
 
   function msConfig(type) {
     return type === "sprite"
-      ? { options: SPRITES, get: () => selectedSprites, set: v => { selectedSprites = v; }, noun: "sprite" }
+      ? { options: activeSprites(), get: () => selectedSprites, set: v => { selectedSprites = v; }, noun: "sprite" }
       : { options: activeVariants(), get: () => selectedVariants, set: v => { selectedVariants = v; }, noun: "variant" };
   }
 
