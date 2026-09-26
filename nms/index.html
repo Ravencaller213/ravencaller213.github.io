@@ -84,6 +84,7 @@
   }
   .tool-card:nth-child(1){animation-delay:.05s;}
   .tool-card:nth-child(2){animation-delay:.18s;}
+  .tool-card:nth-child(3){animation-delay:.31s;}
   .tool-card:hover{border-color:var(--border-hi);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.4), 0 0 30px rgba(94,234,212,0.06);}
 
   .tool-img{width:100%;aspect-ratio:16/9;background:var(--surface-hi);position:relative;overflow:hidden;}
@@ -204,6 +205,43 @@
         <div class="tool-title">Trade Loops<span class="tool-tag">Reference</span></div>
         <p class="tool-blurb">What each economy sells cheap and what it wants to buy, grouped into their two supply loops — Trading/Advanced Materials/Scientific and Mining/Manufacturing/Technology/Power.</p>
         <div class="tool-arrow">Open reference →</div>
+      </div>
+    </a>
+
+    <a class="tool-card" href="./ships/">
+      <div class="tool-img">
+        <svg viewBox="0 0 340 191" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <radialGradient id="sh-bg" cx="50%" cy="50%" r="80%">
+              <stop offset="0%" stop-color="#0f2422"/>
+              <stop offset="100%" stop-color="#060b0c"/>
+            </radialGradient>
+            <linearGradient id="sh-hull" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#5eead4" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.6"/>
+            </linearGradient>
+          </defs>
+          <rect width="340" height="191" fill="url(#sh-bg)"/>
+          <ellipse cx="70" cy="40" rx="90" ry="55" fill="#f2c94d" opacity="0.05"/>
+          <ellipse cx="270" cy="155" rx="80" ry="50" fill="#5eead4" opacity="0.05"/>
+          <!-- ranked bars -->
+          <g transform="translate(70,50)">
+            <rect x="0" y="0"  width="150" height="14" rx="4" fill="url(#sh-hull)" opacity="0.95"/>
+            <rect x="0" y="26" width="118" height="14" rx="4" fill="url(#sh-hull)" opacity="0.7"/>
+            <rect x="0" y="52" width="96"  height="14" rx="4" fill="url(#sh-hull)" opacity="0.5"/>
+            <rect x="0" y="78" width="70"  height="14" rx="4" fill="url(#sh-hull)" opacity="0.32"/>
+            <text x="-16" y="11" text-anchor="end" font-family="'DM Serif Display', serif" font-style="italic" font-size="12" fill="#f2c94d" opacity="0.9">1</text>
+            <text x="-16" y="37" text-anchor="end" font-family="'DM Serif Display', serif" font-style="italic" font-size="12" fill="#dcf3ef" opacity="0.7">2</text>
+            <text x="-16" y="63" text-anchor="end" font-family="'DM Serif Display', serif" font-style="italic" font-size="12" fill="#dcf3ef" opacity="0.5">3</text>
+            <text x="-16" y="89" text-anchor="end" font-family="'DM Serif Display', serif" font-style="italic" font-size="12" fill="#dcf3ef" opacity="0.4">4</text>
+          </g>
+          <text x="20" y="175" font-family="'DM Sans', sans-serif" font-size="8" letter-spacing="3" fill="#6f938d" opacity="0.8">fleet · points ranking</text>
+        </svg>
+      </div>
+      <div class="tool-body">
+        <div class="tool-title">Ship Ranker<span class="tool-tag">Fleet</span></div>
+        <p class="tool-blurb">Score ships by class, unlocked inventory slots, and how their core stats stack up against the rest of the fleet — add, edit, and re-rank as you go.</p>
+        <div class="tool-arrow">Open tool →</div>
       </div>
     </a>
 

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ship Ranker — No Man's Sky | ravencaller213</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Serif+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#060b0c;
+    --surface:#0b1616;
+    --surface-hi:#10201f;
+    --border:rgba(120,230,210,0.14);
+    --border-hi:rgba(120,230,210,0.38);
+    --nms-1:#5eead4;
+    --nms-2:#2dd4bf;
+    --nms-3:#ff8a5c;
+    --nms-4:#38bdf8;
+    --text:#dcf3ef;
+    --text-dim:#6f938d;
+    --radius:14px;
+
+    /* ship-class tier colors */
+    --cls-s:#f2c94d;
+    --cls-a:#b389f0;
+    --cls-b:#4d8bf0;
+    --cls-c:#8a97a3;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'DM Sans',sans-serif;
+    font-weight:300;
+    min-height:100vh;
+    position:relative;
+    overflow-x:hidden;
+  }
+  .bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(94,234,212,0.06), transparent 45%),
+      radial-gradient(circle at 85% 15%, rgba(255,138,92,0.05), transparent 40%),
+      radial-gradient(circle at 50% 90%, rgba(45,212,191,0.07), transparent 50%);
+  }
+  .grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  main{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:36px 24px 80px;}
+
+  .topbar{display:flex;align-items:center;gap:8px;font-size:13px;letter-spacing:0.03em;color:var(--text-dim);margin-bottom:40px;flex-wrap:wrap;}
+  .topbar a{color:var(--text-dim);text-decoration:none;transition:color .2s;}
+  .topbar a:hover{color:var(--nms-1);}
+  .topbar .sep{opacity:0.4;}
+  .topbar .current{color:var(--text);}
+
+  h1.wordmark{
+    font-family:'DM Serif Display',serif;
+    font-style:italic;
+    font-size:clamp(2.1rem,5vw,3rem);
+    margin:0 0 10px;
+    background:linear-gradient(90deg,var(--nms-1),var(--nms-4),var(--nms-3),var(--nms-1));
+    background-size:200%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:shimmer 8s ease-in-out infinite alternate;
+  }
+  @keyframes shimmer{from{background-position:0% 50%;}to{background-position:100% 50%;}}
+  .subtitle{color:var(--text-dim);font-size:15px;max-width:640px;line-height:1.6;margin:0 0 36px;}
+  .subtitle b{color:var(--text);font-weight:500;}
+
+  .divider{height:1px;width:100%;margin:36px 0;
+    background:linear-gradient(90deg,transparent,var(--nms-1),var(--nms-2),var(--nms-3),transparent);
+    opacity:0.3;
+  }
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ---------- Toolbar ---------- */
+  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
+  .toolbar h2{font-size:1.2rem;font-weight:500;margin:0;color:var(--text);}
+  .toolbar .count{color:var(--text-dim);font-size:12px;margin-left:8px;}
+  .toolbar-right{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+
+  button.btn{
+    font-family:'DM Sans',sans-serif;font-size:12.5px;letter-spacing:0.03em;
+    background:transparent;border:1px solid var(--border);color:var(--text);
+    padding:9px 16px;border-radius:99px;cursor:pointer;transition:all .2s;
+  }
+  button.btn:hover{border-color:var(--border-hi);color:var(--nms-1);box-shadow:0 0 12px rgba(94,234,212,0.2);}
+  button.btn.primary{border-color:var(--nms-2);color:var(--nms-1);}
+  button.btn.primary:hover{background:rgba(94,234,212,0.08);}
+  button.btn.ghost{opacity:0.7;}
+  button.btn.ghost:hover{opacity:1;}
+  button.btn.danger:hover{color:var(--nms-3);border-color:var(--nms-3);box-shadow:0 0 12px rgba(255,138,92,0.25);}
+
+  /* ---------- Add/edit form ---------- */
+  #ship-form{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    padding:26px 28px;margin-bottom:26px;animation:fadeUp .4s ease both;
+  }
+  #ship-form h3{margin:0 0 18px;font-size:1rem;font-weight:500;color:var(--text);}
+  .form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  .form-grid .full{grid-column:1/-1;}
+  .form-grid .span2{grid-column:span 2;}
+  @media (max-width:700px){ .form-grid{grid-template-columns:repeat(2,1fr);} }
+  #ship-form label{font-size:10.5px;letter-spacing:0.09em;color:var(--text-dim);text-transform:uppercase;display:block;margin-bottom:6px;}
+  #ship-form input, #ship-form select, #ship-form textarea{
+    width:100%;background:var(--surface-hi);border:1px solid var(--border);border-radius:8px;
+    color:var(--text);font-family:'DM Sans',sans-serif;font-size:13.5px;padding:9px 11px;resize:vertical;
+  }
+  #ship-form input:focus, #ship-form select:focus, #ship-form textarea:focus{outline:none;border-color:var(--border-hi);}
+  .form-section-label{grid-column:1/-1;font-size:9.5px;letter-spacing:0.14em;color:var(--nms-1);text-transform:uppercase;margin:8px 0 -2px;opacity:0.85;}
+  .form-actions{grid-column:1/-1;display:flex;gap:10px;justify-content:flex-end;margin-top:6px;}
+
+  /* ---------- Fleet manifest ---------- */
+  .empty-state{color:var(--text-dim);font-size:13.5px;padding:36px 0;text-align:center;border:1px dashed var(--border);border-radius:var(--radius);}
+
+  .manifest-row{
+    position:relative;padding:20px 4px 22px;border-bottom:1px solid var(--border);
+    transition:background .2s ease;
+  }
+  .manifest-row:last-child{border-bottom:none;}
+  .manifest-row:hover{background:rgba(94,234,212,0.03);}
+
+  .mrow-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px;}
+  .mrow-rank{font-family:'DM Serif Display',serif;font-style:italic;font-size:26px;color:var(--text-dim);width:34px;flex:0 0 auto;}
+  .manifest-row.rank-1 .mrow-rank{color:var(--cls-s);}
+  .manifest-row.rank-2 .mrow-rank{color:var(--nms-1);}
+  .manifest-row.rank-3 .mrow-rank{color:var(--nms-4);}
+  .mrow-id{display:flex;flex-direction:column;gap:3px;}
+  .mrow-name{font-size:16.5px;font-weight:500;color:var(--text);}
+  .mrow-meta{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-dim);}
+  .mrow-inv{display:flex;gap:14px;flex:0 0 auto;align-items:center;}
+  .mrow-spacer{flex:1;min-width:8px;}
+  .mrow-actions{display:flex;gap:6px;order:5;}
+  .mrow-points{display:flex;flex-direction:column;align-items:flex-end;line-height:1.25;}
+  .mrow-points .pts-big{font-size:21px;font-weight:500;color:var(--nms-1);font-variant-numeric:tabular-nums;}
+  .mrow-points .pts-small{font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-dim);}
+  .mrow-points .pts-sub{font-size:11px;color:var(--text-dim);font-variant-numeric:tabular-nums;margin-top:2px;}
+
+  .class-pill{
+    font-size:10px;font-weight:600;letter-spacing:0.04em;padding:1px 7px;border-radius:99px;
+    border:1px solid var(--c);color:var(--c);
+  }
+
+  .mrow-readout{display:flex;flex-wrap:nowrap;gap:16px;align-items:center;padding-left:50px;}
+
+  .meter{display:flex;align-items:center;gap:7px;flex:1 1 0;min-width:0;}
+  .meter-label{font-size:8.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-dim);
+    flex:0 0 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:64px;}
+  .ticks{flex:1 1 auto;min-width:20px;height:12px;border-radius:1px;position:relative;overflow:hidden;
+    background:repeating-linear-gradient(to right, var(--border) 0 3px, transparent 3px 6px);}
+  .ticks-fill{position:absolute;top:0;left:0;height:100%;
+    background:repeating-linear-gradient(to right, var(--c) 0 3px, transparent 3px 6px);}
+  .meter-val{font-size:11.5px;font-variant-numeric:tabular-nums;color:var(--text-dim);flex:0 0 auto;min-width:36px;text-align:right;}
+  .meter-val.stat-best{color:var(--nms-1);font-weight:600;}
+  .meter-val.stat-best::after{content:'▲';font-size:7px;margin-left:4px;opacity:0.85;}
+  .meter-val.stat-worst{color:var(--nms-3);opacity:0.85;}
+  .meter-val.stat-worst::after{content:'▼';font-size:7px;margin-left:4px;opacity:0.7;}
+
+  @media (max-width:640px){
+    .mrow-readout{padding-left:0;gap:10px;}
+    .meter-label{display:none;}
+  }
+
+  .hex-meter{display:flex;align-items:center;gap:9px;}
+  .hex-wrap{display:flex;gap:3px;}
+  .hex6{
+    width:26px;height:26px;flex:0 0 auto;
+    clip-path:polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
+  }
+
+  .row-actions{display:flex;gap:6px;}
+  .row-actions button{
+    font-size:10.5px;background:transparent;border:1px solid var(--border);color:var(--text-dim);
+    padding:4px 10px;border-radius:99px;cursor:pointer;transition:all .2s;
+  }
+  .row-actions button:hover{color:var(--nms-1);border-color:var(--border-hi);}
+  .row-actions button.danger:hover{color:var(--nms-3);}
+</style>
+</head>
+<body>
+<div class="bg-orbs"></div>
+<div class="grain"></div>
+
+<main>
+  <nav class="topbar">
+    <a href="../../">ravencaller213</a>
+    <span class="sep">/</span>
+    <a href="../">No Man's Sky</a>
+    <span class="sep">/</span>
+    <span class="current">Ship Ranker</span>
+  </nav>
+
+  <h1 class="wordmark">Ship Ranker</h1>
+  <p class="subtitle">Points are derived from ship <b>Class</b>, <b>unlocked inventory slots</b>, and ranking <b>core stats</b> against other ships.</p>
+
+  <div class="divider"></div>
+
+  <div class="toolbar">
+    <h2>Hangar <span class="count" id="ship-count"></span></h2>
+    <div class="toolbar-right">
+      <input type="file" id="import-file" accept="application/json" hidden>
+      <button class="btn ghost" id="import-btn">Import</button>
+      <button class="btn ghost" id="export-btn">Export</button>
+      <button class="btn ghost danger" id="clear-hangar">Clear Hangar</button>
+      <button class="btn primary" id="add-toggle">+ Add Ship</button>
+    </div>
+  </div>
+
+  <form id="ship-form" hidden>
+    <h3 id="form-heading">Add a Ship</h3>
+    <input type="hidden" id="f-id">
+    <div class="form-grid">
+      <div class="span2">
+        <label for="f-name">Name</label>
+        <input type="text" id="f-name" required placeholder="e.g. Glass Soul">
+      </div>
+      <div>
+        <label for="f-type">Type</label>
+        <select id="f-type">
+          <option>Fighter</option>
+          <option>Explorer</option>
+          <option>Hauler</option>
+          <option>Shuttle</option>
+          <option>Solar</option>
+          <option>Exotic</option>
+          <option>Salvaged</option>
+        </select>
+      </div>
+      <div>
+        <label for="f-class">Class</label>
+        <select id="f-class">
+          <option value="S">S</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+        </select>
+      </div>
+
+      <div class="form-section-label">Unlocked Inventory Slots</div>
+      <div>
+        <label for="f-tech">Technology</label>
+        <input type="number" id="f-tech" value="0" min="0">
+      </div>
+      <div>
+        <label for="f-cargo">Cargo</label>
+        <input type="number" id="f-cargo" value="0" min="0">
+      </div>
+
+      <div class="form-section-label">Core Stats</div>
+      <div>
+        <label for="f-core-dmg">Damage</label>
+        <input type="number" step="0.1" id="f-core-dmg" value="0">
+      </div>
+      <div>
+        <label for="f-core-shield">Shield</label>
+        <input type="number" step="0.1" id="f-core-shield" value="0">
+      </div>
+      <div>
+        <label for="f-core-warp">Hyperdrive</label>
+        <input type="number" step="0.1" id="f-core-warp" value="0">
+      </div>
+      <div>
+        <label for="f-core-man">Maneuverability</label>
+        <input type="number" step="0.1" id="f-core-man" value="0">
+      </div>
+
+      <div class="span2">
+        <label for="f-colors">Colors</label>
+        <input type="text" id="f-colors" placeholder="e.g. black white">
+      </div>
+      <div class="span2">
+        <label for="f-notes">Notes</label>
+        <input type="text" id="f-notes" placeholder="e.g. expedition reward">
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn ghost" id="cancel-form">Cancel</button>
+        <button type="submit" class="btn primary" id="submit-btn">Add Ship</button>
+      </div>
+    </div>
+  </form>
+
+  <div id="fleet-list"></div>
+</main>
+
+<script>
+(function(){
+  const STORE_KEY = 'nms-ships-v1';
+  const CLASS_SC_SLOTS = { S:4, A:3, B:2, C:1 };
+  const CLASS_COLOR = { S:'var(--cls-s)', A:'var(--cls-a)', B:'var(--cls-b)', C:'var(--cls-c)' };
+
+  const SEED_SHIPS = [
+    { id:'s1', name:'Glass Soul', type:'Salvaged', cls:'S', techInv:41, cargoInv:36,
+      coreDmg:321.7, coreShield:202.2, coreWarp:1737.3, coreMan:280.1,
+      colors:'black white', notes:'' },
+    { id:'s2', name:'Vintage Intercepter', type:'Salvaged', cls:'S', techInv:21, cargoInv:25,
+      coreDmg:310.6, coreShield:204.7, coreWarp:154.5, coreMan:273.1,
+      colors:'classic interceptor', notes:'expedition reward' },
+    { id:'s3', name:'Golden Rasamama S36', type:'Fighter', cls:'S', techInv:21, cargoInv:24,
+      coreDmg:310.6, coreShield:204.7, coreWarp:101, coreMan:415.6,
+      colors:'golden', notes:'expedition reward' },
+    { id:'s4', name:'Rebuilt Daughter AJ3', type:'Solar', cls:'B', techInv:29, cargoInv:17,
+      coreDmg:179.5, coreShield:183.1, coreWarp:124.2, coreMan:369.3,
+      colors:'', notes:'' },
+  ];
+
+  function loadFleet(){
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch(e) {}
+    return SEED_SHIPS.slice();
+  }
+  function saveFleet(fleet){
+    localStorage.setItem(STORE_KEY, JSON.stringify(fleet));
+  }
+
+  let fleet = loadFleet();
+
+  // ---- Scoring (mirrors the PC_myStuff COJ Expedition workbook) ----
+  function rankAscending(value, allValues){
+    // Excel RANK.EQ(value, range, 1): 1 + count of values strictly less than this one.
+    let count = 0;
+    for (const v of allValues) if (v < value) count++;
+    return 1 + count;
+  }
+  function invPts(slots){
+    const raw = (slots || 0) / 16 + 16;
+    const rounded2 = Math.round(raw * 100) / 100;
+    const rounded0 = Math.round(raw);
+    return rounded0 === 16 ? 0 : rounded2;
+  }
+  function computeScores(list){
+    const dmgAll = list.map(s => Number(s.coreDmg) || 0);
+    const shieldAll = list.map(s => Number(s.coreShield) || 0);
+    const warpAll = list.map(s => Number(s.coreWarp) || 0);
+    const manAll = list.map(s => Number(s.coreMan) || 0);
+    return list.map(s => {
+      const scPts = (CLASS_SC_SLOTS[s.cls] || 0) * 10;
+      const techPts = invPts(Number(s.techInv) || 0);
+      const cargoPts = invPts(Number(s.cargoInv) || 0);
+      const dmgPts = rankAscending(Number(s.coreDmg) || 0, dmgAll);
+      const shieldPts = rankAscending(Number(s.coreShield) || 0, shieldAll);
+      const warpPts = rankAscending(Number(s.coreWarp) || 0, warpAll);
+      const manPts = rankAscending(Number(s.coreMan) || 0, manAll);
+      // Core Stat Points = Class bonus + core-stat ranking (everything but inventory).
+      const corePts = scPts + dmgPts + shieldPts + warpPts + manPts;
+      const sum = corePts + techPts + cargoPts;
+      return { ...s, scSlots: CLASS_SC_SLOTS[s.cls] || 0, scPts, techPts, cargoPts, dmgPts, shieldPts, warpPts, manPts, points: round2(sum), corePts: round2(corePts) };
+    });
+  }
+  function round2(n){ return Math.round(n * 100) / 100; }
+  function escapeHtml(s){
+    return (s == null ? '' : String(s)).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function fmt(n){
+    if (n === null || n === undefined || n === '' || Number.isNaN(n)) return '—';
+    return Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
+  }
+
+  // ---- Render ----
+  const fleetList = document.getElementById('fleet-list');
+  const shipCount = document.getElementById('ship-count');
+
+  // Columns that get best/worst highlighting — mirrors what actually
+  // drives the ranking (core stats + the two inventory categories).
+  const HILITE_COLS = [
+    { key: 'techInv', dir: 'high' },
+    { key: 'cargoInv', dir: 'high' },
+    { key: 'coreDmg', dir: 'high' },
+    { key: 'coreShield', dir: 'high' },
+    { key: 'coreWarp', dir: 'high' },
+    { key: 'coreMan', dir: 'high' },
+  ];
+
+  function computeExtremes(list){
+    const extremes = {};
+    HILITE_COLS.forEach(({ key }) => {
+      const vals = list.map(s => Number(s[key]) || 0);
+      const max = Math.max(...vals);
+      const min = Math.min(...vals);
+      extremes[key] = (max === min) ? null : { max, min };
+    });
+    return extremes;
+  }
+  function hiliteClass(key, value, extremes){
+    const ex = extremes[key];
+    if (!ex) return '';
+    const v = Number(value) || 0;
+    if (v === ex.max) return 'stat-best';
+    if (v === ex.min) return 'stat-worst';
+    return '';
+  }
+
+  // ---- Meters ----
+  const STAT_META = [
+    { key: 'coreDmg', label: 'Damage', color: 'var(--nms-3)' },
+    { key: 'coreShield', label: 'Shield', color: 'var(--nms-4)' },
+    { key: 'coreWarp', label: 'Hyperdrive', color: 'var(--nms-2)' },
+    { key: 'coreMan', label: 'Maneuverability', color: 'var(--cls-s)' },
+  ];
+  // S-class max unlocked slots: 60 Technology, 120 Cargo (two 60-slot hexes).
+  const HEX_MAX = 60;
+
+  function tickMeter(value, max, color, extremes, key){
+    const pct = max > 0 ? Math.max(0, Math.min(100, (value / max) * 100)) : 0;
+    return `
+      <div class="meter">
+        <span class="meter-label">${STAT_META.find(m => m.key === key)?.label || key}</span>
+        <span class="ticks"><span class="ticks-fill" style="width:${pct}%;--c:${color}"></span></span>
+        <span class="meter-val ${hiliteClass(key, value, extremes)}">${fmt(value)}</span>
+      </div>`;
+  }
+
+  function hexUnit(pct, color){
+    return `<div class="hex6" style="background:
+      repeating-conic-gradient(from 0deg, rgba(6,11,12,0.85) 0deg 2deg, transparent 2deg 60deg),
+      conic-gradient(${color} 0% ${pct}%, rgba(255,255,255,0.08) ${pct}% 100%)"></div>`;
+  }
+  function hexMeter(value, hexCount, color, label){
+    const v = Number(value) || 0;
+    let remaining = v;
+    const hexes = [];
+    for (let h = 0; h < hexCount; h++){
+      const filled = Math.max(0, Math.min(HEX_MAX, remaining));
+      hexes.push(hexUnit((filled / HEX_MAX) * 100, color));
+      remaining -= HEX_MAX;
+    }
+    return `
+      <div class="hex-meter">
+        <div class="hex-wrap">${hexes.join('')}</div>
+        <div>
+          <div class="meter-label" style="width:auto;">${label}</div>
+          <div class="meter-val">${fmt(value)}</div>
+        </div>
+      </div>`;
+  }
+
+  function render(){
+    const scored = computeScores(fleet);
+    scored.sort((a,b) => b.points - a.points);
+    const extremes = computeExtremes(fleet);
+
+    shipCount.textContent = fleet.length ? `(${fleet.length})` : '';
+    if (!scored.length){
+      fleetList.innerHTML = '<div class="empty-state">No ships yet — add one above.</div>';
+      return;
+    }
+
+    const statMaxes = {};
+    STAT_META.forEach(({ key }) => { statMaxes[key] = Math.max(1, ...scored.map(s => Number(s[key]) || 0)); });
+
+    fleetList.innerHTML = scored.map((s, i) => {
+      const clsColor = CLASS_COLOR[s.cls] || 'var(--text-dim)';
+      const meta = [s.type, s.colors, s.notes].filter(Boolean).join(' · ');
+      const statMeters = STAT_META.map(({ key, color }) => tickMeter(Number(s[key]) || 0, statMaxes[key], color, extremes, key)).join('');
+      const invMeters = hexMeter(s.techInv, 1, 'var(--nms-1)', 'Technology') + hexMeter(s.cargoInv, 2, 'var(--nms-4)', 'Cargo');
+      return `
+      <div class="manifest-row rank-${i + 1}" data-id="${s.id}">
+        <div class="mrow-top">
+          <span class="mrow-rank">${i + 1}</span>
+          <div class="mrow-id">
+            <span class="mrow-name">${escapeHtml(s.name || 'Unnamed')}</span>
+            <span class="mrow-meta"><span class="class-pill" style="--c:${clsColor}">${s.cls} Class</span>${meta ? escapeHtml(meta) : ''}</span>
+          </div>
+          <span class="mrow-spacer"></span>
+          <div class="mrow-inv">${invMeters}</div>
+          <div class="mrow-points">
+            <span class="pts-big">${fmt(s.points)}</span>
+            <span class="pts-small">Total Points</span>
+            <span class="pts-sub">${fmt(s.corePts)} core</span>
+          </div>
+          <div class="mrow-actions">
+            <button data-action="edit">Edit</button>
+            <button data-action="delete" class="danger">Delete</button>
+          </div>
+        </div>
+        <div class="mrow-readout">
+          ${statMeters}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  fleetList.addEventListener('click', (e) => {
+    const actionBtn = e.target.closest('button[data-action]');
+    if (!actionBtn) return;
+    const row = e.target.closest('[data-id]');
+    if (!row) return;
+    const id = row.dataset.id;
+
+    if (actionBtn.dataset.action === 'edit') {
+      openEditForm(id);
+    } else if (actionBtn.dataset.action === 'delete') {
+      const ship = fleet.find(s => s.id === id);
+      if (ship && confirm(`Delete "${ship.name}"?`)) {
+        fleet = fleet.filter(s => s.id !== id);
+        saveFleet(fleet);
+        render();
+      }
+    }
+  });
+
+  // ---- Form ----
+  const form = document.getElementById('ship-form');
+  const addToggle = document.getElementById('add-toggle');
+  const cancelForm = document.getElementById('cancel-form');
+  const formHeading = document.getElementById('form-heading');
+  const submitBtn = document.getElementById('submit-btn');
+  const fId = document.getElementById('f-id');
+
+  const fields = {
+    name: document.getElementById('f-name'),
+    type: document.getElementById('f-type'),
+    cls: document.getElementById('f-class'),
+    techInv: document.getElementById('f-tech'),
+    cargoInv: document.getElementById('f-cargo'),
+    coreDmg: document.getElementById('f-core-dmg'),
+    coreShield: document.getElementById('f-core-shield'),
+    coreWarp: document.getElementById('f-core-warp'),
+    coreMan: document.getElementById('f-core-man'),
+    colors: document.getElementById('f-colors'),
+    notes: document.getElementById('f-notes'),
+  };
+
+  function resetForm(){
+    fId.value = '';
+    fields.name.value = '';
+    fields.type.value = 'Fighter';
+    fields.cls.value = 'S';
+    fields.techInv.value = 0;
+    fields.cargoInv.value = 0;
+    fields.coreDmg.value = 0;
+    fields.coreShield.value = 0;
+    fields.coreWarp.value = 0;
+    fields.coreMan.value = 0;
+    fields.colors.value = '';
+    fields.notes.value = '';
+    formHeading.textContent = 'Add a Ship';
+    submitBtn.textContent = 'Add Ship';
+  }
+
+  function openAddForm(){
+    resetForm();
+    form.hidden = false;
+    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function openEditForm(id){
+    const s = fleet.find(x => x.id === id);
+    if (!s) return;
+    fId.value = s.id;
+    fields.name.value = s.name || '';
+    fields.type.value = s.type || 'Fighter';
+    fields.cls.value = s.cls || 'S';
+    fields.techInv.value = s.techInv ?? 0;
+    fields.cargoInv.value = s.cargoInv ?? 0;
+    fields.coreDmg.value = s.coreDmg ?? 0;
+    fields.coreShield.value = s.coreShield ?? 0;
+    fields.coreWarp.value = s.coreWarp ?? 0;
+    fields.coreMan.value = s.coreMan ?? 0;
+    fields.colors.value = s.colors || '';
+    fields.notes.value = s.notes || '';
+    formHeading.textContent = `Edit ${s.name}`;
+    submitBtn.textContent = 'Save Changes';
+    form.hidden = false;
+    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  addToggle.addEventListener('click', () => {
+    if (!form.hidden && !fId.value) { form.hidden = true; return; }
+    openAddForm();
+  });
+  cancelForm.addEventListener('click', () => { form.hidden = true; });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const num = (el) => el.value === '' ? null : parseFloat(el.value);
+    const ship = {
+      id: fId.value || ('sh' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6)),
+      name: fields.name.value.trim(),
+      type: fields.type.value,
+      cls: fields.cls.value,
+      techInv: num(fields.techInv) || 0,
+      cargoInv: num(fields.cargoInv) || 0,
+      coreDmg: num(fields.coreDmg) || 0,
+      coreShield: num(fields.coreShield) || 0,
+      coreWarp: num(fields.coreWarp) || 0,
+      coreMan: num(fields.coreMan) || 0,
+      colors: fields.colors.value.trim(),
+      notes: fields.notes.value.trim(),
+    };
+    if (!ship.name) return;
+
+    const idx = fleet.findIndex(s => s.id === ship.id);
+    if (idx >= 0) fleet[idx] = ship; else fleet.push(ship);
+    saveFleet(fleet);
+    form.hidden = true;
+    render();
+  });
+
+  // ---- Clear hangar ----
+  document.getElementById('clear-hangar').addEventListener('click', () => {
+    if (!fleet.length) return;
+    if (confirm('Clear the hangar? This deletes every ship in it and can\'t be undone.')) {
+      fleet = [];
+      saveFleet(fleet);
+      render();
+    }
+  });
+
+  // ---- Import / export ----
+  document.getElementById('export-btn').addEventListener('click', () => {
+    if (!fleet.length) return;
+    const blob = new Blob([JSON.stringify(fleet, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'nms-hangar.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  const importFile = document.getElementById('import-file');
+  document.getElementById('import-btn').addEventListener('click', () => importFile.click());
+  importFile.addEventListener('change', () => {
+    const file = importFile.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        if (!Array.isArray(data)) throw new Error('not an array');
+        if (fleet.length && !confirm(`Import ${data.length} ship(s)? This replaces the ${fleet.length} ship(s) currently in the hangar.`)) return;
+        fleet = data;
+        saveFleet(fleet);
+        render();
+      } catch (e) {
+        alert('That file doesn\'t look like a hangar export — expected JSON from the Export button.');
+      }
+    };
+    reader.readAsText(file);
+    importFile.value = '';
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
