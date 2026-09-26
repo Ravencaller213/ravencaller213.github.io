@@ -212,8 +212,8 @@
     .v-hacker { background: linear-gradient(90deg, var(--v-hacker-1), var(--v-hacker-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
     /* Orange-to-crimson "wanted poster" gradient for the "Bounty" (Bounty
        Hunter) variant — distinct from Gold's amber and Cheat/Hacker's
-       hacking palette. Confirmed live so far only on Victory Crown
-       (2026-09-21). */
+       hacking palette. Confirmed live everywhere (2026-09-26) — Crown-only
+       at first (2026-09-21). */
     .v-bounty { background: linear-gradient(90deg, var(--v-bounty-1), var(--v-bounty-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
     .rarity-rare { color: #00fffb; }
     .rarity-epic { color: #d825ee; }
@@ -286,21 +286,20 @@
   </footer>
 
   <!-- Tracker live as of 2026-08-20 (Ch7 S4 launch), last updated
-       2026-09-21. 21 sprites in the data layer, 19 currently visible
-       (Birthday and Morgana are entered but hidden — not live yet, any
-       variant). "Hacker" (Loot Hacker) is confirmed live for every sprite
-       that has a Hacker slot. "Bounty" (Bounty Hunter, Michael calls it
-       "Hunter") is confirmed live only for Victory Crown so far — every
-       other sprite's Bounty art is pre-positioned but renders as the
-       dashed "invalid" placeholder until confirmed. Megaman is Normal-only
-       (no Gold/Cheat/Hacker/Bounty slots exist for it at all — a structural
-       limit, not an unconfirmed one). Internally the code still uses the
-       short keys "Cheat"/"Hacker"/"Bounty" (Michael's shorthand, used in
-       code/chat); the table displays their full names "Cheat Master",
-       "Loot Hacker", "Bounty Hunter" via VARIANT_RENAMES. Bullet/Raccoon/
-       Honey and Spiderman still have no art pulled at all — still not
-       live. See the data-layer comment down in <script> for full sourcing,
-       including the fortnite.gg internal-codename mapping. -->
+       2026-09-26. 21 sprites, all live and visible (Birthday and Morgana
+       were held back at first on 2026-09-21, confirmed live 2026-09-26).
+       "Hacker" (Loot Hacker) and "Bounty" (Bounty Hunter, Michael calls it
+       "Hunter") are both confirmed live for every sprite that has the
+       slot — Bounty was Victory-Crown-only from 2026-09-21 to 2026-09-26.
+       Megaman is Normal-only (no Gold/Cheat/Hacker/Bounty slots exist for
+       it at all — a structural limit, not an unconfirmed one). Internally
+       the code still uses the short keys "Cheat"/"Hacker"/"Bounty"
+       (Michael's shorthand, used in code/chat); the table displays their
+       full names "Cheat Master", "Loot Hacker", "Bounty Hunter" via
+       VARIANT_RENAMES. Bullet/Raccoon/Honey and Spiderman still have no art
+       pulled at all — still not live. See the data-layer comment down in
+       <script> for full sourcing, including the fortnite.gg
+       internal-codename mapping. -->
 
   <div class="toolbar-frame">
 
@@ -325,7 +324,7 @@
           <div class="stat-block">
             <span class="stat-label">Completion</span>
             <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
-            <span class="stat-ratio" id="prog">0 / 74 &middot; 0%</span>
+            <span class="stat-ratio" id="prog">0 / 101 &middot; 0%</span>
           </div>
           <div class="stat-block">
             <span class="stat-label">Mastery</span>
@@ -481,10 +480,11 @@
   */
 
   // ---- Data layer. Live as of 2026-08-20 (Ch7 S4 launch), last updated
-  // 2026-09-21. 21 sprites now — the original 12, plus XRay/Onigiri (added
+  // 2026-09-26. 21 sprites now — the original 12, plus XRay/Onigiri (added
   // 2026-08-20), Megaman/Overshield (added 2026-09-03), and Birthday/Blinky/
   // Crash/Morgana/Pond (added 2026-09-21, full fortnite.gg re-pull after
-  // Klombo, Pond).
+  // Klombo, Pond). All 21 are live and visible as of 2026-09-26 (Birthday
+  // and Morgana were held back at first — see history below).
   //
   // Variant short keys (Michael's shorthand, used internally in code/chat):
   // "Cheat" = Cheat Master, "Hacker" = Loot Hacker, "Bounty" = Bounty
@@ -524,19 +524,15 @@
   //
   // "Bounty" (Loot Hacker's sibling "Bounty Hunter" variant) showed up in
   // the 2026-09-21 fortnite.gg pull for nearly every sprite (all but
-  // Megaman, which has no non-Normal slots at all). Per Michael, it is NOT
-  // live yet except for Victory Crown — every other sprite's art is
-  // pre-positioned in images/override/ but excluded from
-  // SPRITE_VARIANT_OVERRIDES so it renders as the dashed "invalid"
-  // placeholder until confirmed. Flip a sprite's entry to include "Bounty"
-  // once Michael confirms it live for that sprite (same pattern used for
-  // Hacker going live 2026-09-04).
+  // Megaman, which has no non-Normal slots at all). It was Victory-Crown-
+  // only at first (2026-09-21); Michael confirmed it live everywhere else
+  // on 2026-09-26, so SPRITE_VARIANT_OVERRIDES only needs Megaman's entry
+  // now — everyone else falls back to the full VARIANTS list.
   //
-  // Birthday and Morgana are NOT live at all yet (any variant) — art is
-  // pre-positioned but both sprites are hidden from the table/filters via
-  // HIDDEN_SPRITES below. Move a sprite's name from HIDDEN_SPRITES into the
-  // visible set once Michael confirms it live; don't delete its SPRITES/
-  // SPRITE_VARIANT_OVERRIDES entry in the meantime.
+  // Birthday and Morgana were held back (not live, any variant) when first
+  // added 2026-09-21 — hidden from the table/filters via HIDDEN_SPRITES.
+  // Michael confirmed both live on 2026-09-26, so HIDDEN_SPRITES is empty
+  // again; the mechanism is still here for the next sprite that needs it.
   //
   // "Jazz" (not "Jazz Jackrabbit"), "Bush" (not "Bushranger"), and
   // "Adventure" (not "Adventurer") are the actual in-game names.
@@ -558,32 +554,12 @@
   const KEY = "fn_sprites_v1";
   const VCLS = { Normal: "v-normal", Gold: "v-gold", Cheat: "v-cheatmaster", Hacker: "v-hacker", Bounty: "v-bounty" };
 
-  // Megaman is structurally Normal-only. Every other sprite gets an
-  // explicit entry so "Bounty" renders as the dashed "invalid" placeholder
-  // until Michael confirms it live for that sprite — Victory Crown is the
-  // only one with it live so far (2026-09-21).
+  // Only Megaman needs an explicit entry now that Bounty is confirmed live
+  // everywhere else (2026-09-26) — it's structurally Normal-only, no
+  // Gold/Cheat/Hacker/Bounty slots exist for it. Every other sprite falls
+  // back to the full VARIANTS list (Normal/Gold/Cheat/Hacker/Bounty).
   const SPRITE_VARIANT_OVERRIDES = {
     "Megaman": ["Normal"],
-    "Victory Crown": ["Normal", "Gold", "Cheat", "Hacker", "Bounty"],
-    "Jonesy": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Adventure": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Bush": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Sonic": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Tails": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Shadow": ["Normal", "Gold", "Cheat", "Hacker"],
-    "8-Bit": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Jazz": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Killswitch": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Overshield": ["Normal", "Gold", "Cheat", "Hacker"],
-    "XRay": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Onigiri": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Storm Scout": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Klombo": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Birthday": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Blinky": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Crash": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Morgana": ["Normal", "Gold", "Cheat", "Hacker"],
-    "Pond": ["Normal", "Gold", "Cheat", "Hacker"],
   };
 
   const SPRITE_RARITY = {
@@ -623,7 +599,8 @@
   // entries above so art/overrides are ready to go, just hide them from the
   // table/filters/totals until Michael confirms. Move a name out of this
   // list (don't delete its other data-layer entries) once it's live.
-  const HIDDEN_SPRITES = ["Birthday", "Morgana"];
+  // Empty as of 2026-09-26 — Birthday and Morgana are both confirmed live.
+  const HIDDEN_SPRITES = [];
   function activeSprites() { return SPRITES.filter(s => !HIDDEN_SPRITES.includes(s)); }
   let sortByRarity = false;
   function toggleRaritySort() {
