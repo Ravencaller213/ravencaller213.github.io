@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sprites — Override — ravencaller</title>
+  <title>Sprites — Runners — ravencaller</title>
   <link rel="icon" type="image/png" href="/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -31,9 +31,6 @@
       --v-holo-1: #e8e8f8; --v-holo-2: #c8d8f0; --v-holo-3: #d8c8f0;
       --v-crystal-1: #f9a8d4; --v-crystal-2: #a5f3fc; --v-crystal-3: #c4b5fd; --v-crystal-4: #fbcfe8;
       --v-cube-1: #0a0510; --v-cube-2: #7b2ff7; --v-cube-outline: #e619c9;
-      --v-cheat-1: #06270D; --v-cheat-2: #E9FBDE;
-      --v-hacker-1: #00fff2; --v-hacker-2: #ff2079;
-      --v-bounty-1: #ff8a3d; --v-bounty-2: #b91c1c;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -55,7 +52,27 @@
     .nav-back:hover { color: var(--opal-4); }
     .nav-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; }
     .nav-tag { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--border-hi); color: var(--text-dim); }
+    .save-timestamp { font-size: 0.68rem; color: var(--text-faint); letter-spacing: 0.02em; white-space: nowrap; }
 
+    .nav-top-row { display: flex; align-items: center; gap: 0.8rem; }
+
+    /* Live countdown badge to Override, sitting right beside the page links.
+       Bumped up from an initial 0.68rem/16px pass that read as illegible —
+       this needs to actually be readable at a glance, not just technically
+       present. */
+    .override-countdown {
+      display: flex; align-items: center; gap: 0.5rem; text-decoration: none;
+      font-size: 0.9rem; font-weight: 500; font-variant-numeric: tabular-nums;
+      color: var(--text); padding: 5px 14px 5px 7px;
+      border: 1px solid var(--border-hi); border-radius: 99px; white-space: nowrap;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .override-countdown:hover { color: var(--opal-4); border-color: rgba(56,189,248,0.5); }
+    .override-countdown-logo { height: 26px; width: auto; border-radius: 4px; }
+
+    /* Cross-page nav links (Hub / Runners / Override / Compare) — shared across
+       all sprites pages so nobody's stuck navigating back through the
+       hub every time. Self-link on each page gets .current for a subtle marker. */
     .page-links { display: flex; gap: 0.9rem; font-size: 0.72rem; letter-spacing: 0.03em; }
     .page-links a { color: var(--text-dim); text-decoration: none; transition: color 0.2s ease; }
     .page-links a:hover { color: var(--opal-4); }
@@ -75,108 +92,186 @@
 
     .divider { width: 100%; height: 1px; margin-bottom: 1rem; background: linear-gradient(90deg, transparent 0%, var(--opal-1) 20%, var(--opal-2) 50%, var(--opal-3) 80%, transparent 100%); opacity: 0.35; }
 
-    /* Prominent button nav bar above the main content — distinct from the
+    /* Prominent button nav bar above the main panels — distinct from the
        small text-link nav up top, which is more of a breadcrumb. This one's
        meant to be a fast, obvious way to jump between the four sprite pages
        without hunting for a link. */
     .page-navbar { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-bottom: 1.5rem; }
     .page-navbar .btn { text-decoration: none; flex: 1 1 0; text-align: center; }
-    .btn { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.03em; color: var(--text-dim); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 99px; padding: 0.5rem 1.1rem; cursor: pointer; transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease; }
-    .btn:hover { color: var(--text); border-color: var(--border-hi); }
-    .btn.accent { color: var(--opal-4); border-color: rgba(56,189,248,0.35); }
-    .btn.accent:hover { background: rgba(56,189,248,0.08); }
 
-    .countdown-wrap {
-      border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border);
-      padding: 4rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 2rem; min-height: 40vh; text-align: center;
-    }
-    .countdown-eyebrow { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim); }
-    .countdown-grid { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
-    .countdown-cell { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; min-width: 100px; }
-    .countdown-num {
-      font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(2.2rem, 6vw, 3.6rem); line-height: 1;
-      background: linear-gradient(105deg, var(--opal-3), var(--opal-4), var(--opal-2));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-      font-variant-numeric: tabular-nums;
-    }
-    .countdown-label { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); }
-    .countdown-target { font-size: 0.85rem; color: var(--text-faint); letter-spacing: 0.02em; }
-    .countdown-live { color: var(--opal-2); font-size: 1rem; }
-
-    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
-    footer p { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.05em; }
-    footer a { color: var(--opal-3); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
-
-    /* Tracker CSS — live as of 2026-08-20. Ported 1:1 from runners.html,
-       plus a Cheat Master variant class below (Override-only). */
+    /* ── Toolbar: one outer frame, four sections inside ─────────────────────────
+       Instead of four separately-bordered boxes (which never came out matched in
+       size no matter how they were constrained), the whole toolbar is one bordered
+       "main frame" and View/Filters/Save/Completion are just flex columns inside
+       it, divided by a hairline rule. flex:1 on each section splits the available
+       width evenly by construction — no manual sizing needed — and Completion gets
+       a slightly larger share (flex: 1.3) since its progress bars need the room. */
     .toolbar-frame { display: flex; flex-wrap: wrap; gap: 1.4rem; border: 1px solid var(--border); border-radius: 14px; padding: 0.75rem 1.1rem; background: var(--surface); margin-bottom: 1.5rem; }
     .tool-section { display: flex; flex-direction: column; gap: 8px; padding-bottom: 8px; }
     .tool-section + .tool-section { border-left: 1px solid var(--border); padding-left: 1.4rem; }
+
+    /* Section 1 (View): 140px wide. The label stays pinned to the top of the
+       section; the buttons live in their own flex column beneath it that grows
+       to fill the remaining height and centers the buttons within it. Shrunk
+       from 128x88, then again from 120x52 to 120x40, to keep the whole panel
+       more compact as more buttons (Import/Export) got added underneath. */
     .tool-section-view { width: 150px; flex: 0 0 150px; flex-direction: row; align-items: stretch; gap: 8px; }
     .tool-section-view-buttons { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; justify-content: space-evenly; }
     .tool-section-view .btn { width: 100%; height: 40px; padding: 0 6px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 0.7rem; line-height: 1.15; }
     .tool-section-view .btn.active { background: rgba(56,189,248,0.16); border-color: rgba(56,189,248,0.55); color: var(--text); }
     .view-panel-divider { width: 100%; height: 1px; background: var(--border); margin: 1px 0; }
+
+    /* Sections 2+3+4 (Completion + Filters + Save): stacked into a single
+       column — Completion on top, Filters in the middle, Save on the
+       bottom — instead of each taking its own full-height slot beside View.
+       This column grows to fill whatever's left beside View (same role
+       Completion used to play alone), which is what actually makes a true
+       single-row layout possible below — a fixed narrow width was forcing
+       Filters' four fields and Save's four buttons to wrap into a 2x2 grid
+       with a dangling empty cell. Every subsection lays its controls out in
+       one row (flex-wrap: nowrap, each item shrinking to fit) instead of a
+       vertical stack or a wrapped grid. */
     .tool-section-filters-save { flex: 1 1 480px; min-width: 480px; gap: 8px; }
     .tool-subsection { display: flex; flex-direction: row; align-items: center; gap: 10px; }
     .tool-subsection + .tool-subsection { border-top: 1px solid var(--border); padding-top: 8px; }
     .filters-row { display: flex; flex-wrap: nowrap; gap: 8px; align-items: flex-end; flex: 1; min-width: 0; }
     .filters-row .filter-field { flex: 1 1 0; min-width: 0; }
     .save-content { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
+
+    /* Sprite/Variant multiselect: a normal-looking dropdown button that opens
+       a checkbox list, instead of a native <select multiple> — the native
+       version renders as a permanently-open scroll box with no visual
+       affordance for "these are checked," which read as broken rather than
+       as a filter. */
     .ms-dropdown { position: relative; }
-    .ms-toggle { width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--text); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.36rem 0.55rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 0.4rem; }
+    .ms-toggle {
+      width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--text);
+      background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.36rem 0.55rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 0.4rem;
+    }
     .ms-toggle:hover { border-color: var(--border-hi); }
     .ms-toggle.has-selection { color: var(--opal-4); border-color: rgba(56,189,248,0.35); }
     .ms-toggle-caret { font-size: 0.6rem; color: var(--text-faint); transition: transform 0.2s ease; }
     .ms-dropdown.open .ms-toggle-caret { transform: rotate(180deg); }
-    .ms-panel { display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 20; background: var(--surface-hi); border: 1px solid var(--border-hi); border-radius: 8px; max-height: 220px; overflow-y: auto; padding: 0.35rem; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .ms-panel {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 20;
+      background: var(--surface-hi); border: 1px solid var(--border-hi); border-radius: 8px;
+      max-height: 220px; overflow-y: auto; padding: 0.35rem; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
     .ms-dropdown.open .ms-panel { display: block; }
     .ms-option { display: flex; align-items: center; gap: 0.5rem; padding: 0.32rem 0.4rem; border-radius: 6px; cursor: pointer; font-size: 0.78rem; color: var(--text); }
     .ms-option:hover { background: rgba(255,255,255,0.06); }
     .ms-option input[type="checkbox"] { accent-color: var(--opal-4); cursor: pointer; }
-    .ms-panel-actions { display: flex; gap: 0.4rem; padding: 0.3rem 0.4rem 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 0.3rem; position: sticky; top: 0; background: var(--surface-hi); z-index: 1; }
+    /* All/None frozen at the top of the scrollable panel via sticky — same
+       background as the panel itself so scrolled-past options disappear
+       behind it cleanly instead of showing through. */
+    .ms-panel-actions {
+      display: flex; gap: 0.4rem; padding: 0.3rem 0.4rem 0.5rem; border-bottom: 1px solid var(--border);
+      margin-bottom: 0.3rem; position: sticky; top: 0; background: var(--surface-hi); z-index: 1;
+    }
     .ms-panel-actions button { flex: 1 1 0; font-size: 0.68rem; padding: 0.3rem 0.4rem; border-radius: 6px; background: transparent; border: 1px solid var(--border); color: var(--text-dim); cursor: pointer; }
     .ms-panel-actions button:hover { color: var(--text); border-color: var(--border-hi); }
+
+    /* Save buttons: thinner horizontal pills (icon + label side by side), all
+       four in one row (not a wrapping 2x2 grid) — instead of the old
+       single-file column of tall boxy buttons. */
     .save-row { display: flex; flex-wrap: nowrap; gap: 6px; }
-    .save-btn { flex: 1 1 0; min-width: 0; padding: 0.32rem 0.45rem; border-radius: 8px; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; }
+    .save-btn {
+      flex: 1 1 0; min-width: 0; padding: 0.32rem 0.45rem; border-radius: 8px;
+      display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px;
+    }
     .save-icon { font-size: 0.85rem; line-height: 1; flex: 0 0 auto; }
     .save-label { font-size: 0.61rem; letter-spacing: 0.01em; text-align: center; line-height: 1.1; }
+
     .completion-body { display: flex; flex-direction: column; gap: 10px; flex: 1; min-width: 0; justify-content: center; }
+    /* Each stat is a single row: label, then a shortened/left-shifted bar, then
+       the ratio+% text inline at the bar's end — no separate row underneath. */
     .stat-block { display: flex; align-items: center; gap: 0.6rem; }
-    .frame-legend { display: none; font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); writing-mode: vertical-rl; text-orientation: upright; flex: 0 0 auto; white-space: nowrap; align-items: center; justify-content: center; padding: 0.2rem 0; }
+    .frame-legend {
+      display: none;
+      font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim);
+      writing-mode: vertical-rl; text-orientation: upright; flex: 0 0 auto; white-space: nowrap;
+      align-items: center; justify-content: center; padding: 0.2rem 0;
+    }
+
     .filter-field { display: flex; flex-direction: column; gap: 0.2rem; }
     .filter-field label { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); font-style: italic; }
     .filter-select { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--text); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.36rem 0.55rem; cursor: pointer; }
     .filter-select:hover { border-color: var(--border-hi); }
+
+    /* Paste-code import row under the Save buttons — mirrors the code boxes
+       on compare.html, so a share code can be loaded straight into this
+       browser's own collection, not just used for diffing on Compare. */
     .code-input-row { display: flex; gap: 0.5rem; }
-    .code-input { flex: 1 1 auto; font-family: monospace; font-size: 0.76rem; color: var(--text); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 8px; padding: 0.36rem 0.55rem; }
+    .code-input {
+      flex: 1 1 auto; font-family: monospace; font-size: 0.76rem;
+      color: var(--text); background: var(--surface-hi); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.36rem 0.55rem;
+    }
     .code-input::placeholder { color: var(--text-faint); }
     .code-input:hover { border-color: var(--border-hi); }
     .code-input:focus { outline: none; border-color: rgba(56,189,248,0.55); }
+
+    .btn { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.03em; color: var(--text-dim); background: var(--surface-hi); border: 1px solid var(--border); border-radius: 99px; padding: 0.5rem 1.1rem; cursor: pointer; transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease; }
+    .btn:hover { color: var(--text); border-color: var(--border-hi); }
+    .btn.accent { color: var(--opal-4); border-color: rgba(56,189,248,0.35); }
+    .btn.accent:hover { background: rgba(56,189,248,0.08); }
     .axis-btn { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; line-height: 1.25; }
     .axis-btn .axis-sub { font-size: 0.6rem; font-style: italic; color: var(--text-dim); font-weight: 400; letter-spacing: 0.02em; }
+
     .stat-label { font-size: 0.82rem; font-weight: 600; color: var(--text); flex: 0 0 auto; width: 72px; }
     .progress-bar { flex: 1 1 auto; min-width: 60px; height: 16px; border-radius: 99px; background: var(--surface-hi); border: 1px solid var(--border); overflow: hidden; }
     .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--opal-1), var(--opal-4), var(--opal-2)); transition: width 0.3s ease; }
     .progress-fill.mastery-fill { background: linear-gradient(90deg, #f5c842, #e8972a); }
     .stat-ratio { font-size: 0.78rem; color: var(--text-dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
     .legend { display: flex; flex-wrap: wrap; gap: 1.2rem; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 1.25rem; }
     .legend-item { display: flex; align-items: center; gap: 0.45rem; }
     .legend-swatch { width: 16px; height: 16px; border-radius: 5px; border: 1px solid var(--border-hi); background: var(--surface); }
     .legend-swatch.collected { border-color: var(--opal-4); background: rgba(56,189,248,0.34); }
     .legend-swatch.mastered { border: none; background: linear-gradient(135deg, #f5c842, #e8972a); }
     .legend-swatch.invalid { border-style: dashed; opacity: 0.35; }
+
+    /* No top padding here on purpose: padding on a scroll container sits
+       "outside" the scrolling content, so a sticky header's top:0 leaves that
+       padding strip uncovered — rows scrolled underneath show through it as
+       they pass. The equivalent top gap is added as padding-top on the grid
+       itself instead, which scrolls away normally instead of acting as a
+       permanent window into whatever's behind the sticky row. */
     .table-wrap { border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); overflow: auto; max-height: calc(100vh - 3rem); padding: 0 0.5rem 0.5rem; }
+
+    /* CSS Grid instead of an HTML table: each data column is minmax(44px, 1fr), so
+       columns split whatever width is actually available evenly among however many
+       there really are (7 vs 19 depending on axis) and only shrink to the 44px floor
+       — at which point the grid overflows and .table-wrap's overflow:auto scrolls it,
+       rather than cells quietly staying small while empty space sits unused elsewhere.
+       grid-template-columns is set inline by JS per render since the column count varies. */
     .sprite-grid { display: grid; gap: 6px; padding-top: 0.5rem; }
+    /* Sticky header/row-label cells only paint their own box — the grid's 6px
+       gap around them is transparent, so whatever scrolls underneath (the
+       previous row, a neighboring column) shows through in that gutter as the
+       grid scrolls past. The ::before extends each sticky cell's background
+       6px past its own edges (matching .sprite-grid's gap) so it covers that
+       gutter too, without affecting layout since it's absolutely positioned. */
     .g-header { font-size: 0.68rem; font-weight: 500; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; padding: 0.4rem 0.3rem; text-align: center; position: sticky; top: 0; background: var(--surface); z-index: 3; overflow: hidden; text-overflow: ellipsis; }
     .g-header.row-label-col { text-align: left; position: sticky; left: 0; z-index: 4; }
     .g-row-label { position: sticky; left: 0; background: var(--surface); font-size: 0.82rem; font-weight: 500; color: var(--text); padding: 0.4rem 0.9rem 0.4rem 0.3rem; text-align: left; white-space: nowrap; z-index: 2; display: flex; align-items: center; }
     .g-header::before, .g-row-label::before { content: ""; position: absolute; inset: -6px; background: inherit; z-index: -1; }
+
     .cell { width: 100%; aspect-ratio: 1 / 1; border-radius: 10px; background: var(--surface-hi); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease; }
     .cell:hover { border-color: var(--border-hi); }
+    /* Was border:var(--border) at opacity:0.3 — that's a ~3.5% alpha dashed line on
+       a near-black background, which reads as nothing at all rather than a faint
+       placeholder. Burnt Peanut/Batman rows (mostly invalid combos) looked like an
+       empty gap in the table because of this, not because of any missing markup. */
     .cell.invalid { background: rgba(255,255,255,0.025); border: 1px dashed var(--border-hi); cursor: default; opacity: 0.6; }
+
+    /* Owned/mastered progress is shown as a translucent color "fog" laid over the
+       art, rather than desaturating the unowned state — unowned sprites now show
+       at full color (there's nothing to hide), collected ones pick up a blue fog,
+       and mastered ones swap that fog to gold. The fog is a ::after overlay (not a
+       filter on the <img>) so it sits cleanly on top of whatever's underneath,
+       including the placeholder box for missing images. */
     .cell::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1; transition: background 0.25s ease; background: transparent; }
     .cell.collected { border-color: var(--opal-4); }
     .cell.collected::after { background: rgba(56, 189, 248, 0.34); }
@@ -186,39 +281,63 @@
     .cell .placeholder { width: 70%; height: 70%; border-radius: 8px; border: 1px dashed var(--border-hi); }
     .cell .badge { position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; background: var(--opal-4); color: var(--bg); z-index: 2; }
     .cell.mastered .badge { background: linear-gradient(135deg, #f5c842, #e8972a); color: #3a2a06; }
+
     .cell.text-mode { aspect-ratio: 3 / 2; font-size: clamp(0.7rem, 1.3vw, 1.05rem); color: var(--text-faint); }
     .cell.text-mode.collected { color: var(--opal-4); background: rgba(56,189,248,0.1); }
     .cell.text-mode.mastered { color: #fff; background: rgba(245,200,66,0.16); }
+
+    /* Filtered view: every match, flattened into one continuous grid that fills
+       left-to-right and wraps — like lining up screenshots of the matching cards.
+       Each tile carries its own "Sprite · Variant" caption since there's no row
+       label to supply that context once nothing's grouped by sprite/variant. */
+    .filtered-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; padding: 0.5rem; }
+    .filtered-tile { display: flex; flex-direction: column; gap: 6px; }
+    .filtered-tile-label { font-size: 0.75rem; color: var(--text-dim); text-align: center; line-height: 1.3; }
+
+    /* Compact filtered view (Collection/Mastery filters active): rows follow
+       whatever's currently on rows per the View toggle, same as the full
+       table — but each row only shows as many cells as actually match the
+       filter, with no fixed column count and no column header (a column's
+       position doesn't mean the same thing from one row to the next here).
+       Each cell gets a small caption for just the "other" axis, since the
+       row label already supplies half of what the cell is. Rows with zero
+       matches are skipped outright rather than rendered empty. */
     .compact-filtered { display: flex; flex-direction: column; gap: 16px; padding: 0.5rem; }
     .compact-row { display: flex; align-items: flex-start; gap: 14px; }
     .compact-row-label { flex: 0 0 110px; padding-top: 0.5rem; font-size: 0.82rem; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .compact-row-cells { display: flex; flex-wrap: wrap; gap: 10px; flex: 1 1 auto; }
     .compact-tile { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 96px; }
     .compact-tile-label { font-size: 0.68rem; color: var(--text-dim); text-align: center; line-height: 1.2; }
+
     .v-normal { color: #c8c8d8; }
     .v-gold   { background: linear-gradient(90deg, var(--v-gold-1), var(--v-gold-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
     .v-gummi  { background: linear-gradient(90deg, var(--v-gummi-1), var(--v-gummi-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
     .v-galaxy { background: linear-gradient(90deg, var(--v-galaxy-1), var(--v-galaxy-2), var(--v-galaxy-3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
+    /* Swapped: Holofoil now reads as the pastel/iridescent palette (previously
+       Gem's) and Gem takes the pale shimmering palette (previously Holofoil's) —
+       now that Holofoil is actually released, the old assignment read backwards
+       next to it. */
     .v-holofoil { background: linear-gradient(90deg, var(--v-crystal-1), var(--v-crystal-2), var(--v-crystal-3), var(--v-crystal-4)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
     .v-crystal { background: linear-gradient(90deg, var(--v-holo-1), var(--v-holo-2), var(--v-holo-3), var(--v-holo-1)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 500; }
     .v-cube { background: linear-gradient(135deg, var(--v-cube-1), var(--v-cube-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
-    /* Dark-green-to-pale-mint gradient for the new Override-exclusive "Cheat
-       Master" variant — matches the season's hacking/corrupted-systems theme
-       rather than reusing an existing Runners variant palette. */
-    .v-cheatmaster { background: linear-gradient(90deg, var(--v-cheat-1), var(--v-cheat-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
-    /* Cyan-to-magenta glitch gradient for the "Hacker" (Loot Hacker) variant
-       — distinct from Cheat's green/mint, same corrupted-systems theme.
-       Confirmed live for every sprite that has a Hacker slot (2026-09-04). */
-    .v-hacker { background: linear-gradient(90deg, var(--v-hacker-1), var(--v-hacker-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
-    /* Orange-to-crimson "wanted poster" gradient for the "Bounty" (Bounty
-       Hunter) variant — distinct from Gold's amber and Cheat/Hacker's
-       hacking palette. Confirmed live everywhere (2026-09-26) — Crown-only
-       at first (2026-09-21). */
-    .v-bounty { background: linear-gradient(90deg, var(--v-bounty-1), var(--v-bounty-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
+
+    /* Sprite names colored by rarity tier, independent of the variant coloring
+       above (variant names use v-*; sprite names use rarity-*). Applied wherever
+       a sprite's name renders as text: row/column labels in the table and the
+       sprite half of "Sprite · Variant" captions in filtered views. */
     .rarity-rare { color: #00fffb; }
     .rarity-epic { color: #d825ee; }
     .rarity-legendary { color: #fbc363; }
     .rarity-mythic { color: #fff0a6; }
+
+    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+    footer p { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.05em; }
+    footer a { color: var(--opal-3); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* Small format-choice modal for Export Missing — native confirm()/alert()
+       can't have custom button labels, so this is a real dialog with the two
+       actual options spelled out instead of OK/Cancel. */
     .modal-overlay { position: fixed; inset: 0; background: rgba(5,5,10,0.7); display: none; align-items: center; justify-content: center; z-index: 50; padding: 1rem; }
     .modal-overlay.open { display: flex; }
     .modal-box { background: var(--surface); border: 1px solid var(--border-hi); border-radius: 14px; padding: 1.5rem; max-width: 340px; width: 100%; display: flex; flex-direction: column; gap: 1rem; }
@@ -234,78 +353,48 @@
 <div class="page">
 
   <nav class="top">
-    <a class="nav-back" href="/index.html">&larr; ravencaller</a>
+    <a class="nav-back" href="../fn-home.html">&larr; fortnite</a>
     <div class="nav-right">
-      <div class="page-links">
-        <a href="index.html">Hub</a>
-        <a href="runners.html">Runners</a>
-        <a href="override.html" class="current">Override</a>
-        <a href="compare.html">Compare</a>
+      <div class="nav-top-row">
+        <a class="override-countdown" href="override.html" title="Override launches August 20, 2026, 9:00 AM EST">
+          <img class="override-countdown-logo" src="logos/ch7s4_override_logo.png" alt="" />
+          <span id="overrideCountdownText">Override in &hellip;</span>
+        </a>
+        <div class="page-links">
+          <a href="index.html">Hub</a>
+          <a href="runners.html" class="current">Runners</a>
+          <a href="override.html">Override</a>
+          <a href="compare.html">Compare</a>
+        </div>
       </div>
-      <span class="nav-tag">Sprite Checklist &middot; Override</span>
+      <span class="nav-tag">Sprite Checklist &middot; Runners</span>
+      <span class="save-timestamp" id="lastSaved"></span>
     </div>
   </nav>
 
   <header>
     <div class="header-row">
-      <img class="page-logo" src="logos/ch7s4_override_logo.png" alt="Override" />
+      <img class="page-logo" src="logos/ch7s3_runners_logo.png" alt="Runners" />
     </div>
-    <p class="tagline">
-      Ch7 S4 is live. Runners sprites are vaulted — click any cell below to cycle
-      none &rarr; collected &rarr; mastered on the new Override collection.
-    </p>
+    <p class="tagline">Click any cell to cycle none &rarr; collected &rarr; mastered.</p>
   </header>
 
   <div class="divider"></div>
 
   <div class="page-navbar">
-    <a class="btn accent" href="/index.html">Home</a>
+    <a class="btn accent" href="../fn-home.html">Fortnite Hub</a>
     <a class="btn accent" href="index.html">Sprites</a>
-    <a class="btn accent" href="runners.html">Runners</a>
+    <a class="btn accent" href="override.html">Override</a>
     <a class="btn accent" href="compare.html">Compare</a>
+    <a class="btn accent" href="../lobby/hax.html">Lobby Hax</a>
   </div>
-
-  <!-- Countdown retired now that Ch7 S4 has launched — kept commented in
-       case a future season needs the same "counting down to launch" pattern
-       again, rather than rebuilding it from scratch.
-  <div class="countdown-wrap">
-    <div class="countdown-eyebrow">Chapter 7, Season 4 begins</div>
-    <div class="countdown-grid" id="countdownGrid">
-      <div class="countdown-cell"><span class="countdown-num" id="cdDays">--</span><span class="countdown-label">Days</span></div>
-      <div class="countdown-cell"><span class="countdown-num" id="cdHours">--</span><span class="countdown-label">Hours</span></div>
-      <div class="countdown-cell"><span class="countdown-num" id="cdMinutes">--</span><span class="countdown-label">Minutes</span></div>
-      <div class="countdown-cell"><span class="countdown-num" id="cdSeconds">--</span><span class="countdown-label">Seconds</span></div>
-    </div>
-    <div class="countdown-target">August 20, 2026 &middot; 9:00 AM EST</div>
-  </div>
-  -->
-
-  <footer>
-    <p>ravencaller213 &middot; sprite checklist &middot; override</p>
-    <p><a href="index.html">hub</a> &middot; <a href="runners.html">runners tracker</a> &middot; <a href="compare.html">compare with a friend</a></p>
-  </footer>
-
-  <!-- Tracker live as of 2026-08-20 (Ch7 S4 launch), last updated
-       2026-09-26. 21 sprites, all live and visible (Birthday and Morgana
-       were held back at first on 2026-09-21, confirmed live 2026-09-26).
-       "Hacker" (Loot Hacker) and "Bounty" (Bounty Hunter, Michael calls it
-       "Hunter") are both confirmed live for every sprite that has the
-       slot — Bounty was Victory-Crown-only from 2026-09-21 to 2026-09-26.
-       Megaman is Normal-only (no Gold/Cheat/Hacker/Bounty slots exist for
-       it at all — a structural limit, not an unconfirmed one). Internally
-       the code still uses the short keys "Cheat"/"Hacker"/"Bounty"
-       (Michael's shorthand, used in code/chat); the table displays their
-       full names "Cheat Master", "Loot Hacker", "Bounty Hunter" via
-       VARIANT_RENAMES. Bullet/Raccoon/Honey and Spiderman still have no art
-       pulled at all — still not live. See the data-layer comment down in
-       <script> for full sourcing, including the fortnite.gg
-       internal-codename mapping. -->
 
   <div class="toolbar-frame">
 
     <div class="tool-section tool-section-view">
       <div class="frame-legend">View</div>
       <div class="tool-section-view-buttons">
+        <!-- <button class="btn accent" id="viewModeBtn" onclick="toggleViewMode()">Image View</button> -->
         <button class="btn accent axis-btn" id="groupToggleBtn" onclick="toggleGrouping()">
           <span id="axisMain">Sprites</span>
           <span class="axis-sub">on rows</span>
@@ -324,7 +413,7 @@
           <div class="stat-block">
             <span class="stat-label">Completion</span>
             <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
-            <span class="stat-ratio" id="prog">0 / 101 &middot; 0%</span>
+            <span class="stat-ratio" id="prog">0 / 121 &middot; 0%</span>
           </div>
           <div class="stat-block">
             <span class="stat-label">Mastery</span>
@@ -396,6 +485,14 @@
 
   </div>
 
+  <!-- Check all / Uncheck all are dev/testing tools only — not for the published
+       page, so they're commented out here. The checkAll()/uncheckAll() functions
+       are still defined below and callable from the browser console. -->
+  <!--
+  <button class="btn" onclick="checkAll()">Check all</button>
+  <button class="btn" onclick="uncheckAll()">Uncheck all</button>
+  -->
+
   <div class="legend">
     <div class="legend-item"><span class="legend-swatch"></span> Unowned</div>
     <div class="legend-item"><span class="legend-swatch collected"></span> Collected</div>
@@ -404,6 +501,11 @@
   </div>
 
   <div class="table-wrap"><div id="list"></div></div>
+
+  <footer>
+    <p>ravencaller213 &middot; sprite checklist &middot; runners</p>
+    <p><a href="index.html">hub</a> &middot; <a href="override.html">override</a> &middot; <a href="compare.html">compare with a friend</a></p>
+  </footer>
 
   <div class="modal-overlay" id="importExportModal">
     <div class="modal-box">
@@ -442,166 +544,95 @@
     </div>
   </div>
 
+
 </div><!-- end .page -->
 
 <script>
-  /* Countdown ticker — retired now that Ch7 S4 has launched. Kept commented
-     rather than deleted in case a future season wants the same pattern.
-  // EST is fixed UTC-5 year-round for this purpose (Override's launch date in
-  // August falls under EDT/UTC-4 in real-world DST, but the user specified EST
-  // explicitly, so this targets UTC-5 literally rather than guessing at DST).
-  const TARGET = new Date("2026-08-20T09:00:00-05:00").getTime();
-
-  function pad(n) { return String(n).padStart(2, "0"); }
-
-  function tick() {
-    const now = Date.now();
-    const diff = TARGET - now;
-    const wrap = document.getElementById("countdownGrid");
-
-    if (diff <= 0) {
-      wrap.innerHTML = `<div class="countdown-live">Override is live!</div>`;
-      return;
-    }
-
-    const days = Math.floor(diff / 86400000);
-    const hours = Math.floor((diff % 86400000) / 3600000);
-    const minutes = Math.floor((diff % 3600000) / 60000);
-    const seconds = Math.floor((diff % 60000) / 1000);
-
-    document.getElementById("cdDays").textContent = days;
-    document.getElementById("cdHours").textContent = pad(hours);
-    document.getElementById("cdMinutes").textContent = pad(minutes);
-    document.getElementById("cdSeconds").textContent = pad(seconds);
-  }
-
-  tick();
-  setInterval(tick, 1000);
-  */
-
-  // ---- Data layer. Live as of 2026-08-20 (Ch7 S4 launch), last updated
-  // 2026-09-26. 21 sprites now — the original 12, plus XRay/Onigiri (added
-  // 2026-08-20), Megaman/Overshield (added 2026-09-03), and Birthday/Blinky/
-  // Crash/Morgana/Pond (added 2026-09-21, full fortnite.gg re-pull after
-  // Klombo, Pond). All 21 are live and visible as of 2026-09-26 (Birthday
-  // and Morgana were held back at first — see history below).
-  //
-  // Variant short keys (Michael's shorthand, used internally in code/chat):
-  // "Cheat" = Cheat Master, "Hacker" = Loot Hacker, "Bounty" = Bounty
-  // Hunter (Michael calls it "Hunter" in conversation — "Bounty" is the
-  // code/filename key because that's the suffix the art was already
-  // downloaded/renamed with, e.g. blinky_bounty.webp). Image filenames use
-  // these short forms too, so imgPath()'s generic lowercase-and-underscore
-  // logic resolves correctly with no code change. The table itself displays
-  // the full names via VARIANT_RENAMES below — Michael's call (2026-09-04):
-  // shorthand in code/discussion, full names on the actual tracker table.
-  //
-  // fortnite.gg internal codenames (kept here so we don't lose the mapping
-  // — several don't match the in-game/community name at all):
-  //   Birthday      -> Birthday
-  //   Blinky        -> GhostDamage
-  //   Bush          -> BushRanger
-  //   Crash         -> BodySlam
-  //   Jazz          -> DoubleJump (Bounty/Hacker files) / JazzJackrabbit (Cheat/Gold/Normal) — split across two codenames, all 5 variants present under one or the other
-  //   Jonesy        -> Jonesy
-  //   Killswitch    -> Killswitch
-  //   Klombo        -> Klombo
-  //   Megaman       -> ImprovedSlide
-  //   Morgana       -> IncreaseHeals
-  //   Onigiri       -> WinnerC (Design-a-sprite contest winner)
-  //   Overshield    -> Overshield
-  //   Pond          -> WinnerA (Design-a-sprite contest winner)
-  //   Shadow        -> NarrowFlea_Scribe (Cheat/Gold/Normal) / ReloadOverTime (Bounty/Hacker) — same split pattern as Jazz
-  //   Sonic         -> NarrowFlea_Obsidian (Cheat/Gold/Normal) / NarrowFlea (Bounty/Hacker) — same split pattern
-  //   Storm Scout   -> StormScout
-  //   Tails         -> NarrowFlea_Monkey (Cheat/Gold/Hacker/Normal) / NarrowFleaMonkey (Bounty) — same split pattern
-  //   Victory Crown -> Crown
-  //   XRay          -> WinnerB (Design-a-sprite contest winner)
-  //   8-Bit         -> 8BitBlaster (Bounty file) / EightBitBlaster (Cheat/Gold/Normal/Hacker) — same split pattern
-  // Adventure/Advent. as "Dwarf" was already known; Bullet/Raccoon/Honey and
-  // Spiderman still have no fortnite.gg folder at all as of 2026-09-21 —
-  // still not live.
-  //
-  // "Bounty" (Loot Hacker's sibling "Bounty Hunter" variant) showed up in
-  // the 2026-09-21 fortnite.gg pull for nearly every sprite (all but
-  // Megaman, which has no non-Normal slots at all). It was Victory-Crown-
-  // only at first (2026-09-21); Michael confirmed it live everywhere else
-  // on 2026-09-26, so SPRITE_VARIANT_OVERRIDES only needs Megaman's entry
-  // now — everyone else falls back to the full VARIANTS list.
-  //
-  // Birthday and Morgana were held back (not live, any variant) when first
-  // added 2026-09-21 — hidden from the table/filters via HIDDEN_SPRITES.
-  // Michael confirmed both live on 2026-09-26, so HIDDEN_SPRITES is empty
-  // again; the mechanism is still here for the next sprite that needs it.
-  //
-  // "Jazz" (not "Jazz Jackrabbit"), "Bush" (not "Bushranger"), and
-  // "Adventure" (not "Adventurer") are the actual in-game names.
-  //
-  // Order: first fifteen (Jonesy, Adventure, Bush, Sonic, Tails, Shadow,
-  // 8-Bit, Jazz, Victory Crown, Killswitch, Megaman, Overshield, XRay,
-  // Onigiri, Storm Scout) are Michael's confirmed in-game default-list
-  // order as of 2026-09-03. Klombo, Birthday, Blinky, Crash, Morgana, and
-  // Pond are all provisional — appended at the end until their actual menu
-  // positions are confirmed, same convention runners.html uses for its own
-  // late additions. Update this order as more positions come in.
-  const SPRITES = [
-    "Jonesy", "Adventure", "Bush", "Sonic", "Tails", "Shadow", "8-Bit", "Jazz", "Victory Crown", "Killswitch",
-    "Megaman", "Overshield", "XRay", "Onigiri", "Storm Scout",
-    "Klombo", "Birthday", "Blinky", "Crash", "Morgana", "Pond",
-  ];
-  const VARIANTS = ["Normal", "Gold", "Cheat", "Hacker", "Bounty"];
+  // ---- Data layer. Shares localStorage key across all sprites pages
+  // (runners/override/compare), so progress saved on any of them shows up on
+  // all of them. (Formerly shared with index-OG.html, archived 2026-08-07.) ----
+  // Default order matches the in-game Sprites menu exactly (per user, confirmed
+  // against Google for Reaper's placement) — no more special-casing Burnt
+  // Peanut's position, it's just wherever it actually sits in this list.
+  // Peely and Llama confirmed live as of 2026-07-30 (fortnite.gg usage stats),
+  // so they're back in the active list. John Wick is also new this update.
+  // Order for these three (and any future new drops) is provisional — appended
+  // at the end until an actual in-game menu position is confirmed.
+  const SPRITES = ["John Wick","Batman","Water","Earth","Fire","Duck","Ghost","Dream","Demon","Punk","King","Burnt Peanut","Vini Jr","Zero Point","Fishy","Striker","Aura","Boss","Grim","Air","Seven","Ironmouse","Pollo","Peely","Llama"];
+  const VARIANTS = ["Normal","Gold","Gummi","Galaxy","Holofoil","Gem","Cube","Quack"];
+  const BURNT = "Burnt Peanut";
   const ALL_SPRITES = SPRITES;
   const KEY = "fn_sprites_v1";
-  const VCLS = { Normal: "v-normal", Gold: "v-gold", Cheat: "v-cheatmaster", Hacker: "v-hacker", Bounty: "v-bounty" };
+  const VCLS = { Normal: "v-normal", Gold: "v-gold", Gummi: "v-gummi", Galaxy: "v-galaxy", Holofoil: "v-holofoil", Gem: "v-crystal", Cube: "v-cube" };
 
-  // Only Megaman needs an explicit entry now that Bounty is confirmed live
-  // everywhere else (2026-09-26) — it's structurally Normal-only, no
-  // Gold/Cheat/Hacker/Bounty slots exist for it. Every other sprite falls
-  // back to the full VARIANTS list (Normal/Gold/Cheat/Hacker/Bounty).
-  const SPRITE_VARIANT_OVERRIDES = {
-    "Megaman": ["Normal"],
-  };
-
+  // Sprite name -> rarity tier, taken from the sprite tracking CSV's Rarity
+  // column, used to color sprite names independent of variant coloring.
   const SPRITE_RARITY = {
-    "Jazz": "Legendary",
-    "Shadow": "Epic",
-    "Bush": "Rare",
-    "Tails": "Epic",
-    "Killswitch": "Epic",
-    "Adventure": "Rare",
-    "Klombo": "Mythic",
-    "Jonesy": "Rare",
-    "Sonic": "Epic",
-    "Victory Crown": "Mythic",
-    "8-Bit": "Rare",
-    "Storm Scout": "Rare",
+    "Water": "Rare", "Earth": "Rare", "Fire": "Rare", "Fishy": "Rare", "Air": "Rare",
+    "Duck": "Epic", "Ghost": "Epic", "Demon": "Epic", "King": "Epic", "Striker": "Epic", "Aura": "Epic",
+    "Dream": "Legendary", "Punk": "Legendary", "Boss": "Legendary", "Grim": "Legendary", "Seven": "Legendary",
+    "Llama": "Legendary", "Peely": "Legendary",
+    "Zero Point": "Mythic", "Batman": "Mythic", [BURNT]: "Mythic", "Vini Jr": "Mythic", "Pollo": "Mythic", "John Wick": "Mythic", "Ironmouse": "Mythic",
   };
   const RARITY_CLS = { Rare: "rarity-rare", Epic: "rarity-epic", Legendary: "rarity-legendary", Mythic: "rarity-mythic" };
   function spriteRarityClass(sprite) { return RARITY_CLS[SPRITE_RARITY[sprite]] || ""; }
   const RARITY_RANK = { Rare: 1, Epic: 2, Legendary: 3, Mythic: 4 };
   function spriteRarityRank(sprite) { return RARITY_RANK[SPRITE_RARITY[sprite]] || 99; }
 
+  // Every sprite's actual confirmed variant list, taken directly from the sprite
+  // tracking CSV (Y/N per variant). No shortcuts/grouping constants — each entry
+  // here is just that sprite's real list, so confirming or correcting one sprite
+  // never silently changes another's. Any sprite not listed here falls back to
+  // the full VARIANTS set (see variantsForSprite below).
+  const SPRITE_VARIANT_OVERRIDES = {
+    "Water": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem", "Quack"],
+    "Earth": ["Normal", "Gold", "Gummi", "Galaxy", "Gem", "Cube", "Quack"],
+    "Fire": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Cube", "Quack"],
+    "Fishy": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
+    "Duck": ["Normal", "Gold", "Gummi", "Galaxy", "Gem"],
+    "Ghost": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    "Demon": ["Normal", "Gold", "Gummi", "Galaxy", "Gem"],
+    "King": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    "Striker": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    "Aura": ["Normal", "Gold", "Gummi", "Galaxy", "Gem"],
+    "Air": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    "Dream": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
+    "Punk": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
+    "Boss": ["Normal", "Gold", "Gummi", "Galaxy", "Cube"],
+    "Grim": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem", "Cube"],
+    "Seven": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    // Correction: Quack turned out to be a distinct variant ALONGSIDE Holofoil,
+    // not a replacement for it — confirmed via fortnite.gg listing both
+    // "Holofoil Zero Point" and "Quack Zero Point" as separate entries. Cube
+    // is also confirmed now (fortnite.gg lists "Cube Zero Point" too). Quack
+    // itself is no longer unique to Zero Point either — see Water/Earth/Fire.
+    "Zero Point": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Gem", "Cube", "Quack"],
+    "Batman": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil", "Cube"],
+    [BURNT]: ["Normal"],
+    "Vini Jr": ["Normal"],
+    "Pollo": ["Normal"],
+    "Peely": ["Normal", "Gold", "Gummi", "Galaxy", "Holofoil"],
+    "Llama": ["Normal", "Gold", "Gummi", "Galaxy", "Gem"],
+    // New, rarity unconfirmed — no SPRITE_RARITY entry yet, so renders uncolored.
+    "Ironmouse": ["Normal"],
+    // New this update — only Normal confirmed so far.
+    "John Wick": ["Normal"],
+  };
   function variantsForSprite(sprite) { return SPRITE_VARIANT_OVERRIDES[sprite] || VARIANTS; }
   function activeVariantsForSprite(sprite) { return variantsForSprite(sprite).filter(v => activeVariants().includes(v)); }
   function spritesForVariant(variantName) { return activeAllSprites().filter(s => variantsForSprite(s).includes(variantName)); }
 
-  const RENAMES = {};
-  // Display-only full names for the tracker table/filters. Internal code
-  // (keys, image filenames, share-code encoding, chat) keeps using the
-  // short forms "Cheat"/"Hacker"/"Bounty" — Michael's call, 2026-09-04
-  // (reconfirmed 2026-09-21 for Bounty/Hunter).
-  const VARIANT_RENAMES = { Cheat: "Cheat Master", Hacker: "Loot Hacker", Bounty: "Bounty Hunter" };
-  function variantLabel(v) { return VARIANT_RENAMES[v] || v; }
+  const RENAMES = { "Fish": "Fishy", "Foundation": "Seven", "Reaper": "Grim" };
+  const VARIANT_RENAMES = { "Crystal": "Gem" };
 
+  // Gem is now live too (Cube went live earlier) — nothing left hidden, but
+  // keeping this mechanism in place in case a future variant needs it again.
   const HIDDEN_VARIANTS = [];
   function activeVariants() { return VARIANTS.filter(v => !HIDDEN_VARIANTS.includes(v)); }
-  // Birthday and Morgana aren't live yet (any variant) — keep their data
-  // entries above so art/overrides are ready to go, just hide them from the
-  // table/filters/totals until Michael confirms. Move a name out of this
-  // list (don't delete its other data-layer entries) once it's live.
-  // Empty as of 2026-09-26 — Birthday and Morgana are both confirmed live.
-  const HIDDEN_SPRITES = [];
-  function activeSprites() { return SPRITES.filter(s => !HIDDEN_SPRITES.includes(s)); }
+  function activeSprites() { return SPRITES; }
+  // By Rarity is a plain on/off toggle (no dropdown), so its own button just
+  // reflects the current state visually via the "active" class rather than
+  // changing its label text the way View Mode/axis do.
   let sortByRarity = false;
   function toggleRaritySort() {
     sortByRarity = !sortByRarity;
@@ -609,8 +640,10 @@
     render();
   }
   function activeAllSprites() {
-    const visible = activeSprites();
-    return sortByRarity ? [...visible].sort((a, b) => spriteRarityRank(a) - spriteRarityRank(b)) : visible;
+    // Array.prototype.sort is stable (guaranteed since ES2019), so sprites
+    // within the same rarity tier keep their original relative order rather
+    // than getting shuffled every time this toggles.
+    return sortByRarity ? [...SPRITES].sort((a, b) => spriteRarityRank(a) - spriteRarityRank(b)) : SPRITES;
   }
 
   const LEVEL_LABEL = { 0: "none", 1: "collected", 2: "mastered" };
@@ -628,6 +661,26 @@
   }
   function migrateState(obj) {
     const result = { ...(obj && typeof obj === "object" ? obj : {}) };
+    Object.keys(RENAMES).forEach(oldName => {
+      const newName = RENAMES[oldName];
+      const prefix = oldName + "||";
+      Object.keys(result).forEach(key => {
+        if (!key.startsWith(prefix)) return;
+        const newKey = newName + "||" + key.slice(prefix.length);
+        if (result[key]) result[newKey] = result[key];
+        delete result[key];
+      });
+    });
+    Object.keys(VARIANT_RENAMES).forEach(oldName => {
+      const newName = VARIANT_RENAMES[oldName];
+      const suffix = "||" + oldName;
+      Object.keys(result).forEach(key => {
+        if (!key.endsWith(suffix)) return;
+        const newKey = key.slice(0, -suffix.length) + "||" + newName;
+        if (result[key]) result[newKey] = result[key];
+        delete result[key];
+      });
+    });
     return normalizeStateLevels(result);
   }
 
@@ -670,6 +723,8 @@
     document.getElementById("fill").style.width = pct + "%";
   }
 
+  // Mastery bar's denominator is what you've actually collected, not the full possible
+  // total — mastering everything you own is "100%" even if plenty is still unowned.
   function getMasteryStats() {
     let collected = 0, mastered = 0;
     activeAllSprites().forEach(s => {
@@ -688,6 +743,8 @@
     document.getElementById("masteryFill").style.width = pct + "%";
   }
 
+  // groupBy doubles as "which axis is the row": "sprite" = sprite rows / variant columns,
+  // "variant" = variant rows / sprite columns.
   let groupBy = "sprite";
   function getGroups() {
     return groupBy === "sprite" ? activeAllSprites().filter(spriteVisible) : activeVariants().filter(variantVisible);
@@ -717,6 +774,16 @@
     if (btn) btn.textContent = viewMode === "image" ? "Image View" : "Table View";
   }
 
+  // Filters replace the old Remaining / Collected-Not-Mastered sidebar. Rather than
+  // flattening matches into a separate grid (which threw away whatever the X/Y axes
+  // meant), the table keeps its normal row/column layout and non-matching cells just
+  // fade out in place via the "filtered-out" class — see renderCell()/renderTable().
+  // Two independent dropdowns combine into one predicate:
+  //   Unowned + anything      -> level 0 only (mastery is moot if you don't own it)
+  //   All + All                -> no filter, full table
+  //   */Unmastered              -> level 1 only, regardless of Collection
+  //   */Mastered                -> level 2 only, regardless of Collection
+  //   Owned + All               -> level 1 or 2 (owned, mastered or not)
   let collectionFilter = "all"; // "all" | "owned" | "unowned"
   let masteryFilter = "all";    // "all" | "unmastered" | "mastered"
   function onFilterChange() {
@@ -732,6 +799,18 @@
     return null; // All + All: no filter
   }
 
+  // Sprite/Variant filters narrow which rows/columns show up at all —
+  // independent of (and combinable with) the Collection/Mastery level
+  // filters above. Empty selection means "no restriction," same convention
+  // as HIDDEN_VARIANTS elsewhere. Only affects what's rendered in the grid,
+  // same as Collection/Mastery — completion stats and exports intentionally
+  // still cover the whole collection regardless of what's currently shown.
+  //
+  // UI-wise these are checkbox-list dropdowns rather than native
+  // <select multiple> — the native control renders as an always-open
+  // scrollbox with no clear "selected" affordance, which read as broken
+  // rather than as a filter. openMsDropdown tracks which one (if any) is
+  // currently open so a click anywhere else closes it.
   let selectedSprites = [];
   let selectedVariants = [];
   let openMsDropdown = null; // "sprite" | "variant" | null
@@ -740,7 +819,7 @@
 
   function msConfig(type) {
     return type === "sprite"
-      ? { options: activeSprites(), get: () => selectedSprites, set: v => { selectedSprites = v; }, noun: "sprite" }
+      ? { options: SPRITES, get: () => selectedSprites, set: v => { selectedSprites = v; }, noun: "sprite" }
       : { options: activeVariants(), get: () => selectedVariants, set: v => { selectedVariants = v; }, noun: "variant" };
   }
 
@@ -752,7 +831,7 @@
     if (sel.length === 0) label.textContent = `All ${noun}s`;
     else if (sel.length === 1 && sel[0] === "__none__") label.textContent = `No ${noun}s`;
     else if (sel.length === options.length) label.textContent = `All ${noun}s`;
-    else if (sel.length === 1) label.textContent = type === "variant" ? variantLabel(sel[0]) : sel[0];
+    else if (sel.length === 1) label.textContent = sel[0];
     else label.textContent = `${sel.length} ${noun}s selected`;
     toggle.classList.toggle("has-selection", sel.length > 0);
   }
@@ -761,6 +840,9 @@
     const { options, get } = msConfig(type);
     const sel = get();
     const panel = document.getElementById(type + "FilterPanel");
+    // All/None first in the markup (not appended after the option list) so
+    // the sticky positioning actually has something at the top of the
+    // scroll container to stick to.
     panel.innerHTML = `
       <div class="ms-panel-actions">
         <button type="button" onclick="msSelectAll('${type}')">All</button>
@@ -768,7 +850,7 @@
       </div>` + options.map(opt => `
       <label class="ms-option">
         <input type="checkbox" value="${opt}" ${sel.includes(opt) ? "checked" : ""} onchange="onMsOptionChange('${type}', this)">
-        <span>${type === "variant" ? variantLabel(opt) : opt}</span>
+        <span>${opt}</span>
       </label>`).join("");
   }
 
@@ -789,6 +871,10 @@
     render();
   }
   function msSelectNone(type) {
+    // An empty array means "show everything" everywhere else in this filter
+    // (spriteVisible/variantVisible), so an explicit "deselect all" needs a
+    // sentinel value that can never match a real sprite/variant name instead,
+    // otherwise clicking None would silently flip back to showing everything.
     const { set } = msConfig(type);
     set(["__none__"]);
     renderMsPanel(type);
@@ -828,10 +914,7 @@
     return groupBy === "sprite" ? { sprite: row, variant: col } : { sprite: col, variant: row };
   }
   function imgPath(sprite, variant) {
-    // Both sprite and variant names can have spaces now ("Victory Crown",
-    // "Cheat Master") — both get collapsed to underscores to match the
-    // actual saved filenames (e.g. victory_crown_cheat_master.webp).
-    return "images/override/" + sprite.toLowerCase().replace(/ /g, "_") + "_" + variant.toLowerCase().replace(/ /g, "_") + ".webp";
+    return "images/runners/" + sprite.toLowerCase().replace(/ /g, "_") + "_" + variant.toLowerCase() + ".webp";
   }
   function cycleCell(sprite, variant) {
     const key = sprite + "||" + variant;
@@ -841,12 +924,20 @@
     render();
   }
 
+  // render() rebuilds every cell's HTML from scratch on each click, including cells
+  // whose image already failed to load once — without this, each of those gets a
+  // brand-new <img> tag every render, and the browser briefly shows the alt text
+  // again before onerror swaps it back out. Remembering known-missing URLs for the
+  // rest of the session means we go straight to the placeholder box on every render
+  // after the first, instead of re-flashing it each time you click anything.
   const missingImages = new Set();
   function markImageMissing(src, imgEl) {
     missingImages.add(src);
     imgEl.replaceWith(Object.assign(document.createElement("div"), { className: "placeholder" }));
   }
 
+  // Shared cell markup — used both by the full table and by each match in a
+  // filtered row group.
   function cellHTML(sprite, variant) {
     const key = sprite + "||" + variant;
     const level = state[key] || 0;
@@ -867,28 +958,49 @@
   function renderCell(row, col) {
     const { sprite, variant } = cellSpriteVariant(row, col);
     if (!variantsForSprite(sprite).includes(variant)) {
+      // Valid cells pick up "text-mode" (aspect-ratio 3/2) when viewMode is "text",
+      // via cellHTML()'s own template — this branch was skipping that entirely, so
+      // invalid cells kept the default square (1/1) aspect ratio while their valid
+      // neighbors in the same row went short-and-wide. That mismatch is exactly the
+      // "gap": the row's height ends up dictated by the taller square invalid cells,
+      // leaving visible empty space under the shorter valid ones.
       const modeClass = viewMode === "text" ? " text-mode" : "";
       return `<div class="cell invalid${modeClass}" data-sprite="${sprite}" data-variant="${variant}"></div>`;
     }
     return cellHTML(sprite, variant);
   }
 
+  // Row-label column gets a fixed width; every data column shares the rest of the
+  // grid's width evenly via minmax(44px, 1fr) — so the grid genuinely fills however
+  // much room .table-wrap actually has, for however many columns there really are.
   function renderTable() {
     const rows = getGroups();
     const cols = tableColumns();
     const rowAxisLabel = groupBy === "sprite" ? "Sprite" : "Variant";
+    // Capped at 120px per column (not 1fr) so a heavily-filtered view with
+    // only one or two columns doesn't stretch each cell to fill the entire
+    // table width — cells stay a consistent, sane size no matter how few
+    // columns the current filter leaves visible. Still floors at 44px and
+    // lets table-wrap scroll horizontally when there are many columns.
     const gridCols = "120px " + cols.map(() => "minmax(44px, 120px)").join(" ");
     let html = `<div class="sprite-grid" style="grid-template-columns: ${gridCols};">`;
     html += `<div class="g-header row-label-col">${rowAxisLabel}</div>`;
-    cols.forEach(c => { html += `<div class="g-header"><span class="${groupBy === "sprite" ? (VCLS[c] || "") : spriteRarityClass(c)}">${groupBy === "sprite" ? variantLabel(c) : c}</span></div>`; });
+    cols.forEach(c => { html += `<div class="g-header"><span class="${groupBy === "sprite" ? (VCLS[c] || "") : spriteRarityClass(c)}">${c}</span></div>`; });
     rows.forEach(row => {
-      html += `<div class="g-row-label"><span class="${groupBy === "variant" ? (VCLS[row] || "") : spriteRarityClass(row)}">${groupBy === "variant" ? variantLabel(row) : row}</span></div>`;
+      html += `<div class="g-row-label"><span class="${groupBy === "variant" ? (VCLS[row] || "") : spriteRarityClass(row)}">${row}</span></div>`;
       cols.forEach(col => { html += renderCell(row, col); });
     });
     html += `</div>`;
     document.getElementById("list").innerHTML = html;
   }
 
+  // Filtered view: rows follow the current View-toggle axis (getGroups(),
+  // same rows the full table would use), but each row only renders the
+  // cells that actually match the Collection/Mastery filter — no fixed
+  // column count, no column header, and rows with zero matches are skipped
+  // entirely rather than shown empty. Each cell gets a small caption for
+  // just the "other" axis (a variant name when rows are sprites, or vice
+  // versa), since the row label already covers half of what the cell means.
   function renderFilteredGrid(predicate) {
     const rowAxisIsSprite = groupBy === "sprite";
     const groups = [];
@@ -915,15 +1027,13 @@
         const sprite = rowAxisIsSprite ? row : other;
         const variant = rowAxisIsSprite ? other : row;
         const otherLabelClass = rowAxisIsSprite ? (VCLS[other] || "") : spriteRarityClass(other);
-        const otherLabel = rowAxisIsSprite ? variantLabel(other) : other;
         return `<div class="compact-tile">
             ${cellHTML(sprite, variant)}
-            <div class="compact-tile-label"><span class="${otherLabelClass}">${otherLabel}</span></div>
+            <div class="compact-tile-label"><span class="${otherLabelClass}">${other}</span></div>
           </div>`;
       }).join("");
-      const rowLabel = rowAxisIsSprite ? row : variantLabel(row);
       return `<div class="compact-row">
-          <div class="compact-row-label"><span class="${rowLabelClass}">${rowLabel}</span></div>
+          <div class="compact-row-label"><span class="${rowLabelClass}">${row}</span></div>
           <div class="compact-row-cells">${cells}</div>
         </div>`;
     }).join("");
@@ -948,7 +1058,7 @@
     save(); render();
   }
 
-  const VARIANT_KEY = { Normal: "normal" };
+  const VARIANT_KEY = { Normal: "normal", Gold: "gold", Gummi: "gummi", Galaxy: "galaxy", Holofoil: "holofoil", Gem: "gem", Cube: "cube", Quack: "quack" };
   const VARIANT_KEY_REVERSE = Object.fromEntries(Object.entries(VARIANT_KEY).map(([k, v]) => [v, k]));
 
   function buildFullExport() {
@@ -969,6 +1079,9 @@
     URL.revokeObjectURL(a.href);
   }
 
+  // Import JSON and Export Full JSON used to be two separate buttons — now
+  // one "Import/Export" button (moved into the View panel) opens this modal
+  // to pick between them, same JSON-file behavior as before either way.
   function openImportExportModal() {
     document.getElementById("importExportModal").classList.add("open");
   }
@@ -984,6 +1097,20 @@
     exportState();
   }
 
+  // ---- Share code: compact base64url encoding of the whole collection state,
+  // for pasting into Compare instead of exporting/uploading a JSON file.
+  //
+  // Every sprite||variant combo's level (0/1/2) is one base-3 digit. Since
+  // both this page and compare.html already hardcode the same SPRITES /
+  // SPRITE_VARIANT_OVERRIDES (kept in sync by hand), the *order* of those
+  // digits never needs to be transmitted — position alone tells you which
+  // combo a digit belongs to, same as it already does for the on-screen grid.
+  // All ~116 digits are packed into a single BigInt (big = big*3 + digit),
+  // then serialized as bytes and base64url-encoded. Decoding just walks that
+  // BigInt back out one base-3 digit at a time for exactly pairs.length
+  // iterations — because that count is fixed and known up front, leading
+  // (most-significant) zero digits come back correctly with no separate
+  // padding scheme, unlike a naive fixed-width-string approach would need.
   function buildCanonicalPairs() {
     const pairs = [];
     SPRITES.forEach(sprite => { variantsForSprite(sprite).forEach(variant => pairs.push([sprite, variant])); });
@@ -1002,6 +1129,10 @@
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
     return bytes;
   }
+  // Decode half of the share-code scheme — same math as encodeStateToCode
+  // below, run in reverse. Used for importing a code (from this browser's
+  // own past export, or someone else's), same as importState() does for a
+  // JSON file.
   function decodeCodeToState(code) {
     const bytes = base64UrlToBytes(code.trim());
     if (bytes.length === 0) return {};
@@ -1063,6 +1194,9 @@
     }
   }
 
+  // Only ever-visible/trackable variants (respects the Gem hide, and whatever
+  // sort order — including By Rarity — is currently active), just like what's
+  // actually on screen right now.
   function getMissingEntries() {
     const entries = [];
     activeAllSprites().forEach(sprite => {
@@ -1140,11 +1274,19 @@
     reader.readAsText(file);
   }
 
+  // Some browsers restore <select> values across a page refresh even with fresh
+  // JS state, which made the Collection/Mastery dropdowns visually look "stuck"
+  // on the last filter you picked even though collectionFilter/masteryFilter
+  // above are already freshly initialized to "all" every load. Force both the
+  // JS state and the DOM controls back to "all" explicitly so a refresh always
+  // means a real reset, in both what's shown and what's applied.
   collectionFilter = "all";
   masteryFilter = "all";
   document.getElementById("collectionFilter").value = "all";
   document.getElementById("masteryFilter").value = "all";
 
+  // Sprite/Variant dropdowns: start every load with nothing selected (i.e.
+  // "show everything"), and set their toggle labels to match.
   selectedSprites = [];
   selectedVariants = [];
   initMsDropdowns();
@@ -1152,6 +1294,27 @@
   updateGroupButton();
   updateViewModeButton();
   render();
+
+  // ---- Small live countdown badge to Override, up in the nav. Same target
+  // timestamp as override.html's own countdown page (EST fixed at UTC-5, per
+  // the same reasoning noted there — the user specified EST literally rather
+  // than DST-adjusted EDT). Kept compact: days plus an HH:MM:SS ticker rather
+  // than the full "Xd Xh Xm Xs" spelled-out format override.html uses.
+  const OVERRIDE_TARGET = new Date("2026-08-20T09:00:00-05:00").getTime();
+  function padNum(n) { return String(n).padStart(2, "0"); }
+  function tickOverrideCountdown() {
+    const el = document.getElementById("overrideCountdownText");
+    if (!el) return;
+    const diff = OVERRIDE_TARGET - Date.now();
+    if (diff <= 0) { el.textContent = "Override is live!"; return; }
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+    el.textContent = `Override in ${days}d ${padNum(hours)}:${padNum(minutes)}:${padNum(seconds)}`;
+  }
+  tickOverrideCountdown();
+  setInterval(tickOverrideCountdown, 1000);
 </script>
 
 </body>

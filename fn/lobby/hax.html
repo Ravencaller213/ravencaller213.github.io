@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lobby Hax — ravencaller</title>
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Serif+Display:ital@1&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:          #09090d;
+      --surface:     #0f0f18;
+      --surface-hi:  #15151f;
+      --border:      rgba(180,160,255,0.12);
+      --border-hi:   rgba(180,160,255,0.32);
+      --opal-1: #7b6fff;
+      --opal-2: #4dd9c0;
+      --opal-3: #a78bfa;
+      --opal-4: #38bdf8;
+      --opal-5: #6ee7b7;
+      --text:        #ddd8f0;
+      --text-dim:    #7a7495;
+      --text-faint:  #4f4a63;
+      --radius:      14px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background-color: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
+
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 10%,  rgba(123,111,255,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 35% at 80% 80%,  rgba(77,217,192,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 70% 20%,  rgba(167,139,250,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 30% at 10% 90%,  rgba(56,189,248,0.04) 0%, transparent 70%);
+    }
+
+    .page { position: relative; z-index: 1; max-width: min(96vw, 1100px); margin: 0 auto; padding: 0 2rem 6rem; }
+
+    nav.top { padding: 2rem 0 0; display: flex; justify-content: space-between; align-items: center; }
+    .nav-back { font-size: 0.85rem; color: var(--text-dim); text-decoration: none; letter-spacing: 0.02em; transition: color 0.25s ease; display: inline-flex; align-items: center; gap: 0.4rem; }
+    .nav-back:hover { color: var(--opal-4); }
+    .nav-tag { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--border-hi); color: var(--text-dim); }
+
+    header { padding: 2.5rem 0 2rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+    .wordmark {
+      font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(2.2rem, 5vw, 3.4rem); letter-spacing: -0.02em; line-height: 1;
+      background: linear-gradient(105deg, var(--opal-3) 0%, var(--text) 28%, var(--opal-4) 50%, var(--text) 72%, var(--opal-2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200% 100%;
+      animation: shimmer 8s ease-in-out infinite alternate;
+    }
+    @keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+    .tagline { font-size: 0.9rem; color: var(--text-dim); letter-spacing: 0.04em; max-width: 680px; line-height: 1.7; }
+
+    .divider { width: 100%; height: 1px; margin-bottom: 1.5rem; background: linear-gradient(90deg, transparent 0%, var(--opal-1) 20%, var(--opal-2) 50%, var(--opal-3) 80%, transparent 100%); opacity: 0.35; }
+
+    .page-navbar { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.5rem; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+      padding: 0.55rem 1.1rem; border-radius: 99px; border: 1px solid var(--border);
+      background: var(--surface-hi); color: var(--text-dim); font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem; font-weight: 400; letter-spacing: 0.02em; text-decoration: none;
+      cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+    }
+    .btn:hover { border-color: var(--border-hi); color: var(--text); }
+    .btn.accent { color: var(--opal-4); border-color: rgba(56,189,248,0.3); }
+    .btn.accent:hover { background: rgba(56,189,248,0.1); border-color: rgba(56,189,248,0.55); }
+
+    .toolbar-frame { display: flex; flex-wrap: wrap; gap: 1.2rem; align-items: center; justify-content: space-between; border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem 1.2rem; background: var(--surface); margin-bottom: 1.5rem; }
+    .search-input {
+      background: var(--surface-hi); border: 1px solid var(--border); border-radius: 99px; color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 0.82rem; padding: 0.5rem 1rem; min-width: 220px; flex: 1;
+    }
+    .search-input:focus { outline: none; border-color: var(--border-hi); }
+    .search-input::placeholder { color: var(--text-faint); }
+
+    .stat-ratio { font-size: 0.8rem; color: var(--text-dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .stat-ratio b { color: var(--opal-2); font-weight: 500; }
+
+    .progress-bar { width: 100%; height: 6px; border-radius: 99px; background: var(--surface-hi); overflow: hidden; margin-bottom: 1.75rem; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--opal-1), var(--opal-4), var(--opal-2)); border-radius: 99px; transition: width 0.3s ease; }
+
+    .code-list { display: flex; flex-direction: column; gap: 0.7rem; }
+    .code-row {
+      display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 1rem;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1rem 1.25rem; transition: border-color 0.25s ease, opacity 0.25s ease;
+    }
+    .code-row:hover { border-color: var(--border-hi); }
+    .code-row.redeemed { opacity: 0.5; }
+    .code-row.redeemed .code-text { text-decoration: line-through; text-decoration-color: var(--text-faint); }
+
+    .code-check {
+      width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--border-hi);
+      background: var(--surface-hi); cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--opal-2); font-size: 0.85rem; flex: 0 0 auto;
+    }
+    .code-row.redeemed .code-check { background: rgba(77,217,192,0.16); border-color: var(--opal-2); }
+
+    .code-main { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+    .code-text { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.95rem; color: var(--text); letter-spacing: 0.01em; word-break: break-word; }
+    .code-reward { font-size: 0.78rem; color: var(--text-dim); line-height: 1.5; }
+    .code-reward a { color: var(--opal-3); }
+
+    .code-expiry { font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); white-space: nowrap; text-align: right; }
+    .code-expiry.known { color: var(--opal-5); }
+
+    .copy-btn {
+      flex: 0 0 auto; padding: 0.4rem 0.85rem; border-radius: 99px; border: 1px solid var(--border);
+      background: var(--surface-hi); color: var(--text-dim); font-family: 'DM Sans', sans-serif; font-size: 0.7rem;
+      cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease;
+    }
+    .copy-btn:hover { border-color: var(--opal-4); color: var(--opal-4); }
+
+    .empty-state { padding: 3rem 1rem; text-align: center; color: var(--text-faint); font-size: 0.85rem; }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(5,5,10,0.72); display: flex; align-items: center; justify-content: center; z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal-box { background: var(--surface); border: 1px solid var(--border-hi); border-radius: var(--radius); padding: 1.75rem; max-width: 380px; width: 90%; }
+    .modal-box h3 { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 1.2rem; margin-bottom: 0.75rem; color: var(--text); }
+    .modal-box p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 1.5rem; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 0.6rem; }
+
+    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+    footer p { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.05em; }
+    footer a { color: var(--opal-3); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <nav class="top">
+    <a class="nav-back" href="../fn-home.html">&larr; fortnite</a>
+    <span class="nav-tag">Lobby Hax</span>
+  </nav>
+
+  <header>
+    <h1 class="wordmark">Lobby Hax</h1>
+    <p class="tagline">
+      Admin Panel lobby hack codes and their rewards, pulled from IGN's
+      code list. Check off the ones you've redeemed &mdash; your progress is
+      saved in this browser only.
+    </p>
+  </header>
+
+  <div class="divider"></div>
+
+  <div class="page-navbar">
+    <a class="btn accent" href="../fn-home.html">Fortnite Hub</a>
+    <a class="btn accent" href="../sprites/index.html">Sprites</a>
+    <a class="btn accent" href="../sprites/runners.html">Runners</a>
+    <a class="btn accent" href="../sprites/override.html">Override</a>
+    <a class="btn accent" href="../sprites/compare.html">Compare</a>
+  </div>
+
+  <div class="toolbar-frame">
+    <input type="text" id="searchInput" class="search-input" placeholder="Search codes or rewards&hellip;" oninput="render()" />
+    <span class="stat-ratio" id="prog">0 / 0 redeemed</span>
+    <button type="button" class="btn" onclick="openResetModal()">Reset checklist</button>
+  </div>
+
+  <div class="progress-bar"><div class="progress-bar-fill" id="progFill" style="width: 0%;"></div></div>
+
+  <div id="list" class="code-list"></div>
+
+  <footer>
+    <p>ravencaller213 &middot; lobby hax &middot; codes via IGN, last pulled 2026-09-26</p>
+    <p><a href="../fn-home.html">fortnite hub</a> &middot; <a href="../sprites/index.html">sprites</a></p>
+  </footer>
+
+</div><!-- end .page -->
+
+<div class="modal-overlay" id="resetModal">
+  <div class="modal-box">
+    <h3>Reset checklist?</h3>
+    <p>This clears every code you've marked as redeemed on this device. It can't be undone.</p>
+    <div class="modal-actions">
+      <button type="button" class="btn" onclick="closeResetModal()">Cancel</button>
+      <button type="button" class="btn accent" onclick="confirmReset()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const KEY = "fn_lobby_hax_v1";
+
+  // Pulled from IGN's "All Admin Panel Lobby Hack Codes For Free Rewards"
+  // page (saved DOM, 2026-09-26 — the page is client-rendered but every
+  // code/reward/expiration is present in the static HTML, no extra
+  // scraping needed). Order matches the page's own listing.
+  const CODES = [
+    { code: "WhoCrackedTheCode", reward: "40,000 XP", expires: "Unknown" },
+    { code: "WeAreTheWorldChampionsToday", reward: "FNCS Sentry Back Bling", expires: "Unknown" },
+    { code: "DustySprites", reward: "5,000 Sprite Dust", expires: "Unknown" },
+    { code: "AlmostScaringSeason", reward: "2x Cheat Code Locator", expires: "Unknown" },
+    { code: "9YEARS", reward: "9th Birthday Sprite Spray", expires: "Unknown" },
+    { code: "NOCTURNEOP55N1", reward: "2x Extraction Accelerator", expires: "Unknown" },
+    { code: "BLINKYINKYPINKYCLYDE", reward: "5,000 Sprite Dust", expires: "Unknown" },
+    { code: "DestinyAwaits", reward: "2x Llama Supply Drop", expires: "Unknown" },
+    { code: "ChatFindMeAnotherCode", reward: "2x Cheat Code Locator", expires: "Unknown" },
+    { code: "InsertCoinToContinue", reward: "Transforms you into an arcade machine temporarily", expires: "None" },
+    { code: "ChatWhereDoYouFindTheKey", reward: "2x Extraction Accelerator", expires: "None" },
+    { code: "INVALIDCHEAT", reward: "2x Cheat Code Locator", expires: "None" },
+    { code: "YourThoughtsAreMine", reward: "5,000 Sprite Dust, Void Master Geno Skin Edit Style, Void Conduits of Power Back Bling Edit Style (must complete Geno's Story quests first)", expires: "None" },
+    { code: "JONESYISGOLDEN", reward: "Gold Jonesy Sprite", expires: "None" },
+    { code: "GatherAndCraft", reward: "Cheat Master Bush Sprite (must complete Wrixel/Ziggy's Story quests first)", expires: "None" },
+    { code: "Play4All", reward: "Cheat Master Jonesy Sprite", expires: "None" },
+    { code: "GottaGoFast", reward: "Cheat Master Sonic Sprite", expires: "None" },
+    { code: "IWannaFlyHigh", reward: "Cheat Master Tails Sprite", expires: "None" },
+    { code: "8BitBlast", reward: "Cheat Master 8-Bit Sprite", expires: "None" },
+    { code: "BORN2PLAY", reward: "Cheat Master Adventure Sprite", expires: "None" },
+    { code: "OverrideXP", reward: "40,000 XP", expires: "None" },
+    { code: "O2OVERRIDE", reward: "1x Llama Supply Drop, 5x Portable Extractor", expires: "None" },
+    { code: "TakeYourHeart", reward: "2x Extraction Accelerator", expires: "None" },
+    { code: "SurviveTheNight", reward: "2x Cheat Code Locator", expires: "None" },
+    { code: "FindItChat", reward: "2x Cheat Code Locator", expires: "None" },
+    { code: "PerfectOrder", reward: "4x Spicy Taco", expires: "None" },
+    { code: "H0p0nVC", reward: "2,000 Sprite Dust", expires: "None" },
+    { code: "Magilume", reward: "2,000 Sprite Dust", expires: "None" },
+    { code: "Chispambo", reward: "2,000 Sprite Dust", expires: "None" },
+    { code: "abgestaubt", reward: "2,000 Sprite Dust", expires: "None" },
+    { code: "Perlimpinpin", reward: "2,000 Sprite Dust", expires: "None" },
+    { code: "REACHYOURIMPOSSIBLE", reward: "Block Party Loading Screen", expires: "None" },
+    { code: "MagicIsReal", reward: "5,000 Sprite Dust (must complete Bastian's Story Quest first)", expires: "None" },
+    { code: "PlayToLevelUp", reward: "2,000 Sprite Dust", expires: "None" },
+    { code: "SAYH12WR1X3L", reward: "Wrixel's Hero Portrait Spray", expires: "None" },
+    { code: "BEAMMEUP", reward: "2x Extraction Accelerator", expires: "None" },
+    { code: "DustInTheWind", reward: "5,000 Sprite Dust", expires: "None" },
+    { code: "WhereIsTheDustyTree", reward: "5,000 Sprite Dust", expires: "None" },
+    { code: "BRB", reward: "Transforms you into a toilet temporarily", expires: "None" },
+    { code: "BeMoreAlien", reward: "Override Ready Loading Screen", expires: "None" },
+    { code: "LetsBlockAndRoll", reward: "Transforms you into a Tetris block temporarily", expires: "None" },
+    { code: "DontBlockMe", reward: "Transforms you into a Tetris block temporarily", expires: "None" },
+  ];
+
+  let redeemed = {};
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      redeemed = raw ? JSON.parse(raw) : {};
+      if (!redeemed || typeof redeemed !== "object") redeemed = {};
+    } catch (e) { redeemed = {}; }
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(redeemed)); } catch (e) {}
+  }
+
+  function toggleCode(code) {
+    if (redeemed[code]) delete redeemed[code];
+    else redeemed[code] = true;
+    save();
+    render();
+  }
+
+  function copyCode(code) {
+    const finish = (btn) => { const orig = btn.textContent; btn.textContent = "Copied!"; setTimeout(() => { btn.textContent = orig; }, 1200); };
+    const btn = document.getElementById("copy-" + code);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(() => finish(btn)).catch(() => fallbackCopy(code, btn, finish));
+    } else {
+      fallbackCopy(code, btn, finish);
+    }
+  }
+  function fallbackCopy(code, btn, finish) {
+    const ta = document.createElement("textarea");
+    ta.value = code;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+    finish(btn);
+  }
+
+  function openResetModal() { document.getElementById("resetModal").classList.add("open"); }
+  function closeResetModal() { document.getElementById("resetModal").classList.remove("open"); }
+  function confirmReset() {
+    redeemed = {};
+    save();
+    closeResetModal();
+    render();
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+  }
+
+  function render() {
+    const q = (document.getElementById("searchInput").value || "").trim().toLowerCase();
+    const filtered = CODES.filter(c =>
+      !q || c.code.toLowerCase().includes(q) || c.reward.toLowerCase().includes(q)
+    );
+
+    const list = document.getElementById("list");
+    if (filtered.length === 0) {
+      list.innerHTML = '<div class="empty-state">No codes match that search.</div>';
+    } else {
+      list.innerHTML = filtered.map(c => {
+        const isRedeemed = !!redeemed[c.code];
+        const expiryClass = c.expires && c.expires !== "None" && c.expires !== "Unknown" ? "known" : "";
+        return `<div class="code-row${isRedeemed ? " redeemed" : ""}">
+          <button type="button" class="code-check" onclick="toggleCode('${c.code.replace(/'/g, "\\'")}')" title="Mark redeemed">${isRedeemed ? "&#10003;" : ""}</button>
+          <div class="code-main">
+            <div class="code-text">${escapeHtml(c.code)}</div>
+            <div class="code-reward">${escapeHtml(c.reward)}</div>
+          </div>
+          <button type="button" class="copy-btn" id="copy-${escapeHtml(c.code)}" onclick="copyCode('${c.code.replace(/'/g, "\\'")}')">Copy</button>
+          <div class="code-expiry ${expiryClass}">Exp: ${escapeHtml(c.expires)}</div>
+        </div>`;
+      }).join("");
+    }
+
+    const total = CODES.length;
+    const done = CODES.filter(c => redeemed[c.code]).length;
+    document.getElementById("prog").innerHTML = `<b>${done}</b> / ${total} redeemed`;
+    document.getElementById("progFill").style.width = (total ? (done / total * 100) : 0) + "%";
+  }
+
+  load();
+  render();
+</script>
+
+</body>
+</html>
